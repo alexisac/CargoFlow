@@ -1,0 +1,75 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IntelliJ IDEA / Android Studio
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# VS Code
+.vscode/
+
+# Java / Kotlin / Maven
+target/
+*.class
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Gradle / Android
+.gradle/
+**/.gradle/
+build/
+**/build/
+
+local.properties
+**/local.properties
+
+captures/
+.externalNativeBuild/
+.cxx/
+**/.externalNativeBuild/
+**/.cxx/
+
+# Android build artifacts
+*.apk
+*.ap_
+*.aab
+*.dex
+
+# Logs
+*.log
+
+# Env / secrets
+.env
+.env.*
+*.env
+
+# Spring Boot local configs
+application-local.properties
+application-dev.properties
+application-prod.properties
+
+# Eclipse / STS
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
