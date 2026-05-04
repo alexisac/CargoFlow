@@ -1,0 +1,16 @@
+spring:
+    application:
+        name: backendCargoFlow
+    datasource:
+        url: jdbc:postgresql://localhost:5432/<your_DB_name>
+        username: <PostgreSQL username>
+        password: <PostgreSQL password>
+    flyway:
+        enabled: true
+        out-of-order: true
+logging:
+    level:
+        org.hibernate.SQL: debug
+jwt:
+    secret: <secret key for JWT>
+    expiration-ms: <time for JWT>

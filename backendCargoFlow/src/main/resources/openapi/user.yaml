@@ -1,0 +1,145 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: User management
+  description: API related to management of Users
+paths:
+  /users/create:
+    post:
+      tags:
+        - Users
+      summary: Add a new user by admin
+      operationId: addNewUser
+      requestBody:
+        description: User data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddNewUserRequest'
+        required: true
+      responses:
+        '201':
+          description: User was created successfully
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '409':
+          description: User already exist
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+  /users/login:
+    post:
+      tags:
+        - Users
+      summary: Login
+      operationId: loginUser
+      requestBody:
+        description: Login credentials
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUserRequest'
+        required: true
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '401':
+          description: Invalid email or password
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+
+components:
+  schemas:
+    UserRole:
+      type: string
+      enum:
+        - DRIVER
+        - DISPATCHER
+        - MANAGER
+        - ADMIN
+      example: DRIVER
+    AddNewUserRequest:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - email
+        - hashedPassword
+        - role
+      properties:
+        firstName:
+          type: string
+          minLength: 3
+          example: Alexandru
+        lastName:
+          type: string
+          minLength: 3
+          example: Isac
+        email:
+          type: string
+          minLength: 5
+          example: alex_isac72@yahoo.com
+        hashedPassword:
+          type: string
+          minLength: 8
+          example: hashed-password-123
+        role:
+          $ref: '#/components/schemas/UserRole'
+    LoginUserRequest:
+      type: object
+      required:
+        - email
+        - hashedPassword
+      properties:
+        email:
+          type: string
+          minLength: 5
+          example: alex_isac72@yahoo.com
+        hashedPassword:
+          type: string
+          example: hashed-password-123
+    LoginUserResponse:
+      type: object
+      required:
+        - accessToken
+        - tokenType
+      properties:
+        accessToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkaWFuYV90ZXN0QHlhaG9vLmNvbSIsInVzZXJJZCI6Miwicm9sZSI6Ik1BTkFHRVIiLCJmaXJzdE5hbWUiOiJTYXZhIiwibGFzdE5hbWUiOiJEaWFuYSIsImlhdCI6MTc3NzkzNDUxNiwiZXhwIjoxNzc3OTM4MTE2fQ.-kteVhAMZJ0XhvJKo2q_AhBOGbwCCBMqeDsqfkXoQjA
+        tokenType:
+          type: string
+          example: Bearer
