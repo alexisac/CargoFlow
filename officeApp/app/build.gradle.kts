@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt.android)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -55,4 +57,23 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+
+    // Source: https://mvnrepository.com/artifact/com.google.code.gson/gson
+    implementation(libs.gson)
+    // Source: https://mvnrepository.com/artifact/com.squareup.okhttp3/logging-interceptor
+    implementation(libs.okhttp3.logging.interceptor)
+    // Source: https://mvnrepository.com/artifact/com.squareup.retrofit2/retrofit
+    implementation(libs.retrofit2.retrofit)
+    // Source: https://mvnrepository.com/artifact/com.squareup.retrofit2/converter-gson
+    implementation(libs.retrofit2.convertor.gson)
+    // Source: https://mvnrepository.com/artifact/androidx.datastore/datastore-preferences
+    implementation(libs.datastore.datastore.preferences)
+    // Source: https://mvnrepository.com/artifact/androidx.navigation/navigation-compose
+    implementation(libs.navigation.navigation.compose)
+    // Source: https://mvnrepository.com/artifact/com.google.dagger/hilt-android
+    implementation(libs.dagger.hilt.android)
+    // Source: https://mvnrepository.com/artifact/com.google.dagger/hilt-android
+    ksp(libs.dagger.hilt.compiler)
+    // Source: https://mvnrepository.com/artifact/androidx.hilt/hilt-navigation-compose
+    implementation(libs.androidx.hilt.navigation.compose)
 }

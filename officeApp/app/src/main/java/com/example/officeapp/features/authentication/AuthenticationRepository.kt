@@ -1,0 +1,108 @@
+package com.example.officeapp.features.authentication
+
+import com.example.officeapp.models.AddNewUserRequest
+import com.example.officeapp.models.GenericApplicationResponse
+import com.example.officeapp.models.LoginUserRequest
+import com.example.officeapp.models.LoginUserResponse
+import com.example.officeapp.utils.ApiResult
+import com.example.officeapp.utils.JWTDecoder
+import com.example.officeapp.utils.SessionManager
+import com.google.gson.Gson
+import retrofit2.Response
+import javax.inject.Inject
+
+class AuthenticationRepository @Inject constructor(
+    private val authenticationInterfaceAPI: AuthenticationInterfaceAPI,
+    private val sessionManager: SessionManager
+) {
+    suspend fun loginUser(email: String, hashedPassword: String): ApiResult<LoginUserResponse> {
+        return try {
+            val request = LoginUserRequest(
+                email = email,
+                hashedPassword = hashedPassword
+            )
+
+            val response = authenticationInterfaceAPI.loginUser(request)
+
+            if (response.isSuccessful){
+                val body = response.body()
+                if (body == null)
+                    ApiResult.Error("Empty response from server.")
+                else {
+                    sessionManager.saveLoginSession(
+                        accessToken = body.accessToken,
+                        tokenType = body.tokenType
+                    )
+                    val payload = JWTDecoder.decodePayload(body.accessToken)
+
+                    payload?.userId?.let { userId ->
+                        sessionManager.saveUserId(userId)
+                    }
+                    payload?.role?.let { role ->
+                        sessionManager.saveUserRole(role)
+                    }
+                    ApiResult.Success(body)
+                }
+            } else {
+                parseError(response)
+            }
+        } catch (ex: Exception) {
+            ApiResult.Error(
+                message = ex.message ?: "Unknown error at LoginUser."
+            )
+        }
+    }
+
+    suspend fun addNewUser(addNewUserRequest: AddNewUserRequest): ApiResult<GenericApplicationResponse> {
+        return try {
+            val response = authenticationInterfaceAPI.addNewUser(addNewUserRequest)
+
+            if (response.isSuccessful) {
+                val body = response.body()
+
+                if (body == null)
+                    ApiResult.Error("Empty response from server.")
+                else
+                    ApiResult.Success(body)
+            } else {
+                parseError(response)
+            }
+        } catch (ex: Exception) {
+            ApiResult.Error(
+                message = ex.message ?: "Unknown error at AddNewUser."
+            )
+        }
+    }
+
+    suspend fun getAccessToken(): String? {
+        return sessionManager.getAccessTokenOnce()
+    }
+
+    suspend fun logout() {
+        sessionManager.clearSession()
+    }
+
+    private fun <T> parseError(response: Response<T>): ApiResult.Error {
+        return try {
+            val errorJson = response.errorBody()?.string()
+
+            if(errorJson.isNullOrBlank()) {
+                ApiResult.Error(
+                    message = "Server error: ${response.code()}",
+                    code = response.code().toString()
+                )
+            } else {
+                val errorResponse = Gson().fromJson(errorJson, GenericApplicationResponse::class.java)
+                ApiResult.Error(
+                    message = errorResponse.message ?: "Server error.",
+                    code = errorResponse.code ?: response.code().toString()
+                )
+            }
+        } catch (ex: Exception) {
+            ApiResult.Error(
+                message = "Server error: ${response.code()}",
+                code = response.code().toString()
+            )
+        }
+    }
+}
