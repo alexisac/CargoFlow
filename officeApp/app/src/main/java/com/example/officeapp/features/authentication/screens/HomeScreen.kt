@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,6 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.officeapp.features.authentication.AuthenticationViewModel
+import com.example.officeapp.features.reusableComponents.FormMessages
+import com.example.officeapp.models.UserRole
 
 @Composable
 fun HomeScreen(
@@ -37,40 +38,24 @@ fun HomeScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text (text = "Dashboard")
+        Text (text = "Dashboard - ${uiState.userRole}")
 
-        if (uiState.successMessage != null) {
-            Text(
-                text = uiState.successMessage ?: "",
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .padding(top = 16.dp)
-            )
-        }
-
-        if (uiState.errorMessage != null) {
-            Text(
-                text = uiState.errorMessage ?: "",
-                color = MaterialTheme.colorScheme.error,
-                modifier = Modifier.padding(top = 16.dp)
-            )
-        }
-
-        if (uiState.successMessage != null) {
-            Text(
-                text = uiState.successMessage ?: "",
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(top = 16.dp)
-            )
-        }
-
-        Button(
-            onClick = onGoToAddUser,
+        FormMessages(
+            errorMessage = uiState.errorMessage,
+            successMessage = uiState.successMessage,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 32.dp)
-        ) {
-            Text("Add new user")
+                .padding(top = 16.dp)
+        )
+
+        if(uiState.userRole == UserRole.ADMIN.name) {
+            Button(
+                onClick = onGoToAddUser,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 32.dp)
+            ) {
+                Text("Add new user")
+            }
         }
 
         OutlinedButton(

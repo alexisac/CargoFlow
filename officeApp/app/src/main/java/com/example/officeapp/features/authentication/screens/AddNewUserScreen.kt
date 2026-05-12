@@ -6,14 +6,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -25,9 +22,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.officeapp.features.authentication.AuthenticationViewModel
+import com.example.officeapp.features.reusableComponents.FormMessages
+import com.example.officeapp.features.reusableComponents.LoadingButton
+import com.example.officeapp.features.reusableComponents.PasswordField
 import com.example.officeapp.models.UserRole
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,6 +41,7 @@ fun AddNewUserScreen(
     var lastName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var confirmedPassword by remember { mutableStateOf("") }
 
     var expanded by remember { mutableStateOf(false) }
     var selectedRole by remember { mutableStateOf(UserRole.DRIVER) }
@@ -90,15 +90,22 @@ fun AddNewUserScreen(
             )
         )
 
-        OutlinedTextField(
+        PasswordField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
+            label = "Password",
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 12.dp),
-            singleLine = true,
-            visualTransformation = PasswordVisualTransformation()
+                .padding(top = 12.dp)
+        )
+
+        PasswordField(
+            value = confirmedPassword,
+            onValueChange = { confirmedPassword = it },
+            label = "Confirmed password",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp)
         )
 
         ExposedDropdownMenuBox(
@@ -138,31 +145,23 @@ fun AddNewUserScreen(
             }
         }
 
-        if (uiState.errorMessage != null) {
-            Text(
-                text = uiState.errorMessage ?: "",
-                color = MaterialTheme.colorScheme.error,
-                modifier = Modifier
-                    .padding(top = 12.dp)
-            )
-        }
+        FormMessages(
+            errorMessage = uiState.errorMessage,
+            successMessage = uiState.successMessage,
+            modifier = Modifier
+                .padding(top = 16.dp)
+        )
 
-        if (uiState.successMessage != null) {
-            Text(
-                text = uiState.successMessage ?: "",
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .padding(top = 12.dp)
-            )
-        }
-
-        Button(
+        LoadingButton(
+            text = "Create user",
+            isLoading = uiState.isLoading,
             onClick = {
                 viewModel.addNewUser(
                     firstName = firstName,
                     lastName = lastName,
                     email = email,
                     password = password,
+                    confirmedPassword = confirmedPassword,
                     role = selectedRole
                 )
             },
@@ -170,12 +169,7 @@ fun AddNewUserScreen(
                 .fillMaxWidth()
                 .padding(top = 24.dp),
             enabled = !uiState.isLoading
-        ) {
-            if (uiState.isLoading)
-                CircularProgressIndicator()
-            else
-                Text("Create user")
-        }
+        )
 
         OutlinedButton(
             onClick = {

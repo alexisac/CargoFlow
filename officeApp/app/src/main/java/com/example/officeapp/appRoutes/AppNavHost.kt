@@ -61,13 +61,14 @@ fun AppNavHost() {
             HomeScreen(
                 viewModel = authenticationViewModel,
                 onLogout = {
-                    authenticationViewModel.logout()
                     navController.navigate(AppRoutes.LOGIN_ROUTE) {
                         popUpTo(0) {
                             inclusive = true
                         }
                         launchSingleTop = true
                     }
+
+                    authenticationViewModel.logout()
                 },
                 onGoToAddUser = {
                     navController.navigate(AppRoutes.ADD_USER_ROUTE)

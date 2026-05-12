@@ -6,9 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,9 +18,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.officeapp.features.authentication.AuthenticationViewModel
+import com.example.officeapp.features.reusableComponents.FormMessages
+import com.example.officeapp.features.reusableComponents.LoadingButton
+import com.example.officeapp.features.reusableComponents.PasswordField
 
 @Composable
 fun LoginScreen(
@@ -37,13 +36,6 @@ fun LoginScreen(
 
     LaunchedEffect(Unit) {
         viewModel.clearMessages()
-    }
-
-    LaunchedEffect(uiState.isLoggedIn) {
-        if (uiState.isLoggedIn) {
-            onLoggedIn()
-            viewModel.clearMessages()
-        }
     }
 
     Column(
@@ -73,52 +65,36 @@ fun LoginScreen(
             )
         )
 
-        OutlinedTextField(
+        PasswordField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
+            label = "Password",
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 12.dp),
-            singleLine = true,
-            visualTransformation = PasswordVisualTransformation()
+                .padding(top = 12.dp)
         )
 
-        if (uiState.errorMessage != null) {
-           Text(
-               text = uiState.errorMessage ?: "",
-               color = MaterialTheme.colorScheme.error,
-               modifier = Modifier
-                   .padding(top = 12.dp)
-           )
-        }
+        FormMessages(
+            errorMessage = uiState.errorMessage,
+            successMessage = uiState.successMessage,
+            modifier = Modifier
+                .padding(top = 16.dp)
+        )
 
-        if (uiState.successMessage != null) {
-            Text(
-                text = uiState.successMessage ?: "",
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .padding(top = 12.dp)
-            )
-        }
-
-        Button(
+        LoadingButton(
+            text = "Login",
+            isLoading = uiState.isLoading,
             onClick = {
                 viewModel.loginUser(
                     email = email,
-                    password = password
+                    password = password,
+                    onSuccess = onLoggedIn
                 )
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 24.dp),
             enabled = !uiState.isLoading
-        ) {
-            if (uiState.isLoading) {
-                CircularProgressIndicator()
-            } else {
-                Text("Login")
-            }
-        }
+        )
     }
 }

@@ -35,19 +35,23 @@ class AuthenticationService @Inject constructor(
         lastName: String,
         email: String,
         password: String,
+        confirmedPassword: String,
         role: UserRole
     ): ApiResult<GenericApplicationResponse> {
         if(firstName.length < 3)
             return ApiResult.Error("FirstName needs to has minimum 3 characters")
 
         if(lastName.length < 3)
-            return ApiResult.Error("FirstName needs to has minimum 3 characters")
+            return ApiResult.Error("LastName needs to has minimum 3 characters")
 
         if(email.length < 5)
             return ApiResult.Error("Email needs to has minimum 5 characters")
 
         if(password.length < 8)
             return ApiResult.Error("Password needs to has minimum 8 characters")
+
+        if(password != confirmedPassword)
+            return ApiResult.Error("Password and Confirmed password are not identical")
 
         val hashedPassword = PasswordHasher.sha256(password)
 
@@ -76,6 +80,10 @@ class AuthenticationService @Inject constructor(
             return false
         }
         return true
+    }
+
+    suspend fun getUserRole(): String? {
+        return authenticationRepository.getUserRole()
     }
 
     suspend fun logout() {

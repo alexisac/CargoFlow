@@ -78,6 +78,10 @@ class AuthenticationRepository @Inject constructor(
         return sessionManager.getAccessTokenOnce()
     }
 
+    suspend fun getUserRole(): String? {
+        return sessionManager.getUserRole()
+    }
+
     suspend fun logout() {
         sessionManager.clearSession()
     }

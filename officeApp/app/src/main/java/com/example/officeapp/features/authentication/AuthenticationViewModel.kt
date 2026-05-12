@@ -21,7 +21,8 @@ class AuthenticationViewModel @Inject constructor(
 
     fun loginUser(
         email: String,
-        password: String
+        password: String,
+        onSuccess: () -> Unit
     ) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
@@ -36,12 +37,18 @@ class AuthenticationViewModel @Inject constructor(
                 )
             ) {
                 is ApiResult.Success -> {
+                    val role = authenticationService.getUserRole()
+
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
                         isLoggedIn = true,
+                        isCheckingSession = false,
+                        userRole = role,
                         successMessage = "Success authentication.",
                         errorMessage = null
                     )
+
+                    onSuccess()
                 }
 
                 is ApiResult.Error -> {
@@ -67,6 +74,7 @@ class AuthenticationViewModel @Inject constructor(
         lastName: String,
         email: String,
         password: String,
+        confirmedPassword: String,
         role: UserRole
     ) {
         viewModelScope.launch {
@@ -82,6 +90,7 @@ class AuthenticationViewModel @Inject constructor(
                     lastName = lastName,
                     email = email,
                     password = password,
+                    confirmedPassword = confirmedPassword,
                     role = role
                 )
             ){
@@ -113,9 +122,14 @@ class AuthenticationViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch {
             authenticationService.logout()
+
             _uiState.value = AuthenticationUiState(
+                isLoading = false,
                 isLoggedIn = false,
-                successMessage = "Logout success."
+                isCheckingSession = false,
+                userRole = null,
+                successMessage = null,
+                errorMessage = null
             )
         }
     }
@@ -130,14 +144,23 @@ class AuthenticationViewModel @Inject constructor(
     fun checkSession() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
-                isCheckingSession = true
+                isCheckingSession = true,
+                errorMessage = null,
+                successMessage = null
             )
 
             val isValid = authenticationService.isUserSessionValid()
 
+            val role = if (isValid) {
+                authenticationService.getUserRole()
+            } else {
+                null
+            }
+
             _uiState.value = _uiState.value.copy(
                 isCheckingSession = false,
-                isLoggedIn = isValid
+                isLoggedIn = isValid,
+                userRole = role
             )
         }
     }
