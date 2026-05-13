@@ -27,7 +27,7 @@ import com.example.officeapp.features.authentication.AuthenticationViewModel
 import com.example.officeapp.features.reusableComponents.FormMessages
 import com.example.officeapp.features.reusableComponents.LoadingButton
 import com.example.officeapp.features.reusableComponents.PasswordField
-import com.example.officeapp.models.UserRole
+import com.example.officeapp.models.user.UserRole
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

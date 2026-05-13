@@ -1,4 +1,4 @@
-package com.example.officeapp.models
+package com.example.officeapp.models.user
 
 data class LoginUserResponse(
     val accessToken: String,

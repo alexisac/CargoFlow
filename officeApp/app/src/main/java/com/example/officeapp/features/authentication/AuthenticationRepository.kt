@@ -1,14 +1,13 @@
 package com.example.officeapp.features.authentication
 
-import com.example.officeapp.models.AddNewUserRequest
+import com.example.officeapp.models.user.AddNewUserRequest
 import com.example.officeapp.models.GenericApplicationResponse
-import com.example.officeapp.models.LoginUserRequest
-import com.example.officeapp.models.LoginUserResponse
+import com.example.officeapp.models.user.LoginUserRequest
+import com.example.officeapp.models.user.LoginUserResponse
 import com.example.officeapp.utils.ApiResult
 import com.example.officeapp.utils.JWTDecoder
 import com.example.officeapp.utils.SessionManager
-import com.google.gson.Gson
-import retrofit2.Response
+import com.example.officeapp.utils.parseApiError
 import javax.inject.Inject
 
 class AuthenticationRepository @Inject constructor(
@@ -44,7 +43,7 @@ class AuthenticationRepository @Inject constructor(
                     ApiResult.Success(body)
                 }
             } else {
-                parseError(response)
+                parseApiError(response)
             }
         } catch (ex: Exception) {
             ApiResult.Error(
@@ -65,12 +64,10 @@ class AuthenticationRepository @Inject constructor(
                 else
                     ApiResult.Success(body)
             } else {
-                parseError(response)
+                parseApiError(response)
             }
         } catch (ex: Exception) {
-            ApiResult.Error(
-                message = ex.message ?: "Unknown error at AddNewUser."
-            )
+            ApiResult.Error(message = ex.message ?: "Unknown error at AddNewUser.")
         }
     }
 
@@ -84,29 +81,5 @@ class AuthenticationRepository @Inject constructor(
 
     suspend fun logout() {
         sessionManager.clearSession()
-    }
-
-    private fun <T> parseError(response: Response<T>): ApiResult.Error {
-        return try {
-            val errorJson = response.errorBody()?.string()
-
-            if(errorJson.isNullOrBlank()) {
-                ApiResult.Error(
-                    message = "Server error: ${response.code()}",
-                    code = response.code().toString()
-                )
-            } else {
-                val errorResponse = Gson().fromJson(errorJson, GenericApplicationResponse::class.java)
-                ApiResult.Error(
-                    message = errorResponse.message ?: "Server error.",
-                    code = errorResponse.code ?: response.code().toString()
-                )
-            }
-        } catch (ex: Exception) {
-            ApiResult.Error(
-                message = "Server error: ${response.code()}",
-                code = response.code().toString()
-            )
-        }
     }
 }

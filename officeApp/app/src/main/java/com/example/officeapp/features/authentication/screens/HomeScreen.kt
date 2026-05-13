@@ -17,13 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.officeapp.features.authentication.AuthenticationViewModel
 import com.example.officeapp.features.reusableComponents.FormMessages
-import com.example.officeapp.models.UserRole
+import com.example.officeapp.models.user.UserRole
 
 @Composable
 fun HomeScreen(
     viewModel: AuthenticationViewModel,
     onLogout: () -> Unit,
-    onGoToAddUser: () -> Unit
+    onGoToAddUser: () -> Unit,
+    onGoToAddVehicle: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -55,6 +56,21 @@ fun HomeScreen(
                     .padding(top = 32.dp)
             ) {
                 Text("Add new user")
+            }
+        }
+
+        if (uiState.userRole in listOf(
+                UserRole.DISPATCHER.name,
+                UserRole.MANAGER.name,
+                UserRole.ADMIN.name
+        )) {
+            Button(
+                onClick = onGoToAddVehicle,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp)
+            ) {
+                Text("Add new vehicle")
             }
         }
 

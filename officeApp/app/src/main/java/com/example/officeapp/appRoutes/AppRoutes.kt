@@ -5,4 +5,5 @@ object AppRoutes {
     const val LOGIN_ROUTE = "login"
     const val HOME_ROUTE = "home"
     const val ADD_USER_ROUTE = "add_user"
+    const val ADD_VEHICLE_ROUTE = "add_vehicle"
 }

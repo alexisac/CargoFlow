@@ -1,4 +1,4 @@
-package com.example.officeapp.models
+package com.example.officeapp.models.user
 
 data class LoginUserRequest(
     val email: String,

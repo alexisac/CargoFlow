@@ -1,9 +1,9 @@
 package com.example.officeapp.features.authentication
 
-import com.example.officeapp.models.AddNewUserRequest
+import com.example.officeapp.models.user.AddNewUserRequest
 import com.example.officeapp.models.GenericApplicationResponse
-import com.example.officeapp.models.LoginUserRequest
-import com.example.officeapp.models.LoginUserResponse
+import com.example.officeapp.models.user.LoginUserRequest
+import com.example.officeapp.models.user.LoginUserResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Headers

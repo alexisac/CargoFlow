@@ -5,6 +5,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.officeapp.features.addVehicle.VehicleViewModel
+import com.example.officeapp.features.addVehicle.screens.AddNewVehicleScreen
 import com.example.officeapp.features.authentication.AuthenticationViewModel
 import com.example.officeapp.features.authentication.screens.AddNewUserScreen
 import com.example.officeapp.features.authentication.screens.AuthCheckScreen
@@ -16,6 +18,7 @@ fun AppNavHost() {
     val navController = rememberNavController()
 
     val authenticationViewModel: AuthenticationViewModel = hiltViewModel()
+    val vehicleViewModel: VehicleViewModel = hiltViewModel()
 
     NavHost(
         navController = navController,
@@ -72,6 +75,9 @@ fun AppNavHost() {
                 },
                 onGoToAddUser = {
                     navController.navigate(AppRoutes.ADD_USER_ROUTE)
+                },
+                onGoToAddVehicle = {
+                    navController.navigate(AppRoutes.ADD_VEHICLE_ROUTE)
                 }
             )
         }
@@ -79,6 +85,15 @@ fun AppNavHost() {
         composable(AppRoutes.ADD_USER_ROUTE) {
             AddNewUserScreen(
                 viewModel = authenticationViewModel,
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(AppRoutes.ADD_VEHICLE_ROUTE) {
+            AddNewVehicleScreen(
+                viewModel = vehicleViewModel,
                 onBack = {
                     navController.popBackStack()
                 }

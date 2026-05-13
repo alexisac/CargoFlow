@@ -1,5 +1,6 @@
 package com.example.officeapp.utils
 
+import com.example.officeapp.features.addVehicle.VehicleInterfaceAPI
 import com.example.officeapp.features.authentication.AuthenticationInterfaceAPI
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -63,5 +64,13 @@ object NetworkModule {
         retrofit: Retrofit
     ): AuthenticationInterfaceAPI {
         return retrofit.create(AuthenticationInterfaceAPI::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideVehicleInterfaceAPI(
+        retrofit: Retrofit
+    ): VehicleInterfaceAPI {
+        return retrofit.create(VehicleInterfaceAPI::class.java)
     }
 }

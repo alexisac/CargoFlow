@@ -1,9 +1,9 @@
 package com.example.officeapp.features.authentication
 
-import com.example.officeapp.models.AddNewUserRequest
+import com.example.officeapp.models.user.AddNewUserRequest
 import com.example.officeapp.models.GenericApplicationResponse
-import com.example.officeapp.models.LoginUserResponse
-import com.example.officeapp.models.UserRole
+import com.example.officeapp.models.user.LoginUserResponse
+import com.example.officeapp.models.user.UserRole
 import com.example.officeapp.utils.ApiResult
 import com.example.officeapp.utils.JWTDecoder
 import com.example.officeapp.utils.PasswordHasher
@@ -12,6 +12,7 @@ import javax.inject.Inject
 class AuthenticationService @Inject constructor(
     private val authenticationRepository: AuthenticationRepository
 ) {
+    // TO DO: normalize parameters
     suspend fun loginUser(email: String, password: String): ApiResult<LoginUserResponse> {
         if(email.isBlank())
             return ApiResult.Error("Email is required")
@@ -30,6 +31,7 @@ class AuthenticationService @Inject constructor(
         )
     }
 
+    // TO DO: Normalize parameters
     suspend fun addNewUser(
         firstName: String,
         lastName: String,
