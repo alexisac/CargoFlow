@@ -3,7 +3,7 @@ package com.example.backendcargoflow.controller;
 import com.example.backendcargoflow.common.LogMessage;
 import com.example.backendcargoflow.controller.user.api.UsersApi;
 import com.example.backendcargoflow.controller.user.models.AddNewUserRequestDto;
-import com.example.backendcargoflow.controller.user.models.GenericApplicationResponseDto;
+import com.example.backendcargoflow.controller.common.models.GenericApplicationResponseDto;
 import com.example.backendcargoflow.controller.user.models.LoginUserRequestDto;
 import com.example.backendcargoflow.controller.user.models.LoginUserResponseDto;
 import com.example.backendcargoflow.service.UserService;

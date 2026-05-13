@@ -1,3 +1,9 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: User management
+  description: Common models
+paths: {}
 components:
   schemas:
     GenericApplicationResponse:
@@ -14,7 +20,7 @@ components:
         code:
           type: string
           description: Application-specific result code
-          example: 201 - USER_CREATED
+          example: 201 - ENTITY_CREATED
         message:
           type: string
           description: Human-readable result message

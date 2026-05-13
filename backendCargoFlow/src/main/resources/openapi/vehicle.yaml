@@ -1,0 +1,121 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: Vehicle management
+  description: API related to management of Vehicle
+paths:
+  /vehicle/create:
+    post:
+      tags:
+        - Vehicles
+      summary: Add a new vehicle by dispatcher or higher rank
+      operationId: addNewVehicle
+      requestBody:
+        description: Vehicle data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddNewVehicleRequest'
+        required: true
+      responses:
+        '201':
+          description: Vehicle was created successfully
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '409':
+          description: Vehicle already exists
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+
+components:
+  schemas:
+    VehicleType:
+      type: string
+      enum:
+        - TRUCK
+        - VAN
+        - TRACTOR_UNIT
+        - SEMI_TRAILER
+        - BOX_TRUCK
+        - REFRIGERATED_TRUCK
+        - TANKER
+      example: TRUCK
+    VehicleStatus:
+      type: string
+      enum:
+        - AVAILABLE
+        - IN_USE
+        - NEED_MAINTENANCE
+        - INACTIVE
+      example: AVAILABLE
+    AddNewVehicleRequest:
+      type: object
+      required:
+        - licencePlate
+        - vin
+        - brand
+        - model
+        - manufactureYear
+        - vehicleType
+        - maxWeight
+        - maxVolume
+        - vehicleStatus
+      properties:
+        licencePlate:
+          type: string
+          pattern: '^[A-Z]{1,2}-[0-9]{2,3}-[A-Z]{3}$'
+          example: B-11-AAA
+        vin:
+          type: string
+          minLength: 17
+          maxLength: 17
+          example: 1HGCM82633A004352
+        brand:
+          type: string
+          minLength: 2
+          maxLength: 50
+          example: VW
+        model:
+          type: string
+          minLength: 3
+          maxLength: 50
+          example: Golf
+        manufactureYear:
+          type: integer
+          minimum: 1900
+          description: Must not be greater than the current year
+          example: 2020
+        vehicleType:
+          $ref: '#/components/schemas/VehicleType'
+        maxWeight:
+          type: integer
+          minimum: 1
+          maximum: 24000
+          example: 23500
+        maxVolume:
+          type: integer
+          minimum: 1
+          maximum: 90
+          example: 65
+        vehicleStatus:
+          $ref: '#/components/schemas/VehicleStatus'
+        additionalInfo:
+          type: string
+          maxLength: 250
+          example: This truck has a flat front-right tyre

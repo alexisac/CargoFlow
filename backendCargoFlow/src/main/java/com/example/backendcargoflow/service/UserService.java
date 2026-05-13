@@ -5,7 +5,7 @@ import com.example.backendcargoflow.common.security.JWTService;
 import com.example.backendcargoflow.common.exceptions.ConflictException;
 import com.example.backendcargoflow.common.exceptions.UnauthorizedException;
 import com.example.backendcargoflow.controller.user.models.AddNewUserRequestDto;
-import com.example.backendcargoflow.controller.user.models.GenericApplicationResponseDto;
+import com.example.backendcargoflow.controller.common.models.GenericApplicationResponseDto;
 import com.example.backendcargoflow.controller.user.models.LoginUserRequestDto;
 import com.example.backendcargoflow.controller.user.models.LoginUserResponseDto;
 import com.example.backendcargoflow.domain.user.entity.User;

@@ -1,6 +1,6 @@
 package com.example.backendcargoflow.common.exceptions;
 
-import com.example.backendcargoflow.controller.user.models.GenericApplicationResponseDto;
+import com.example.backendcargoflow.controller.common.models.GenericApplicationResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
