@@ -1,0 +1,3 @@
+ALTER TABLE vehicles
+    ALTER COLUMN max_weight DROP NOT NULL,
+    ALTER COLUMN max_volume DROP NOT NULL;

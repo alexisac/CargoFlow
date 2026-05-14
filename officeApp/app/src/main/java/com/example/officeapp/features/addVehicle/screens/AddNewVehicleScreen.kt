@@ -27,8 +27,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.officeapp.features.addVehicle.VehicleViewModel
+import com.example.officeapp.features.addVehicle.capacityRequirement
 import com.example.officeapp.features.reusableComponents.FormMessages
 import com.example.officeapp.features.reusableComponents.LoadingButton
+import com.example.officeapp.models.vehicle.VehicleCapacityRequirement
 import com.example.officeapp.models.vehicle.VehicleStatus
 import com.example.officeapp.models.vehicle.VehicleType
 
@@ -40,19 +42,12 @@ fun AddNewVehicleScreen (
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(uiState.successMessage) {
-        if (uiState.successMessage != null) {
-            viewModel.clearMessage()
-            onBack()
-        }
-    }
-
     var licencePlate by remember { mutableStateOf("") }
     var vin by remember { mutableStateOf("") }
     var brand by remember { mutableStateOf("") }
     var model by remember { mutableStateOf("") }
     var manufactureYear by remember { mutableStateOf("") }
-    var vehicleType by remember { mutableStateOf(VehicleType.TRUCK) }
+    var vehicleType by remember { mutableStateOf(VehicleType.TRACTOR_UNIT) }
     var maxWeight by remember { mutableStateOf("") }
     var maxVolume by remember { mutableStateOf("") }
     var vehicleStatus by remember { mutableStateOf(VehicleStatus.AVAILABLE) }
@@ -60,6 +55,26 @@ fun AddNewVehicleScreen (
 
     var expendedVehicleType by remember { mutableStateOf(false) }
     var expendedVehicleStatus by remember { mutableStateOf(false) }
+
+    val capacityRequirement = vehicleType.capacityRequirement()
+    val maxWeightEnabled = capacityRequirement == VehicleCapacityRequirement.WEIGHT_AND_VOLUME
+    val maxVolumeEnabled = capacityRequirement == VehicleCapacityRequirement.WEIGHT_AND_VOLUME ||
+                           capacityRequirement == VehicleCapacityRequirement.ONLY_VOLUME
+
+    LaunchedEffect(uiState.successMessage) {
+        if (uiState.successMessage != null) {
+            viewModel.clearMessage()
+            onBack()
+        }
+    }
+
+    LaunchedEffect(vehicleType) {
+        if (!maxWeightEnabled)
+            maxWeight = ""
+
+        if (!maxVolumeEnabled)
+            maxVolume = ""
+    }
 
     Column(
         modifier = Modifier
@@ -78,7 +93,7 @@ fun AddNewVehicleScreen (
             value = licencePlate,
             onValueChange = { licencePlate = it.uppercase() },
             label = { Text("Licence plate") },
-            placeholder = { Text("B-111-AAA") },
+            supportingText = { Text("Format example: B-111-AAA or VN-123-ABC") },
             modifier = Modifier
                 .fillMaxWidth(),
             singleLine = true
@@ -168,6 +183,15 @@ fun AddNewVehicleScreen (
             value = maxWeight,
             onValueChange = { maxWeight = it },
             label = { Text("Maximum weight") },
+            supportingText = {
+                Text(
+                    if (maxWeightEnabled)
+                        "Required for this vehicle type"
+                    else
+                        "Not applicable for this vehicle type"
+                )
+            },
+            enabled = maxWeightEnabled,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 12.dp),
@@ -181,6 +205,15 @@ fun AddNewVehicleScreen (
             value = maxVolume,
             onValueChange = { maxVolume = it },
             label = { Text("Maximum volume") },
+            supportingText = {
+                Text(
+                    if (maxVolumeEnabled)
+                        "Required for this vehicle type"
+                    else
+                        "Not applicable for this vehicle type"
+                )
+            },
+            enabled = maxVolumeEnabled,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 12.dp),
@@ -231,7 +264,7 @@ fun AddNewVehicleScreen (
             value = additionalInfo,
             onValueChange = { additionalInfo = it },
             label = { Text("Additional info") },
-            placeholder = { Text("Optional details about the vehicle") },
+            supportingText = { Text("Optional details about the vehicle") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 12.dp),

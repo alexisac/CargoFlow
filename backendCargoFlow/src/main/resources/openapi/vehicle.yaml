@@ -48,13 +48,14 @@ components:
     VehicleType:
       type: string
       enum:
-        - TRUCK
         - VAN
-        - TRACTOR_UNIT
-        - SEMI_TRAILER
         - BOX_TRUCK
         - REFRIGERATED_TRUCK
-        - TANKER
+        - TANKER_TRUCK
+        - TRACTOR_UNIT
+        - SEMI_TRAILER
+        - REFRIGERATED_TRAILER
+        - TANKER_TRAILER
       example: TRUCK
     VehicleStatus:
       type: string
@@ -73,8 +74,6 @@ components:
         - model
         - manufactureYear
         - vehicleType
-        - maxWeight
-        - maxVolume
         - vehicleStatus
       properties:
         licencePlate:
@@ -107,11 +106,15 @@ components:
           type: integer
           minimum: 1
           maximum: 24000
+          nullable: true
+          description: Required for VAN, BOX_TRUCK, REFRIGERATED_TRUCK, SEMI_TRAILER and REFRIGERATED_TRAILER. Must be empty for TANKER_TRUCK, TANKER_TRAILER and TRACTOR_UNIT
           example: 23500
         maxVolume:
           type: integer
           minimum: 1
           maximum: 90
+          nullable: true
+          description: Required for all cargo vehicles and trailers except TRACTOR_UNIT. Must be empty for TRACTOR_UNIT
           example: 65
         vehicleStatus:
           $ref: '#/components/schemas/VehicleStatus'

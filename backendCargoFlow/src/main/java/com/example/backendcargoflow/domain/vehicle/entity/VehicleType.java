@@ -1,11 +1,12 @@
 package com.example.backendcargoflow.domain.vehicle.entity;
 
 public enum VehicleType{
-    TRUCK,
     VAN,
-    TRACTOR_UNIT,
-    SEMI_TRAILER,
     BOX_TRUCK,
     REFRIGERATED_TRUCK,
-    TANKER
+    TANKER_TRUCK,
+    TRACTOR_UNIT,
+    SEMI_TRAILER,
+    REFRIGERATED_TRAILER,
+    TANKER_TRAILER
 }

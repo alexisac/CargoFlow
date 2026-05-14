@@ -9,6 +9,7 @@ import com.example.backendcargoflow.domain.vehicle.entity.VehicleType;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 @Mapper(
         componentModel = "spring",
@@ -25,5 +26,9 @@ public interface VehicleMapper {
 
     default VehicleStatus mapStatus(VehicleStatusDto statusDto) {
         return statusDto == null ? null : VehicleStatus.valueOf(statusDto.name());
+    }
+
+    default <T> T map(JsonNullable<T> value) {
+        return value == null || !value.isPresent() ? null : value.get();
     }
 }

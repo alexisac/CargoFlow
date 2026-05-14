@@ -38,10 +38,10 @@ public class Vehicle {
     @Column(name = "vehicle_type", nullable = false)
     private VehicleType vehicleType;
 
-    @Column(name = "max_weight", nullable = false)
+    @Column(name = "max_weight")
     private Integer maxWeight;
 
-    @Column(name = "max_volume", nullable = false)
+    @Column(name = "max_volume")
     private Integer maxVolume;
 
     @Enumerated(EnumType.STRING)
