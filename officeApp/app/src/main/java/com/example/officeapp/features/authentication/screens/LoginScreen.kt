@@ -78,7 +78,8 @@ fun LoginScreen(
             errorMessage = uiState.errorMessage,
             successMessage = uiState.successMessage,
             modifier = Modifier
-                .padding(top = 16.dp)
+                .padding(top = 16.dp),
+            onMessageShown = { viewModel.clearMessages() }
         )
 
         LoadingButton(
