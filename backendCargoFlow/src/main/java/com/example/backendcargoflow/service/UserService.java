@@ -34,7 +34,10 @@ public class UserService {
         }
         User newUser = userMapper.mapAddNewUserRequestDtoToUser(addNewUserRequestDto);
         userRepository.save(newUser);
-        return buildSuccessResponse();
+        return GenericApplicationResponseFactory.success(
+                "201 - USER_CREATED",
+                "User was created successfully"
+        );
     }
 
     public LoginUserResponseDto loginUser(LoginUserRequestDto loginUserRequestDto) {
@@ -49,14 +52,6 @@ public class UserService {
         LoginUserResponseDto response = new LoginUserResponseDto();
         response.setAccessToken(accessToken);
         response.setTokenType("Bearer");
-        return response;
-    }
-
-    private GenericApplicationResponseDto buildSuccessResponse(){
-        GenericApplicationResponseDto response = new GenericApplicationResponseDto();
-        response.setSuccess(true);
-        response.setCode("201 - USER_CREATED");
-        response.setMessage("User was created successfully");
         return response;
     }
 }

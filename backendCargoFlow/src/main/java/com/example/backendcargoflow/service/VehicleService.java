@@ -35,15 +35,10 @@ public class VehicleService {
 
         Vehicle newVehicle = vehicleMapper.mapAddNewVehicleRequestDtoToVehicle(addNewVehicleRequestDto);
         vehicleRepository.save(newVehicle);
-        return buildSuccessResponse();
-    }
-
-    private GenericApplicationResponseDto buildSuccessResponse(){
-        GenericApplicationResponseDto response = new GenericApplicationResponseDto();
-        response.setSuccess(true);
-        response.setCode("201 - VEHICLE_CREATED");
-        response.setMessage("Vehicle was created successfully");
-        return response;
+        return GenericApplicationResponseFactory.success(
+                "201 - VEHICLE_CREATED",
+                "Vehicle was created successfully"
+        );
     }
 
     private void validateVehicleCapacity(AddNewVehicleRequestDto addNewVehicleRequestDto) {

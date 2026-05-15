@@ -25,14 +25,9 @@ public class TripService {
         trip.setTripStatus(TripStatus.PLANNED);
         trip.setCreatedByUserId(currentUserId);
         tripRepository.save(trip);
-        return buildSuccessResponse();
-    }
-
-    private GenericApplicationResponseDto buildSuccessResponse(){
-        GenericApplicationResponseDto response = new GenericApplicationResponseDto();
-        response.setSuccess(true);
-        response.setCode("201 - TRIP_CREATED");
-        response.setMessage("Trip was created successfully");
-        return response;
+        return GenericApplicationResponseFactory.success(
+                "201 - TRIP_CREATED",
+                "Trip was created successfully"
+        );
     }
 }
