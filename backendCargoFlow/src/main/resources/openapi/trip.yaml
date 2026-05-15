@@ -1,0 +1,183 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: Trip management
+  description: API related to management of Trip
+paths:
+  /trip/create:
+    post:
+      tags:
+        - Trips
+      summary: Add a new trip by dispatcher or higher rank
+      operationId: addNewTrip
+      requestBody:
+        description: Trip data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddNewTripRequest'
+        required: true
+      responses:
+        '201':
+          description: Trip was created successfully
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+
+components:
+  schemas:
+    TripStatus:
+      type: string
+      enum:
+        - PLANNED
+        - ASSIGNED
+        - IN_PROGRESS
+        - COMPLETED
+        - CANCELED
+      example: PLANNED
+    CargoType:
+      type: string
+      enum:
+        - GENERAL
+        - REFRIGERATED
+        - DANGEROUS
+        - FRAGILE
+    Currency:
+      type: string
+      enum:
+        - EUR
+        - RON
+        - USD
+        - GBP
+        - HUF
+        - PLN
+        - BGN
+        - CZK
+        - CHF
+        - TRY
+      example: EUR
+    Address:
+      type: object
+      required:
+        - country
+        - administrativeArea
+        - city
+        - streetName
+        - streetNumber
+        - postalCode
+      properties:
+        country:
+          type: string
+          minLength: 2
+          maxLength: 50
+          example: Romania
+        administrativeArea:
+          type: string
+          minLength: 2
+          maxLength: 50
+          example: Cluj
+        city:
+          type: string
+          minLength: 2
+          maxLength: 50
+          example: Cluj-Napoca
+        streetName:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: Stefan cel Mare
+        streetNumber:
+          type: string
+          minLength: 1
+          maxLength: 15
+          example: 52A
+        postalCode:
+          type: string
+          minLength: 2
+          maxLength: 15
+          example: 123456
+        additionalDetails:
+          type: string
+          maxLength: 250
+          nullable: true
+          example: Delivery street is one-way. Access only from the main road.
+    AddNewTripRequest:
+      type: object
+      required:
+        - pickupAddress
+        - deliveryAddress
+        - pickupDateTime
+        - pickupTimeZone
+        - deliveryDateTime
+        - deliveryTimeZone
+        - cargoType
+        - price
+        - currency
+      properties:
+        pickupAddress:
+          $ref: '#/components/schemas/Address'
+        deliveryAddress:
+          $ref: '#/components/schemas/Address'
+        pickupDateTime:
+          type: string
+          format: local-date-time
+          example: 2026-05-15T12:00:00
+        pickupTimeZone:
+          type: string
+          minLength: 3
+          maxLength: 50
+          example: Europe/Bucharest
+        deliveryDateTime:
+          type: string
+          format: local-date-time
+          example: 2026-05-16T19:00:00
+        deliveryTimeZone:
+          type: string
+          minLength: 3
+          maxLength: 50
+          example: Europe/Berlin
+        cargoDescription:
+          type: string
+          minLength: 3
+          maxLength: 250
+          nullable: true
+          example: 10 pallets of electronics
+        cargoWeight:
+          type: integer
+          minimum: 1
+          maximum: 24000
+          nullable: true
+          example: 12345
+        cargoVolume:
+          type: integer
+          minimum: 1
+          maximum: 90
+          nullable: true
+          example: 65
+        cargoType:
+          $ref: '#/components/schemas/CargoType'
+        price:
+          type: number
+          format: double
+          minimum: 0
+          example: 1200.5
+        currency:
+          $ref: '#/components/schemas/Currency'
+        additionalInfo:
+          type: string
+          maxLength: 250
+          nullable: true
+          example: Driver must call 30 minutes before arrival
