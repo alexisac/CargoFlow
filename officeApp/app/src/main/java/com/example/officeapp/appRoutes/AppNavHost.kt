@@ -2,9 +2,12 @@ package com.example.officeapp.appRoutes
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.officeapp.features.addTrip.TripViewModel
+import com.example.officeapp.features.addTrip.screens.AddNewTripScreen
 import com.example.officeapp.features.addVehicle.VehicleViewModel
 import com.example.officeapp.features.addVehicle.screens.AddNewVehicleScreen
 import com.example.officeapp.features.authentication.AuthenticationViewModel
@@ -19,6 +22,7 @@ fun AppNavHost() {
 
     val authenticationViewModel: AuthenticationViewModel = hiltViewModel()
     val vehicleViewModel: VehicleViewModel = hiltViewModel()
+    val tripViewModel: TripViewModel = hiltViewModel()
 
     NavHost(
         navController = navController,
@@ -78,6 +82,9 @@ fun AppNavHost() {
                 },
                 onGoToAddVehicle = {
                     navController.navigate(AppRoutes.ADD_VEHICLE_ROUTE)
+                },
+                onGoToAddTrip = {
+                    navController.navigate(AppRoutes.ADD_TRIP_ROUTE)
                 }
             )
         }
@@ -94,6 +101,15 @@ fun AppNavHost() {
         composable(AppRoutes.ADD_VEHICLE_ROUTE) {
             AddNewVehicleScreen(
                 viewModel = vehicleViewModel,
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(AppRoutes.ADD_TRIP_ROUTE) {
+            AddNewTripScreen(
+                viewModel = tripViewModel,
                 onBack = {
                     navController.popBackStack()
                 }

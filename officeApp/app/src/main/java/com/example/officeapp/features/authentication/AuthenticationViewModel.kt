@@ -3,7 +3,7 @@ package com.example.officeapp.features.authentication
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.officeapp.models.user.UserRole
-import com.example.officeapp.models.uiStates.AuthenticationUiState
+import com.example.officeapp.models.user.AuthenticationUiState
 import com.example.officeapp.utils.ApiResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

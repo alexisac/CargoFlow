@@ -1,5 +1,6 @@
 package com.example.officeapp.utils
 
+import com.example.officeapp.features.addTrip.TripInterfaceAPI
 import com.example.officeapp.features.addVehicle.VehicleInterfaceAPI
 import com.example.officeapp.features.authentication.AuthenticationInterfaceAPI
 import com.google.gson.Gson
@@ -17,7 +18,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private val BASE_URL = "http://192.168.1.2:8080"
+    private val BASE_URL = "http://<YOUR_IP>:8080"
 
     @Provides
     @Singleton
@@ -60,17 +61,19 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideAuthenticationInterfaceAPI(
-        retrofit: Retrofit
-    ): AuthenticationInterfaceAPI {
+    fun provideAuthenticationInterfaceAPI(retrofit: Retrofit): AuthenticationInterfaceAPI {
         return retrofit.create(AuthenticationInterfaceAPI::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideVehicleInterfaceAPI(
-        retrofit: Retrofit
-    ): VehicleInterfaceAPI {
+    fun provideVehicleInterfaceAPI(retrofit: Retrofit): VehicleInterfaceAPI {
         return retrofit.create(VehicleInterfaceAPI::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTripInterfaceAPI(retrofit: Retrofit): TripInterfaceAPI {
+        return retrofit.create(TripInterfaceAPI::class.java)
     }
 }

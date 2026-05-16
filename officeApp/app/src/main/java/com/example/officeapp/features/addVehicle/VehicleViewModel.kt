@@ -2,7 +2,7 @@ package com.example.officeapp.features.addVehicle
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.officeapp.models.uiStates.VehicleUiState
+import com.example.officeapp.models.vehicle.VehicleUiState
 import com.example.officeapp.models.vehicle.VehicleStatus
 import com.example.officeapp.models.vehicle.VehicleType
 import com.example.officeapp.utils.ApiResult
@@ -56,7 +56,7 @@ class VehicleViewModel @Inject constructor(
                 is ApiResult.Success -> {
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
-                        successMessage = result.data.message ?: "Vehiclewas created with success."
+                        successMessage = result.data.message ?: "Vehicle was created with success."
                     )
                 }
 

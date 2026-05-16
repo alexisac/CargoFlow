@@ -24,7 +24,8 @@ fun HomeScreen(
     viewModel: AuthenticationViewModel,
     onLogout: () -> Unit,
     onGoToAddUser: () -> Unit,
-    onGoToAddVehicle: () -> Unit
+    onGoToAddVehicle: () -> Unit,
+    onGoToAddTrip: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -72,6 +73,21 @@ fun HomeScreen(
                     .padding(top = 12.dp)
             ) {
                 Text("Add new vehicle")
+            }
+        }
+
+        if (uiState.userRole in listOf(
+                UserRole.DISPATCHER.name,
+                UserRole.MANAGER.name,
+                UserRole.ADMIN.name
+            )) {
+            Button(
+                onClick = onGoToAddTrip,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp)
+            ) {
+                Text("Add new trip")
             }
         }
 

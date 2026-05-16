@@ -1,4 +1,4 @@
-package com.example.officeapp.models.uiStates
+package com.example.officeapp.models.user
 
 data class AuthenticationUiState(
     val isLoading: Boolean = false,

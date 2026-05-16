@@ -1,4 +1,4 @@
-package com.example.officeapp.models.uiStates
+package com.example.officeapp.models.vehicle
 
 data class VehicleUiState (
     val isLoading: Boolean = false,
