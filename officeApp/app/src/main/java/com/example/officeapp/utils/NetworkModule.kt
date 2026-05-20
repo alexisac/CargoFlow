@@ -1,8 +1,8 @@
 package com.example.officeapp.utils
 
-import com.example.officeapp.features.addTrip.TripInterfaceAPI
-import com.example.officeapp.features.addVehicle.VehicleInterfaceAPI
-import com.example.officeapp.features.authentication.AuthenticationInterfaceAPI
+import com.example.officeapp.interfacesAPI.TripInterfaceAPI
+import com.example.officeapp.interfacesAPI.VehicleInterfaceAPI
+import com.example.officeapp.interfacesAPI.AuthenticationInterfaceAPI
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module

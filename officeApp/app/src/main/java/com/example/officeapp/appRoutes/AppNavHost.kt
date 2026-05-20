@@ -2,19 +2,18 @@ package com.example.officeapp.appRoutes
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.officeapp.features.addTrip.TripViewModel
-import com.example.officeapp.features.addTrip.screens.AddNewTripScreen
-import com.example.officeapp.features.addVehicle.VehicleViewModel
-import com.example.officeapp.features.addVehicle.screens.AddNewVehicleScreen
-import com.example.officeapp.features.authentication.AuthenticationViewModel
-import com.example.officeapp.features.authentication.screens.AddNewUserScreen
-import com.example.officeapp.features.authentication.screens.AuthCheckScreen
-import com.example.officeapp.features.authentication.screens.HomeScreen
-import com.example.officeapp.features.authentication.screens.LoginScreen
+import com.example.officeapp.viewModels.TripViewModel
+import com.example.officeapp.screens.addTrip.AddNewTripScreen
+import com.example.officeapp.viewModels.VehicleViewModel
+import com.example.officeapp.screens.addVehicle.AddNewVehicleScreen
+import com.example.officeapp.viewModels.AuthenticationViewModel
+import com.example.officeapp.screens.authentication.AddNewUserScreen
+import com.example.officeapp.screens.authentication.AuthCheckScreen
+import com.example.officeapp.screens.authentication.HomeScreen
+import com.example.officeapp.screens.authentication.LoginScreen
 
 @Composable
 fun AppNavHost() {
