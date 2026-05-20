@@ -37,6 +37,39 @@ paths:
               schema:
                 $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
 
+  /trip/search:
+    post:
+      tags:
+        - Trips
+      summary: Search trips with filters and pagination
+      operationId: searchTrips
+      requestBody:
+        description: Trip filters and pagination data
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TripSearchRequest"
+        required: true
+      responses:
+        '200':
+          description: Trips were retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripPageResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+
 components:
   schemas:
     TripStatus:
@@ -181,3 +214,149 @@ components:
           maxLength: 250
           nullable: true
           example: Driver must call 30 minutes before arrival
+    TripSearchRequest:
+      type: object
+      required:
+        - pageNumber
+        - pageSize
+      properties:
+        tripStatusList:
+          type: array
+          description: If null or empty, trips are not filtered by status
+          items:
+            $ref: '#/components/schemas/TripStatus'
+          example:
+            - PLANNED
+            - ASSIGNED
+        pickupCountries:
+          type: array
+          description: If null or empty, trips are not filtered by pickup country
+          items:
+            type: string
+            minLength: 2
+            maxLength: 50
+          example:
+            - Romania
+            - Germany
+        pickupCities:
+          type: array
+          description: If null or empty, trips are not filtered by pickup city
+          items:
+            type: string
+            minLength: 2
+            maxLength: 50
+          example:
+            - Cluj-Napoca
+            - Bucharest
+        deliveryCountries:
+          type: array
+          description: If null or empty, trips are not filtered by delivery country
+          items:
+            type: string
+            minLength: 2
+            maxLength: 50
+          example:
+            - Germany
+            - Austria
+        deliveryCities:
+          type: array
+          description: If null or empty, trips are not filtered by delivery city
+          items:
+            type: string
+            minLength: 2
+            maxLength: 50
+          example:
+            - Berlin
+            - Vienna
+        pickupDateTimeFrom:
+          type: string
+          format: local-date-time
+          example: 2026-05-15T00:00:00
+        pickupDateTimeTo:
+          type: string
+          format: local-date-time
+          example: 2026-05-20T23:59:59
+        deliveryDateTimeFrom:
+          type: string
+          format: local-date-time
+          example: 2026-05-16T00:00:00
+        deliveryDateTimeTo:
+          type: string
+          format: local-date-time
+          example: 2026-05-25T23:59:59
+        pageNumber:
+          type: integer
+          minimum: 0
+          example: 0
+        pageSize:
+          type: integer
+          minimum: 1
+          maximum: 50
+          example: 20
+    TripSummary:
+      type: object
+      required:
+        - id
+        - tripStatus
+        - pickupCountry
+        - pickupCity
+        - deliveryCountry
+        - deliveryCity
+        - pickupDateTime
+        - pickupTimeZone
+        - deliveryDateTime
+        - deliveryTimeZone
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 15
+        tripStatus:
+          $ref: '#/components/schemas/TripStatus'
+        pickupCountry:
+          type: string
+          example: Romania
+        pickupCity:
+          type: string
+          example: Cluj-Napoca
+        deliveryCountry:
+          type: string
+          example: Germany
+        deliveryCity:
+          type: string
+          example: Berlin
+        pickupDateTime:
+          type: string
+          format: local-date-time
+          example: 2026-05-15T12:00:00
+        pickupTimeZone:
+          type: string
+          example: Europe/Bucharest
+        deliveryDateTime:
+          type: string
+          format: local-date-time
+          example: 2026-05-16T19:00:00
+        deliveryTimeZone:
+          type: string
+          example: Europe/Berlin
+    TripPageResponse:
+      type: object
+      required:
+        - trips
+        - pageNumber
+        - pageSize
+        - lastPage
+      properties:
+        trips:
+          type: array
+          items:
+            $ref: '#/components/schemas/TripSummary'
+        pageNumber:
+          type: integer
+          example: 0
+        pageSize:
+          type: integer
+          example: 20
+        lastPage:
+          type: boolean
+          example: false

@@ -3,13 +3,24 @@ package com.example.backendcargoflow.service;
 import com.example.backendcargoflow.common.security.CurrentUserService;
 import com.example.backendcargoflow.controller.common.models.GenericApplicationResponseDto;
 import com.example.backendcargoflow.controller.trip.models.AddNewTripRequestDto;
+import com.example.backendcargoflow.controller.trip.models.TripPageResponseDto;
+import com.example.backendcargoflow.controller.trip.models.TripSearchRequestDto;
 import com.example.backendcargoflow.domain.trip.entity.Trip;
 import com.example.backendcargoflow.domain.trip.entity.TripStatus;
 import com.example.backendcargoflow.domain.trip.mapper.TripMapper;
 import com.example.backendcargoflow.domain.trip.repository.TripRepository;
+import com.example.backendcargoflow.domain.trip.repository.TripSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -29,5 +40,39 @@ public class TripService {
                 "201 - TRIP_CREATED",
                 "Trip was created successfully"
         );
+    }
+
+    @PreAuthorize("hasAnyRole('DISPATCHER', 'MANAGER', 'ADMIN')")
+    public TripPageResponseDto searchTrips(TripSearchRequestDto tripSearchRequestDto) {
+        List<TripStatus> tripStatusList = tripMapper.mapTripStatusList(tripSearchRequestDto.getTripStatusList());
+
+        Specification<Trip> specification = Specification
+                .where(TripSpecification.hasTripStatusList(tripStatusList))
+                .and(TripSpecification.hasPickupCountries(tripSearchRequestDto.getPickupCountries()))
+                .and(TripSpecification.hasPickupCities(tripSearchRequestDto.getPickupCities()))
+                .and(TripSpecification.hasDeliveryCountries(tripSearchRequestDto.getDeliveryCountries()))
+                .and(TripSpecification.hasDeliveryCities(tripSearchRequestDto.getDeliveryCities()))
+                .and(TripSpecification.pickupDateTimeFrom(parseDateTime(tripSearchRequestDto.getPickupDateTimeFrom())))
+                .and(TripSpecification.pickupDateTimeTo(parseDateTime(tripSearchRequestDto.getPickupDateTimeTo())))
+                .and(TripSpecification.deliveryDateTimeFrom(parseDateTime(tripSearchRequestDto.getDeliveryDateTimeFrom())))
+                .and(TripSpecification.deliveryDateTimeTo(parseDateTime(tripSearchRequestDto.getDeliveryDateTimeTo())));
+
+        Pageable pageable = PageRequest.of(
+                tripSearchRequestDto.getPageNumber(),
+                tripSearchRequestDto.getPageSize()
+        );
+        Page<Trip> tripPage = tripRepository.findAll(specification, pageable);
+
+        TripPageResponseDto response = new TripPageResponseDto();
+        response.setTrips(tripMapper.mapTripsToTripSummaryDtos(tripPage.getContent()));
+        response.setPageNumber(tripPage.getNumber());
+        response.setPageSize(tripPage.getSize());
+        response.setLastPage(tripPage.isLast());
+
+        return response;
+    }
+
+    private LocalDateTime parseDateTime(String value) {
+        return value == null || value.isBlank() ? null : LocalDateTime.parse(value);
     }
 }

@@ -10,6 +10,7 @@ public class LogMessage {
             " email = %s, \n" +
             " password = %s";
 
+
     public static final String ADD_NEW_VEHICLE = "ADD_NEW_VEHICLE operation was invoked with: \n" +
             " licencePlate = %s, \n" +
             " VIN = %s, \n" +
@@ -21,6 +22,8 @@ public class LogMessage {
             " maxVolume = %s, \n" +
             " status = %s, \n" +
             " additionalInfo = %s";
+
+
     public static final String ADD_NEW_TRIP = "ADD_NEW_TRIP operation was invoked with: \n" +
             "PICKUP ADDRESS: \n " +
             "country = %s, \n" +
@@ -51,4 +54,16 @@ public class LogMessage {
             "price = %s, \n" +
             "currency = %s, \n" +
             "additionalInfo = %s";
+    public static final String SEARCH_TRIPS = "SEARCH_TRIPS operation was invoked with: \n" +
+            "tripStatuses = %s, \n" +
+            "pickupCountries = %s, \n" +
+            "pickupCities = %s, \n" +
+            "deliveryCountries = %s, \n" +
+            "deliveryCities = %s, \n" +
+            "pickupDateTimeFrom = %s, \n" +
+            "pickupDateTimeTo = %s, \n" +
+            "deliveryDateTimeFrom = %s, \n" +
+            "deliveryDateTimeTo = %s, \n" +
+            "pageNumber = %d, \n" +
+            "pageSize = %d";
 }

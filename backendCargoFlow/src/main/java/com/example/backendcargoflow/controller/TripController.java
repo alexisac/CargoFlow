@@ -4,6 +4,8 @@ import com.example.backendcargoflow.common.LogMessage;
 import com.example.backendcargoflow.controller.common.models.GenericApplicationResponseDto;
 import com.example.backendcargoflow.controller.trip.api.TripsApi;
 import com.example.backendcargoflow.controller.trip.models.AddNewTripRequestDto;
+import com.example.backendcargoflow.controller.trip.models.TripPageResponseDto;
+import com.example.backendcargoflow.controller.trip.models.TripSearchRequestDto;
 import com.example.backendcargoflow.service.TripService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,5 +48,23 @@ public class TripController implements TripsApi {
                 addNewTripRequestDto.getAdditionalInfo()
         ));
         return tripService.addNewTrip(addNewTripRequestDto);
+    }
+
+    @Override
+    public TripPageResponseDto searchTrips(@RequestBody TripSearchRequestDto tripSearchRequestDto) {
+        log.info(String.format(LogMessage.SEARCH_TRIPS,
+                tripSearchRequestDto.getTripStatusList(),
+                tripSearchRequestDto.getPickupCountries(),
+                tripSearchRequestDto.getPickupCities(),
+                tripSearchRequestDto.getDeliveryCountries(),
+                tripSearchRequestDto.getDeliveryCities(),
+                tripSearchRequestDto.getPickupDateTimeFrom(),
+                tripSearchRequestDto.getPickupDateTimeTo(),
+                tripSearchRequestDto.getDeliveryDateTimeFrom(),
+                tripSearchRequestDto.getDeliveryDateTimeTo(),
+                tripSearchRequestDto.getPageNumber(),
+                tripSearchRequestDto.getPageSize()
+        ));
+        return tripService.searchTrips(tripSearchRequestDto);
     }
 }

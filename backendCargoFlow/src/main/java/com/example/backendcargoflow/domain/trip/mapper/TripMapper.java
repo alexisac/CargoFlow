@@ -1,18 +1,13 @@
 package com.example.backendcargoflow.domain.trip.mapper;
 
-import com.example.backendcargoflow.controller.trip.models.AddNewTripRequestDto;
-import com.example.backendcargoflow.controller.trip.models.AddressDto;
-import com.example.backendcargoflow.controller.trip.models.CargoTypeDto;
-import com.example.backendcargoflow.controller.trip.models.CurrencyDto;
-import com.example.backendcargoflow.domain.trip.entity.Address;
-import com.example.backendcargoflow.domain.trip.entity.CargoType;
-import com.example.backendcargoflow.domain.trip.entity.Currency;
-import com.example.backendcargoflow.domain.trip.entity.Trip;
+import com.example.backendcargoflow.controller.trip.models.*;
+import com.example.backendcargoflow.domain.trip.entity.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.openapitools.jackson.nullable.JsonNullable;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Mapper(
         componentModel = "spring",
@@ -26,6 +21,16 @@ public interface TripMapper {
     Trip mapAddNewTripRequestDtoToTrip(AddNewTripRequestDto addNewTripRequestDto);
 
     Address mapAddressDtoToAddress(AddressDto addressDto);
+
+    List<TripStatus> mapTripStatusList(List<TripStatusDto> statuses);
+
+    @Mapping(target = "pickupCountry", source = "pickupAddress.country")
+    @Mapping(target = "pickupCity", source = "pickupAddress.city")
+    @Mapping(target = "deliveryCountry", source = "deliveryAddress.country")
+    @Mapping(target = "deliveryCity", source = "deliveryAddress.city")
+    TripSummaryDto mapTripToTripSummaryDto(Trip trip);
+
+    List<TripSummaryDto> mapTripsToTripSummaryDtos(List<Trip> trips);
 
     default CargoType mapTripCargoType(CargoTypeDto tripCargoTypeDto) {
         return tripCargoTypeDto == null ? null : CargoType.valueOf(tripCargoTypeDto.name());
@@ -41,5 +46,9 @@ public interface TripMapper {
 
     default <T> T map(JsonNullable<T> value) {
         return value == null || !value.isPresent() ? null : value.get();
+    }
+
+    default TripStatusDto mapTripStatus(TripStatus tripStatus) {
+        return tripStatus == null ? null : TripStatusDto.valueOf(tripStatus.name());
     }
 }
