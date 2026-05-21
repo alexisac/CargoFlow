@@ -10,6 +10,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.officeapp.appRoutes.AppNavHost
@@ -22,18 +26,29 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            OfficeAppRoot{
-                AppNavHost()
+            var isDarkTheme by rememberSaveable { mutableStateOf(true) }
+            OfficeAppRoot(
+                isDarkTheme = isDarkTheme
+            ) {
+                AppNavHost(
+                    isDarkTheme = isDarkTheme,
+                    onThemeChange = { isDarkTheme = it }
+                )
             }
         }
     }
 }
 
 @Composable
-fun OfficeAppRoot(context: @Composable () -> Unit) {
-    OfficeAppTheme{
+fun OfficeAppRoot(
+    isDarkTheme: Boolean,
+    content: @Composable () -> Unit
+) {
+    OfficeAppTheme(
+        darkTheme = isDarkTheme
+    ){
         Surface{
-            context()
+            content()
         }
     }
 }

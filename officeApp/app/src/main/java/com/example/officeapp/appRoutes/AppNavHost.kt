@@ -17,7 +17,10 @@ import com.example.officeapp.screens.authentication.LoginScreen
 import com.example.officeapp.screens.searchTrips.TripSearchScreen
 
 @Composable
-fun AppNavHost() {
+fun AppNavHost(
+    isDarkTheme: Boolean,
+    onThemeChange: (Boolean) -> Unit
+) {
     val navController = rememberNavController()
 
     val authenticationViewModel: AuthenticationViewModel = hiltViewModel()
@@ -53,6 +56,8 @@ fun AppNavHost() {
         composable(AppRoutes.LOGIN_ROUTE) {
             LoginScreen(
                 viewModel = authenticationViewModel,
+                isDarkTheme = isDarkTheme,
+                onThemeChange = onThemeChange,
                 onLoggedIn = {
                     navController.navigate(AppRoutes.HOME_ROUTE) {
                         popUpTo(AppRoutes.LOGIN_ROUTE) {

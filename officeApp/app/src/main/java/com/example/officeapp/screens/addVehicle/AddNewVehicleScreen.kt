@@ -29,7 +29,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.officeapp.R
 import com.example.officeapp.viewModels.VehicleViewModel
-import com.example.officeapp.screens.reusableComponents.FormMessages
+import com.example.officeapp.screens.reusableComponents.OldFormMessages
 import com.example.officeapp.screens.reusableComponents.LoadingButton
 import com.example.officeapp.models.vehicle.VehicleCapacityRequirement
 import com.example.officeapp.models.vehicle.VehicleStatus
@@ -274,7 +274,7 @@ fun AddNewVehicleScreen (
             singleLine = false
         )
 
-        FormMessages(
+        OldFormMessages(
             errorMessage = uiState.errorMessage,
             successMessage = uiState.successMessage,
             modifier = Modifier

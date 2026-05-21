@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.example.officeapp.R
 import com.example.officeapp.viewModels.TripViewModel
 import com.example.officeapp.screens.reusableComponents.DatePickerField
-import com.example.officeapp.screens.reusableComponents.FormMessages
+import com.example.officeapp.screens.reusableComponents.OldFormMessages
 import com.example.officeapp.screens.reusableComponents.LoadingButton
 import com.example.officeapp.screens.reusableComponents.TimePickerField
 import com.example.officeapp.screens.reusableComponents.TimeZoneDropdownField
@@ -570,7 +570,7 @@ fun AddNewTripScreen(
             )
         }
 
-        FormMessages(
+        OldFormMessages(
             errorMessage = uiState.errorMessage,
             successMessage = uiState.successMessage,
             modifier = Modifier

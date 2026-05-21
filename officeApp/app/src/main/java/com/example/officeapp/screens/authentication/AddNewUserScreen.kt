@@ -26,7 +26,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.officeapp.R
 import com.example.officeapp.viewModels.AuthenticationViewModel
-import com.example.officeapp.screens.reusableComponents.FormMessages
+import com.example.officeapp.screens.reusableComponents.OldFormMessages
 import com.example.officeapp.screens.reusableComponents.LoadingButton
 import com.example.officeapp.screens.reusableComponents.PasswordField
 import com.example.officeapp.models.user.UserRole
@@ -147,7 +147,7 @@ fun AddNewUserScreen(
             }
         }
 
-        FormMessages(
+        OldFormMessages(
             errorMessage = uiState.errorMessage,
             successMessage = uiState.successMessage,
             modifier = Modifier
