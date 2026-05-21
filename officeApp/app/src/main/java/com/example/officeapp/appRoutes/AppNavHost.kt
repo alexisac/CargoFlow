@@ -12,8 +12,9 @@ import com.example.officeapp.screens.addVehicle.AddNewVehicleScreen
 import com.example.officeapp.viewModels.AuthenticationViewModel
 import com.example.officeapp.screens.authentication.AddNewUserScreen
 import com.example.officeapp.screens.authentication.AuthCheckScreen
-import com.example.officeapp.screens.authentication.HomeScreen
+import com.example.officeapp.screens.HomeScreen
 import com.example.officeapp.screens.authentication.LoginScreen
+import com.example.officeapp.screens.searchTrips.TripSearchScreen
 
 @Composable
 fun AppNavHost() {
@@ -84,6 +85,9 @@ fun AppNavHost() {
                 },
                 onGoToAddTrip = {
                     navController.navigate(AppRoutes.ADD_TRIP_ROUTE)
+                },
+                onGoToSearchTrips = {
+                    navController.navigate(AppRoutes.SEARCH_TRIPS_ROUTE)
                 }
             )
         }
@@ -112,6 +116,12 @@ fun AppNavHost() {
                 onBack = {
                     navController.popBackStack()
                 }
+            )
+        }
+
+        composable(AppRoutes.SEARCH_TRIPS_ROUTE) {
+            TripSearchScreen(
+                viewModel = tripViewModel
             )
         }
     }

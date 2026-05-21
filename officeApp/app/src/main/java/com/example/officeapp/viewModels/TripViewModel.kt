@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.officeapp.models.trip.CargoType
 import com.example.officeapp.models.trip.Currency
+import com.example.officeapp.models.trip.TripStatus
 import com.example.officeapp.models.trip.TripUiState
 import com.example.officeapp.services.TripService
 import com.example.officeapp.utils.ApiResult
@@ -109,6 +110,108 @@ class TripViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun searchTrips(
+        tripStatusList: List<TripStatus>,
+        pickupCountries: List<String>,
+        pickupCities: List<String>,
+        deliveryCountries: List<String>,
+        deliveryCities: List<String>,
+        pickupDateTimeFrom: String?,
+        pickupDateTimeTo: String?,
+        deliveryDateTimeFrom: String?,
+        deliveryDateTimeTo: String?,
+        pageNumber: Int,
+        pageSize: Int,
+        append: Boolean
+    ) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isLoading = true,
+                errorMessage = null,
+                successMessage = null
+            )
+
+            when (
+                val result = tripService.searchTrips(
+                    tripStatusList = tripStatusList,
+                    pickupCountries = pickupCountries,
+                    pickupCities = pickupCities,
+                    deliveryCountries = deliveryCountries,
+                    deliveryCities = deliveryCities,
+                    pickupDateTimeFrom = pickupDateTimeFrom,
+                    pickupDateTimeTo = pickupDateTimeTo,
+                    deliveryDateTimeFrom = deliveryDateTimeFrom,
+                    deliveryDateTimeTo = deliveryDateTimeTo,
+                    pageNumber = pageNumber,
+                    pageSize = pageSize
+                )
+            ) {
+                is ApiResult.Success -> {
+                    val currentTrips = if (append) {
+                        _uiState.value.trips
+                    } else {
+                        emptyList()
+                    }
+
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        trips = currentTrips + result.data.trips,
+                        pageNumber = result.data.pageNumber,
+                        pageSize = result.data.pageSize,
+                        lastPage = result.data.lastPage,
+                        errorMessage = null
+                    )
+                }
+
+                is ApiResult.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = result.message
+                    )
+                }
+
+                ApiResult.Loading -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = true
+                    )
+                }
+            }
+        }
+    }
+
+    fun loadNextTripsPage(
+        tripStatusList: List<TripStatus>,
+        pickupCountries: List<String>,
+        pickupCities: List<String>,
+        deliveryCountries: List<String>,
+        deliveryCities: List<String>,
+        pickupDateTimeFrom: String?,
+        pickupDateTimeTo: String?,
+        deliveryDateTimeFrom: String?,
+        deliveryDateTimeTo: String?
+    ) {
+        val state = _uiState.value
+
+        if (state.isLoading || state.lastPage) {
+            return
+        }
+
+        searchTrips(
+            tripStatusList = tripStatusList,
+            pickupCountries = pickupCountries,
+            pickupCities = pickupCities,
+            deliveryCountries = deliveryCountries,
+            deliveryCities = deliveryCities,
+            pickupDateTimeFrom = pickupDateTimeFrom,
+            pickupDateTimeTo = pickupDateTimeTo,
+            deliveryDateTimeFrom = deliveryDateTimeFrom,
+            deliveryDateTimeTo = deliveryDateTimeTo,
+            pageNumber = state.pageNumber + 1,
+            pageSize = state.pageSize,
+            append = true
+        )
     }
 
     fun clearMessage() {

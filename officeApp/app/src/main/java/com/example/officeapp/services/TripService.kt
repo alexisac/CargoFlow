@@ -5,6 +5,9 @@ import com.example.officeapp.models.trip.AddNewTripRequest
 import com.example.officeapp.models.trip.Address
 import com.example.officeapp.models.trip.CargoType
 import com.example.officeapp.models.trip.Currency
+import com.example.officeapp.models.trip.TripPageResponse
+import com.example.officeapp.models.trip.TripSearchRequest
+import com.example.officeapp.models.trip.TripStatus
 import com.example.officeapp.repositories.TripRepository
 import com.example.officeapp.utils.ApiResult
 import java.time.LocalDateTime
@@ -163,6 +166,41 @@ class TripService @Inject constructor(
         return tripRepository.addNewTrip(request)
     }
 
+    suspend fun searchTrips(
+        tripStatusList: List<TripStatus>,
+        pickupCountries: List<String>,
+        pickupCities: List<String>,
+        deliveryCountries: List<String>,
+        deliveryCities: List<String>,
+        pickupDateTimeFrom: String?,
+        pickupDateTimeTo: String?,
+        deliveryDateTimeFrom: String?,
+        deliveryDateTimeTo: String?,
+        pageNumber: Int,
+        pageSize: Int
+    ): ApiResult<TripPageResponse> {
+        if (pageNumber < 0)
+            return ApiResult.Error("Page number cannot be negative.")
+
+        if (pageSize < 0)
+            return ApiResult.Error("Page size cannot be negative.")
+
+        val request = TripSearchRequest(
+            tripStatusList = tripStatusList,
+            pickupCountries = pickupCountries.cleanStringList(),
+            pickupCities = pickupCities.cleanStringList(),
+            deliveryCountries = deliveryCountries.cleanStringList(),
+            deliveryCities = deliveryCities.cleanStringList(),
+            pickupDateTimeFrom = pickupDateTimeFrom.cleanNullableString(),
+            pickupDateTimeTo = pickupDateTimeTo.cleanNullableString(),
+            deliveryDateTimeFrom = deliveryDateTimeFrom.cleanNullableString(),
+            deliveryDateTimeTo = deliveryDateTimeTo.cleanNullableString(),
+            pageNumber = pageNumber,
+            pageSize = pageSize
+        )
+        return tripRepository.searchTrips(request)
+    }
+
     private fun buildAddress(
         country: String,
         administrativeArea: String,
@@ -214,6 +252,19 @@ class TripService @Inject constructor(
                 additionalDetails = trimmedAdditionalDetails
             )
         )
+    }
+
+    private fun List<String>.cleanStringList(): List<String> {
+        return this
+            .map { it.trim() }
+            .filter { it.isNotBlank() }
+            .distinct()
+    }
+
+    private fun String?.cleanNullableString(): String? {
+        return this
+            ?.trim()
+            ?.takeIf { it.isNotBlank() }
     }
 
     private sealed class AddressBuildResult {

@@ -1,4 +1,4 @@
-package com.example.officeapp.screens.authentication
+package com.example.officeapp.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,7 +25,8 @@ fun HomeScreen(
     onLogout: () -> Unit,
     onGoToAddUser: () -> Unit,
     onGoToAddVehicle: () -> Unit,
-    onGoToAddTrip: () -> Unit
+    onGoToAddTrip: () -> Unit,
+    onGoToSearchTrips: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -88,6 +89,21 @@ fun HomeScreen(
                     .padding(top = 12.dp)
             ) {
                 Text("Add new trip")
+            }
+        }
+
+        if (uiState.userRole in listOf(
+                UserRole.DISPATCHER.name,
+                UserRole.MANAGER.name,
+                UserRole.ADMIN.name
+            )) {
+            Button(
+                onClick = onGoToSearchTrips,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp)
+            ) {
+                Text("Search trips")
             }
         }
 

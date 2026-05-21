@@ -7,4 +7,5 @@ object AppRoutes {
     const val ADD_USER_ROUTE = "add_user"
     const val ADD_VEHICLE_ROUTE = "add_vehicle"
     const val ADD_TRIP_ROUTE = "add_trip"
+    const val SEARCH_TRIPS_ROUTE = "search_trips"
 }
