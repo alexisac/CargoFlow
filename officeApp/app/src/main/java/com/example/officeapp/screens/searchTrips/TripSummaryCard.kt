@@ -11,7 +11,9 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.officeapp.R
 import com.example.officeapp.models.trip.TripSummary
 
 @Composable
@@ -38,7 +40,7 @@ fun TripSummaryCard(
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
-                        text = "Pickup",
+                        text = stringResource(R.string.section_pickup),
                     )
 
                     Text(
@@ -56,7 +58,7 @@ fun TripSummaryCard(
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
-                        text = "Delivery",
+                        text = stringResource(R.string.section_delivery),
                     )
 
                     Text(

@@ -14,7 +14,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.officeapp.R
 import com.example.officeapp.viewModels.AuthenticationViewModel
 import com.example.officeapp.screens.reusableComponents.FormMessages
 import com.example.officeapp.models.user.UserRole
@@ -58,7 +60,7 @@ fun HomeScreen(
                     .fillMaxWidth()
                     .padding(top = 32.dp)
             ) {
-                Text("Add new user")
+                Text(stringResource(R.string.add_new_user_title))
             }
         }
 
@@ -73,7 +75,7 @@ fun HomeScreen(
                     .fillMaxWidth()
                     .padding(top = 12.dp)
             ) {
-                Text("Add new vehicle")
+                Text(stringResource(R.string.add_new_vehicle_title))
             }
         }
 
@@ -88,7 +90,7 @@ fun HomeScreen(
                     .fillMaxWidth()
                     .padding(top = 12.dp)
             ) {
-                Text("Add new trip")
+                Text(stringResource(R.string.add_new_trip_title))
             }
         }
 
@@ -103,7 +105,7 @@ fun HomeScreen(
                     .fillMaxWidth()
                     .padding(top = 12.dp)
             ) {
-                Text("Search trips")
+                Text(stringResource(R.string.search_trips_title))
             }
         }
 
@@ -113,7 +115,7 @@ fun HomeScreen(
                 .fillMaxWidth()
                 .padding(top = 12.dp)
         ) {
-            Text("Logout")
+            Text(stringResource(R.string.button_logout))
         }
     }
 }

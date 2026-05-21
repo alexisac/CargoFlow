@@ -59,7 +59,7 @@ class TripService @Inject constructor(
 
         val pickupAddress = when (pickupAddressResult) {
             is AddressBuildResult.Success -> pickupAddressResult.address
-            is AddressBuildResult.Error -> return ApiResult.Error("Pickup address: ${pickupAddressResult.message}")
+            is AddressBuildResult.Error -> return ApiResult.Error(ValidationMessages.PICKUP_ADDRESS_PREFIX + pickupAddressResult.message)
         }
 
         val deliveryAddressResult = buildAddress(
@@ -74,7 +74,7 @@ class TripService @Inject constructor(
 
         val deliveryAddress = when (deliveryAddressResult) {
             is AddressBuildResult.Success -> deliveryAddressResult.address
-            is AddressBuildResult.Error -> return ApiResult.Error("Delivery address: ${deliveryAddressResult.message}")
+            is AddressBuildResult.Error -> return ApiResult.Error(ValidationMessages.DELIVERY_ADDRESS_PREFIX + deliveryAddressResult.message)
         }
 
         val trimmedPickupDateTime = pickupDateTime.trim()
@@ -89,62 +89,62 @@ class TripService @Inject constructor(
             ?.takeIf { it.isNotBlank() }
 
         if (trimmedPickupDateTime.isBlank())
-            return ApiResult.Error("Pickup date and time is required.")
+            return ApiResult.Error(ValidationMessages.PICKUP_DATE_TIME_REQUIRED)
 
         if (trimmedDeliveryDateTime.isBlank())
-            return ApiResult.Error("Delivery date and time is required.")
+            return ApiResult.Error(ValidationMessages.DELIVERY_DATE_TIME_REQUIRED)
 
         if (trimmedPickupTimeZone.length !in 3..50)
-            return ApiResult.Error("Pickup time zone must be between 3 and 50 characters.")
+            return ApiResult.Error(ValidationMessages.PICKUP_TIME_ZONE_LENGTH)
 
         if (trimmedDeliveryTimeZone.length !in 3..50)
-            return ApiResult.Error("Delivery time zone must be between 3 and 50 characters.")
+            return ApiResult.Error(ValidationMessages.DELIVERY_TIME_ZONE_LENGTH)
 
         val pickupLocalDateTime = try {
             LocalDateTime.parse(trimmedPickupDateTime, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
         } catch (_: Exception) {
-            return ApiResult.Error("Pickup date and time must have format yyyy-MM-ddTHH:mm:ss.")
+            return ApiResult.Error(ValidationMessages.PICKUP_DATE_TIME_FORMAT)
         }
 
         val deliveryLocalDateTime = try {
             LocalDateTime.parse(trimmedDeliveryDateTime, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
         } catch (_: Exception) {
-            return ApiResult.Error("Delivery date and time must have format yyyy-MM-ddTHH:mm:ss.")
+            return ApiResult.Error(ValidationMessages.DELIVERY_DATE_TIME_FORMAT)
         }
 
         if (!deliveryLocalDateTime.isAfter(pickupLocalDateTime))
-            return ApiResult.Error("Delivery date and time must be after pickup date and time.")
+            return ApiResult.Error(ValidationMessages.DELIVERY_DATE_TIME_AFTER_PICKUP)
 
         if (trimmedCargoDescription != null && trimmedCargoDescription.length !in 3..250)
-            return ApiResult.Error("Cargo description must be between 3 and 250 characters.")
+            return ApiResult.Error(ValidationMessages.CARGO_DESCRIPTION_LENGTH)
 
 
         val trimmedCargoWeight = cargoWeight.trim().takeIf { it.isNotBlank() }
         val cargoWeightInt = if (trimmedCargoWeight == null)
             null
         else
-            trimmedCargoWeight.toIntOrNull() ?: return ApiResult.Error("Cargo weight must be a number.")
+            trimmedCargoWeight.toIntOrNull() ?: return ApiResult.Error(ValidationMessages.CARGO_WEIGHT_REQUIRED)
 
         if (cargoWeightInt != null && cargoWeightInt !in 1..24000)
-            return ApiResult.Error("Cargo weight must be between 1 and 24000.")
+            return ApiResult.Error(ValidationMessages.CARGO_WEIGHT_RANGE)
 
         val trimmedCargoVolume = cargoVolume.trim().takeIf { it.isNotBlank() }
         val cargoVolumeInt = if (trimmedCargoVolume == null)
             null
         else
-            trimmedCargoVolume.toIntOrNull() ?: return ApiResult.Error("Cargo volume must be a number.")
+            trimmedCargoVolume.toIntOrNull() ?: return ApiResult.Error(ValidationMessages.CARGO_VOLUME_REQUIRED)
 
         if (cargoVolumeInt != null && cargoVolumeInt !in 1..90)
-            return ApiResult.Error("Cargo volume must be between 1 and 90.")
+            return ApiResult.Error(ValidationMessages.CARGO_VOLUME_RANGE)
 
         val priceDouble = price.trim().toDoubleOrNull()
-            ?: return ApiResult.Error("Price must be a number.")
+            ?: return ApiResult.Error(ValidationMessages.PRICE_REQUIRED)
 
         if (priceDouble < 0)
-            return ApiResult.Error("Price must be greater than or equal to 0.")
+            return ApiResult.Error(ValidationMessages.PRICE_RANGE)
 
         if (trimmedAdditionalInfo != null && trimmedAdditionalInfo.length > 250)
-            return ApiResult.Error("Additional info must have maximum 250 characters.")
+            return ApiResult.Error(ValidationMessages.ADDITIONAL_INFO_MAX_LENGTH)
 
 
         val request = AddNewTripRequest(
@@ -180,10 +180,10 @@ class TripService @Inject constructor(
         pageSize: Int
     ): ApiResult<TripPageResponse> {
         if (pageNumber < 0)
-            return ApiResult.Error("Page number cannot be negative.")
+            return ApiResult.Error(ValidationMessages.PAGE_NUMBER_RANGE)
 
         if (pageSize < 0)
-            return ApiResult.Error("Page size cannot be negative.")
+            return ApiResult.Error(ValidationMessages.PAGE_SIZE_RANGE)
 
         val request = TripSearchRequest(
             tripStatusList = tripStatusList,
@@ -221,25 +221,25 @@ class TripService @Inject constructor(
             ?.takeIf { it.isNotBlank() }
 
         if (trimmedCountry.length !in 2..50)
-            return AddressBuildResult.Error("Country must be between 2 and 50 characters.")
+            return AddressBuildResult.Error(ValidationMessages.COUNTRY_LENGTH)
 
         if (trimmedAdministrativeArea.length !in 2..50)
-            return AddressBuildResult.Error("Administrative area must be between 2 and 50 characters.")
+            return AddressBuildResult.Error(ValidationMessages.ADMINISTRATIVE_AREA_LENGTH)
 
         if (trimmedCity.length !in 2..50)
-            return AddressBuildResult.Error("City must be between 2 and 50 characters.")
+            return AddressBuildResult.Error(ValidationMessages.CITY_LENGTH)
 
         if (trimmedStreetName.length !in 2..100)
-            return AddressBuildResult.Error("Street name must be between 2 and 100 characters.")
+            return AddressBuildResult.Error(ValidationMessages.STREET_NAME_LENGTH)
 
         if (trimmedStreetNumber.length !in 1..15)
-            return AddressBuildResult.Error("Street number must be between 1 and 15 characters.")
+            return AddressBuildResult.Error(ValidationMessages.STREET_NUMBER_LENGTH)
 
         if (trimmedPostalCode.length !in 2..15)
-            return AddressBuildResult.Error("Postal code must be between 2 and 15 characters.")
+            return AddressBuildResult.Error(ValidationMessages.POSTAL_CODE_LENGTH)
 
         if (trimmedAdditionalDetails != null && trimmedAdditionalDetails.length > 250)
-            return AddressBuildResult.Error("Additional address details must have maximum 250 characters.")
+            return AddressBuildResult.Error(ValidationMessages.ADDITIONAL_DETAILS_MAX_LENGTH)
 
         return AddressBuildResult.Success(
             Address(

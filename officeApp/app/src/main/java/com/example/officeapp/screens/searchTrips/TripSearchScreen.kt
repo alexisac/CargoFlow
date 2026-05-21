@@ -21,8 +21,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.officeapp.R
 import com.example.officeapp.models.trip.TripStatus
+import com.example.officeapp.screens.reusableComponents.FormMessages
 import com.example.officeapp.viewModels.TripViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,7 +73,7 @@ fun TripSearchScreen (
         Button(
             onClick = { showFilters = true }
         ) {
-            Text("Filters")
+            Text(stringResource(R.string.button_filters))
         }
 
         FilterChipRow(
@@ -101,13 +104,13 @@ fun TripSearchScreen (
             )
         }
 
-        // FormMessage
-        if (uiState.errorMessage != null) {
-            Text(
-                text = uiState.errorMessage ?: "",
-                modifier = Modifier.padding(top = 16.dp)
-            )
-        }
+        FormMessages(
+            errorMessage = uiState.errorMessage,
+            successMessage = uiState.successMessage,
+            modifier = Modifier
+                .padding(top = 16.dp),
+            onMessageShown = { viewModel.clearMessage() }
+        )
 
         LazyColumn(
             modifier = Modifier.padding(top = 16.dp),

@@ -1,3 +1,92 @@
 <resources>
-    <string name="app_name">officeApp</string>
+    <string name="app_name">Office App</string>
+
+    <string name="add_new_trip_title">Add new trip</string>
+    <string name="add_new_user_title">Add new user</string>
+    <string name="add_new_vehicle_title">Add new vehicle</string>
+    <string name="login_screen_title">Login</string>
+    <string name="search_trips_title">Search trips</string>
+
+    <string name="button_add_field">Add field</string>
+    <string name="button_add_status_filter">Add status filter</string>
+    <string name="button_apply_filters">Apply filters</string>
+    <string name="button_back">Back</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_create_trip">Create trip</string>
+    <string name="button_create_user">Create user</string>
+    <string name="button_create_vehicle">Create vehicle</string>
+    <string name="button_filters">Filters</string>
+    <string name="button_login">Login</string>
+    <string name="button_logout">Logout</string>
+    <string name="button_ok">Ok</string>
+
+    <string name="label_additional_details">Additional details</string>
+    <string name="label_additional_info">Additional info</string>
+    <string name="label_administrative_area">Administrative Area</string>
+    <string name="label_brand">Brand</string>
+    <string name="label_cargo_description">Cargo description</string>
+    <string name="label_cargo_type">Cargo type</string>
+    <string name="label_cargo_volume">Cargo volume</string>
+    <string name="label_cargo_weight">Cargo weight</string>
+    <string name="label_city">City</string>
+    <string name="label_confirm_password">Confirm password</string>
+    <string name="label_country">Country</string>
+    <string name="label_currency">Currency</string>
+    <string name="label_delivery_city">Delivery city</string>
+    <string name="label_delivery_country">Delivery country</string>
+    <string name="label_delivery_date">Delivery date</string>
+    <string name="label_delivery_time">Delivery time</string>
+    <string name="label_delivery_time_zone">Delivery time zone</string>
+    <string name="label_email">Email</string>
+    <string name="label_first_name">First name</string>
+    <string name="label_last_name">Last name</string>
+    <string name="label_licence_plate">Licence plate</string>
+    <string name="label_manufacture_year">Manufacture year</string>
+    <string name="label_maximum_volume">Maximum volume</string>
+    <string name="label_maximum_weight">Maximum weight</string>
+    <string name="label_model">Model</string>
+    <string name="label_password">Password</string>
+    <string name="label_pickup_city">Pickup city</string>
+    <string name="label_pickup_country">Pickup country</string>
+    <string name="label_pickup_date">Pickup date</string>
+    <string name="label_pickup_from_date">Pickup from date</string>
+    <string name="label_pickup_from_time">Pickup from time</string>
+    <string name="label_pickup_time">Pickup time</string>
+    <string name="label_pickup_time_zone">Pickup time zone</string>
+    <string name="label_pickup_to_date">Pickup to date</string>
+    <string name="label_pickup_to_time">Pickup to time</string>
+    <string name="label_postal_code">Postal code</string>
+    <string name="label_price">Price</string>
+    <string name="label_required_field">*</string>
+    <string name="label_role">Role</string>
+    <string name="label_street_name">Street name</string>
+    <string name="label_street_number">Street number</string>
+    <string name="label_trip_status">Trip status</string>
+    <string name="label_vehicle_status">Vehicle status</string>
+    <string name="label_vehicle_type">Vehicle type</string>
+    <string name="label_vin">VIN</string>
+
+    <string name="section_cargo_and_payment">Cargo and Payment</string>
+    <string name="section_delivery">Delivery</string>
+    <string name="section_delivery_address">Delivery address</string>
+    <string name="section_delivery_interval">Delivery interval</string>
+    <string name="section_pickup">Pickup</string>
+    <string name="section_pickup_address">Pickup address</string>
+    <string name="section_pickup_interval">Pickup interval</string>
+    <string name="section_time">Time</string>
+
+    <string name="description_additional_info">Optional details about the vehicle</string>
+    <string name="description_close_section">Close section</string>
+    <string name="description_copy_message">Copy message</string>
+    <string name="description_hide_password">Hide password</string>
+    <string name="description_licence_plate">Format example: B-111-AAA or VN-123-ABC</string>
+    <string name="description_max_volume_disabled">Not applicable for this vehicle type</string>
+    <string name="description_max_volume_enabled">Required for this vehicle type</string>
+    <string name="description_max_weight_disabled">Not applicable for this vehicle type</string>
+    <string name="description_max_weight_enabled">Required for this vehicle type</string>
+    <string name="description_open_section">Open section</string>
+    <string name="description_remove_filter">Remove filter</string>
+    <string name="description_show_password">Show password</string>
+
+    <string name="checking_session">Checking session...</string>
 </resources>

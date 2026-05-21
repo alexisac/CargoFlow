@@ -1,0 +1,54 @@
+package com.example.officeapp.services
+
+object ValidationMessages {
+    const val CARGO_VOLUME_REQUIRED = "Cargo volume must be a number."
+    const val CARGO_WEIGHT_REQUIRED = "Cargo weight must be a number."
+    const val DELIVERY_DATE_TIME_REQUIRED = "Delivery date and time is required."
+    const val EMAIL_REQUIRED = "Email is required."
+    const val MANUFACTURE_YEAR_REQUIRED = "Manufacture year must be a number."
+    const val MAX_VOLUME_REQUIRED = "Max volume must be a number."
+    const val MAX_WEIGHT_REQUIRED = "Max weight must be a number."
+    const val PASSWORD_REQUIRED = "Password is required."
+    const val PICKUP_DATE_TIME_REQUIRED = "Pickup date and time is required."
+    const val PRICE_REQUIRED = "Price must be a number."
+
+
+    const val ADDITIONAL_DETAILS_MAX_LENGTH = "Additional address details must have maximum 250 characters."
+    const val ADDITIONAL_INFO_MAX_LENGTH = "Additional info needs to have maximum 250 characters."
+    const val ADMINISTRATIVE_AREA_LENGTH = "Administrative area must be between 2 and 50 characters."
+    const val BRAND_LENGTH = "Brand must be between 2 and 50 characters."
+    const val CARGO_DESCRIPTION_LENGTH = "Cargo description must be between 3 and 250 characters."
+    const val CARGO_VOLUME_RANGE = "Cargo volume must be between 1 and 90."
+    const val CARGO_WEIGHT_RANGE = "Cargo weight must be between 1 and 24000."
+    const val CITY_LENGTH = "City must be between 2 and 50 characters."
+    const val COUNTRY_LENGTH = "Country must be between 2 and 50 characters."
+    const val DELIVERY_TIME_ZONE_LENGTH = "Delivery time zone must be between 3 and 50 characters."
+    const val EMAIL_MIN_LENGTH = "Email needs to have minimum 5 characters."
+    const val FIRST_NAME_MIN_LENGTH = "First name needs to have minimum 3 characters."
+    const val LAST_NAME_MIN_LENGTH = "Last name needs to have minimum 3 characters."
+    const val MANUFACTURE_YEAR_RANGE = "Manufacture year must be between 1900 and "
+    const val MAX_VOLUME_RANGE = "Max volume must be between 1 and 90."
+    const val MAX_WEIGHT_RANGE = "Max weight must be between 1 and 24000."
+    const val MODEL_LENGTH = "Model must be between 3 and 50 characters."
+    const val PAGE_NUMBER_RANGE = "Page number cannot be negative."
+    const val PAGE_SIZE_RANGE = "Page size cannot be negative."
+    const val PASSWORD_MIN_LENGTH = "Password needs to have minimum 8 characters."
+    const val PICKUP_TIME_ZONE_LENGTH = "Pickup time zone must be between 3 and 50 characters."
+    const val POSTAL_CODE_LENGTH = "Postal code must be between 2 and 15 characters."
+    const val PRICE_RANGE = "Price must be greater than or equal to 0."
+    const val STREET_NAME_LENGTH = "Street name must be between 2 and 100 characters."
+    const val STREET_NUMBER_LENGTH = "Street number must be between 1 and 15 characters."
+    const val VIN_LENGTH = "VIN must have exactly 17 characters."
+
+
+    const val DELIVERY_DATE_TIME_AFTER_PICKUP = "Delivery date and time must be after pickup date and time."
+    const val DELIVERY_DATE_TIME_FORMAT = "Delivery date and time must have format yyyy-MM-ddTHH:mm:ss."
+    const val LICENCE_PLATE_FORMAT = "Licence plate format must be like B-11-AAA or VN-123-AAA."
+    const val LICENCE_PLATE_REGEX = "^[A-Z]{1,2}-[0-9]{2,3}-[A-Z]{3}$"
+    const val PASSWORDS_DO_NOT_MATCH = "Password and confirmed password are not identical."
+    const val PICKUP_DATE_TIME_FORMAT = "Pickup date and time must have format yyyy-MM-ddTHH:mm:ss."
+
+
+    const val DELIVERY_ADDRESS_PREFIX = "Delivery address: "
+    const val PICKUP_ADDRESS_PREFIX = "Pickup address: "
+}

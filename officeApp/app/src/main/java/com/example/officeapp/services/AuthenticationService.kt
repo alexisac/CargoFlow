@@ -13,16 +13,15 @@ import javax.inject.Inject
 class AuthenticationService @Inject constructor(
     private val authenticationRepository: AuthenticationRepository
 ) {
-    // TO DO: normalize parameters
     suspend fun loginUser(email: String, password: String): ApiResult<LoginUserResponse> {
         if(email.isBlank())
-            return ApiResult.Error("Email is required")
+            return ApiResult.Error(ValidationMessages.EMAIL_REQUIRED)
 
         if(email.length < 5)
-            return ApiResult.Error("Email needs to has minimum 5 characters")
+            return ApiResult.Error(ValidationMessages.EMAIL_MIN_LENGTH)
 
         if(password.isBlank())
-            return ApiResult.Error("Password is required")
+            return ApiResult.Error(ValidationMessages.PASSWORD_REQUIRED)
 
         val hashedPassword = PasswordHasher.sha256(password)
 
@@ -32,7 +31,6 @@ class AuthenticationService @Inject constructor(
         )
     }
 
-    // TO DO: Normalize parameters
     suspend fun addNewUser(
         firstName: String,
         lastName: String,
@@ -42,19 +40,19 @@ class AuthenticationService @Inject constructor(
         role: UserRole
     ): ApiResult<GenericApplicationResponse> {
         if(firstName.length < 3)
-            return ApiResult.Error("FirstName needs to has minimum 3 characters")
+            return ApiResult.Error(ValidationMessages.FIRST_NAME_MIN_LENGTH)
 
         if(lastName.length < 3)
-            return ApiResult.Error("LastName needs to has minimum 3 characters")
+            return ApiResult.Error(ValidationMessages.LAST_NAME_MIN_LENGTH)
 
         if(email.length < 5)
-            return ApiResult.Error("Email needs to has minimum 5 characters")
+            return ApiResult.Error(ValidationMessages.EMAIL_MIN_LENGTH)
 
         if(password.length < 8)
-            return ApiResult.Error("Password needs to has minimum 8 characters")
+            return ApiResult.Error(ValidationMessages.PASSWORD_MIN_LENGTH)
 
         if(password != confirmedPassword)
-            return ApiResult.Error("Password and Confirmed password are not identical")
+            return ApiResult.Error(ValidationMessages.PASSWORDS_DO_NOT_MATCH)
 
         val hashedPassword = PasswordHasher.sha256(password)
 

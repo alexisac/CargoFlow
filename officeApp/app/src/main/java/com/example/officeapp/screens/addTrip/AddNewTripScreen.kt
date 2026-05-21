@@ -24,7 +24,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.officeapp.R
 import com.example.officeapp.viewModels.TripViewModel
 import com.example.officeapp.screens.reusableComponents.DatePickerField
 import com.example.officeapp.screens.reusableComponents.FormMessages
@@ -97,23 +99,23 @@ fun AddNewTripScreen(
         verticalArrangement = Arrangement.Top
     ) {
         Text(
-            text = "Add new trip",
+            text = stringResource(R.string.add_new_trip_title),
             modifier = Modifier
                 .padding(bottom = 24.dp)
         )
 
         TripSection(
-            title = "Pickup address",
+            title = stringResource(R.string.section_pickup_address),
             expanded = pickupAddressExpanded,
             onClick = { pickupAddressExpanded = !pickupAddressExpanded }
         ) {
             OutlinedTextField(
                 value = pickupCountry,
                 onValueChange = { pickupCountry = it },
-                label = { Text("Country") },
+                label = { Text(stringResource(R.string.label_country)) },
                 supportingText = {
                     Text(
-                        text = "*",
+                        text = stringResource(R.string.label_required_field),
                         color = Color.Red
                     )
                 },
@@ -125,10 +127,10 @@ fun AddNewTripScreen(
             OutlinedTextField(
                 value = pickupAdministrativeArea,
                 onValueChange = { pickupAdministrativeArea = it },
-                label = { Text("Administrative Area") },
+                label = { Text(stringResource(R.string.label_administrative_area)) },
                 supportingText = {
                     Text(
-                        text = "*",
+                        text = stringResource(R.string.label_required_field),
                         color = Color.Red
                     )
                 },
@@ -141,10 +143,10 @@ fun AddNewTripScreen(
             OutlinedTextField(
                 value = pickupCity,
                 onValueChange = { pickupCity = it },
-                label = { Text("City") },
+                label = { Text(stringResource(R.string.label_city)) },
                 supportingText = {
                     Text(
-                        text = "*",
+                        text = stringResource(R.string.label_required_field),
                         color = Color.Red
                     )
                 },
@@ -157,10 +159,10 @@ fun AddNewTripScreen(
             OutlinedTextField(
                 value = pickupStreetName,
                 onValueChange = { pickupStreetName = it },
-                label = { Text("Street name") },
+                label = { Text(stringResource(R.string.label_street_name)) },
                 supportingText = {
                     Text(
-                        text = "*",
+                        text = stringResource(R.string.label_required_field),
                         color = Color.Red
                     )
                 },
@@ -173,10 +175,10 @@ fun AddNewTripScreen(
             OutlinedTextField(
                 value = pickupStreetNumber,
                 onValueChange = { pickupStreetNumber = it },
-                label = { Text("Street number") },
+                label = { Text(stringResource(R.string.label_street_number)) },
                 supportingText = {
                     Text(
-                        text = "*",
+                        text = stringResource(R.string.label_required_field),
                         color = Color.Red
                     )
                 },
@@ -189,10 +191,10 @@ fun AddNewTripScreen(
             OutlinedTextField(
                 value = pickupPostalCode,
                 onValueChange = { pickupPostalCode = it },
-                label = { Text("Postal code") },
+                label = { Text(stringResource(R.string.label_postal_code)) },
                 supportingText = {
                     Text(
-                        text = "*",
+                        text = stringResource(R.string.label_required_field),
                         color = Color.Red
                     )
                 },
@@ -205,7 +207,7 @@ fun AddNewTripScreen(
             OutlinedTextField(
                 value = pickupAdditionalDetails,
                 onValueChange = { pickupAdditionalDetails = it },
-                label = { Text("Additional details") },
+                label = { Text(stringResource(R.string.label_additional_details)) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 12.dp),
@@ -216,17 +218,17 @@ fun AddNewTripScreen(
         }
 
         TripSection(
-            title = "Delivery address",
+            title = stringResource(R.string.section_delivery_address),
             expanded = deliveryAddressExpanded,
             onClick = { deliveryAddressExpanded = !deliveryAddressExpanded }
         ) {
             OutlinedTextField(
                 value = deliveryCountry,
                 onValueChange = { deliveryCountry = it },
-                label = { Text("Country") },
+                label = { Text(stringResource(R.string.label_country)) },
                 supportingText = {
                     Text(
-                        text = "*",
+                        text = stringResource(R.string.label_required_field),
                         color = Color.Red
                     )
                 },
@@ -238,10 +240,10 @@ fun AddNewTripScreen(
             OutlinedTextField(
                 value = deliveryAdministrativeArea,
                 onValueChange = { deliveryAdministrativeArea = it },
-                label = { Text("Administrative Area") },
+                label = { Text(stringResource(R.string.label_administrative_area)) },
                 supportingText = {
                     Text(
-                        text = "*",
+                        text = stringResource(R.string.label_required_field),
                         color = Color.Red
                     )
                 },
@@ -254,10 +256,10 @@ fun AddNewTripScreen(
             OutlinedTextField(
                 value = deliveryCity,
                 onValueChange = { deliveryCity = it },
-                label = { Text("City") },
+                label = { Text(stringResource(R.string.label_city)) },
                 supportingText = {
                     Text(
-                        text = "*",
+                        text = stringResource(R.string.label_required_field),
                         color = Color.Red
                     )
                 },
@@ -270,10 +272,10 @@ fun AddNewTripScreen(
             OutlinedTextField(
                 value = deliveryStreetName,
                 onValueChange = { deliveryStreetName = it },
-                label = { Text("Street name") },
+                label = { Text(stringResource(R.string.label_street_name)) },
                 supportingText = {
                     Text(
-                        text = "*",
+                        text = stringResource(R.string.label_required_field),
                         color = Color.Red
                     )
                 },
@@ -286,10 +288,10 @@ fun AddNewTripScreen(
             OutlinedTextField(
                 value = deliveryStreetNumber,
                 onValueChange = { deliveryStreetNumber = it },
-                label = { Text("Street number") },
+                label = { Text(stringResource(R.string.label_street_number)) },
                 supportingText = {
                     Text(
-                        text = "*",
+                        text = stringResource(R.string.label_required_field),
                         color = Color.Red
                     )
                 },
@@ -302,10 +304,10 @@ fun AddNewTripScreen(
             OutlinedTextField(
                 value = deliveryPostalCode,
                 onValueChange = { deliveryPostalCode = it },
-                label = { Text("Postal code") },
+                label = { Text(stringResource(R.string.label_postal_code)) },
                 supportingText = {
                     Text(
-                        text = "*",
+                        text = stringResource(R.string.label_required_field),
                         color = Color.Red
                     )
                 },
@@ -318,7 +320,7 @@ fun AddNewTripScreen(
             OutlinedTextField(
                 value = deliveryAdditionalDetails,
                 onValueChange = { deliveryAdditionalDetails = it },
-                label = { Text("Additional details") },
+                label = { Text(stringResource(R.string.label_additional_details)) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 12.dp),
@@ -329,83 +331,83 @@ fun AddNewTripScreen(
         }
 
         TripSection(
-            title = "Time",
+            title = stringResource(R.string.section_time),
             expanded = timeExpanded,
             onClick = { timeExpanded = !timeExpanded }
         ) {
             DatePickerField(
-                label = "Pickup date",
+                label = stringResource(R.string.label_pickup_date),
                 value = pickupDate,
                 onDateSelected = { pickupDate = it },
                 modifier = Modifier.padding(top = 12.dp),
                 supportingText = {
                     Text(
-                        text = "*",
+                        text = stringResource(R.string.label_required_field),
                         color = Color.Red
                     )
                 }
             )
 
             TimePickerField(
-                label = "Pickup time",
+                label = stringResource(R.string.label_pickup_time),
                 value = pickupTime,
                 onTimeSelected = { pickupTime = it },
                 modifier = Modifier.padding(top = 12.dp),
                 supportingText = {
                     Text(
-                        text = "*",
+                        text = stringResource(R.string.label_required_field),
                         color = Color.Red
                     )
                 }
             )
 
             TimeZoneDropdownField(
-                label = "Pickup time zone",
+                label = stringResource(R.string.label_pickup_time_zone),
                 selectedTimeZone = pickupTimeZone,
                 onTimeZoneSelected = { pickupTimeZone = it },
                 modifier = Modifier.padding(top = 12.dp),
                 supportingText = {
                     Text(
-                        text = "*",
+                        text = stringResource(R.string.label_required_field),
                         color = Color.Red
                     )
                 }
             )
 
             DatePickerField(
-                label = "Delivery date",
+                label = stringResource(R.string.label_delivery_date),
                 value = deliveryDate,
                 onDateSelected = { deliveryDate = it },
                 modifier = Modifier.padding(top = 12.dp),
                 supportingText = {
                     Text(
-                        text = "*",
+                        text = stringResource(R.string.label_required_field),
                         color = Color.Red
                     )
                 }
             )
 
             TimePickerField(
-                label = "Delivery time",
+                label = stringResource(R.string.label_delivery_time),
                 value = deliveryTime,
                 onTimeSelected = { deliveryTime = it },
                 modifier = Modifier.padding(top = 12.dp),
                 supportingText = {
                     Text(
-                        text = "*",
+                        text = stringResource(R.string.label_required_field),
                         color = Color.Red
                     )
                 }
             )
 
             TimeZoneDropdownField(
-                label = "Delivery time zone",
+                label = stringResource(R.string.label_delivery_time_zone),
                 selectedTimeZone = deliveryTimeZone,
                 onTimeZoneSelected = { deliveryTimeZone = it },
                 modifier = Modifier.padding(top = 12.dp),
                 supportingText = {
                     Text(
-                        text = "*",
+                        text = stringResource(R.string.label_required_field),
                         color = Color.Red
                     )
                 }
@@ -413,14 +415,14 @@ fun AddNewTripScreen(
         }
 
         TripSection(
-            title = "Cargo and Payment",
+            title = stringResource(R.string.section_cargo_and_payment),
             expanded = cargoAndPaymentExpanede,
             onClick = { cargoAndPaymentExpanede = !cargoAndPaymentExpanede }
         ) {
             OutlinedTextField(
                 value = cargoDescription,
                 onValueChange = { cargoDescription = it },
-                label = { Text("Cargo description") },
+                label = { Text(stringResource(R.string.label_cargo_description)) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 12.dp),
@@ -432,7 +434,7 @@ fun AddNewTripScreen(
             OutlinedTextField(
                 value = cargoWeight,
                 onValueChange = { cargoWeight = it },
-                label = { Text("Cargo weight") },
+                label = { Text(stringResource(R.string.label_cargo_weight)) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 12.dp),
@@ -442,7 +444,7 @@ fun AddNewTripScreen(
             OutlinedTextField(
                 value = cargoVolume,
                 onValueChange = { cargoVolume = it },
-                label = { Text("Cargo volume") },
+                label = { Text(stringResource(R.string.label_cargo_volume)) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 12.dp),
@@ -460,10 +462,10 @@ fun AddNewTripScreen(
                     value = cargoType.name,
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text("Cargo type") },
+                    label = { Text(stringResource(R.string.label_cargo_type)) },
                     supportingText = {
                         Text(
-                            text = "*",
+                            text = stringResource(R.string.label_required_field),
                             color = Color.Red
                         )
                     },
@@ -497,10 +499,10 @@ fun AddNewTripScreen(
             OutlinedTextField(
                 value = price,
                 onValueChange = { price = it },
-                label = { Text("Price") },
+                label = { Text(stringResource(R.string.label_price)) },
                 supportingText = {
                     Text(
-                        text = "*",
+                        text = stringResource(R.string.label_required_field),
                         color = Color.Red
                     )
                 },
@@ -521,10 +523,10 @@ fun AddNewTripScreen(
                     value = currency.name,
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text("Currency") },
+                    label = { Text(stringResource(R.string.label_currency)) },
                     supportingText = {
                         Text(
-                            text = "*",
+                            text = stringResource(R.string.label_required_field),
                             color = Color.Red
                         )
                     },
@@ -558,7 +560,7 @@ fun AddNewTripScreen(
             OutlinedTextField(
                 value = additionalInfo,
                 onValueChange = { additionalInfo = it },
-                label = { Text("Additional info") },
+                label = { Text(stringResource(R.string.label_additional_details)) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 12.dp),
@@ -577,7 +579,7 @@ fun AddNewTripScreen(
         )
 
         LoadingButton(
-            text = "Create trip",
+            text = stringResource(R.string.button_create_trip),
             isLoading = uiState.isLoading,
             onClick = {
                 val pickupDateTime = if (pickupDate.isNotBlank() && pickupTime.isNotBlank()) {
@@ -638,7 +640,7 @@ fun AddNewTripScreen(
                 .fillMaxWidth()
                 .padding(top = 12.dp)
         ) {
-            Text("Back")
+            Text(stringResource(R.string.button_back))
         }
     }
 }

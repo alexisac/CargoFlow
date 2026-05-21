@@ -17,6 +17,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.example.officeapp.R
 import java.time.LocalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,14 +72,14 @@ fun TimePickerField(
                         showDialog = false
                     }
                 ) {
-                    Text("OK")
+                    Text(stringResource(R.string.button_ok))
                 }
             },
             dismissButton = {
                 TextButton(
                     onClick = { showDialog = false }
                 ) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.button_cancel))
                 }
             },
             text = {

@@ -21,8 +21,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.officeapp.R
 import com.example.officeapp.viewModels.AuthenticationViewModel
 import com.example.officeapp.screens.reusableComponents.FormMessages
 import com.example.officeapp.screens.reusableComponents.LoadingButton
@@ -53,7 +55,7 @@ fun AddNewUserScreen(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Add new user",
+            text = stringResource(R.string.add_new_user_title),
             modifier = Modifier
                 .padding(bottom = 24.dp)
         )
@@ -61,7 +63,7 @@ fun AddNewUserScreen(
         OutlinedTextField(
             value = firstName,
             onValueChange = { firstName = it },
-            label = { Text("First name") },
+            label = { Text(stringResource(R.string.label_first_name)) },
             modifier = Modifier
                 .fillMaxWidth(),
             singleLine = true
@@ -70,7 +72,7 @@ fun AddNewUserScreen(
         OutlinedTextField(
             value = lastName,
             onValueChange = { lastName = it },
-            label = { Text("Last name") },
+            label = { Text(stringResource(R.string.label_last_name)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 12.dp),
@@ -80,7 +82,7 @@ fun AddNewUserScreen(
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") },
+            label = { Text(stringResource(R.string.label_email)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 12.dp),
@@ -93,7 +95,7 @@ fun AddNewUserScreen(
         PasswordField(
             value = password,
             onValueChange = { password = it },
-            label = "Password",
+            label = stringResource(R.string.label_password),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 12.dp)
@@ -102,7 +104,7 @@ fun AddNewUserScreen(
         PasswordField(
             value = confirmedPassword,
             onValueChange = { confirmedPassword = it },
-            label = "Confirmed password",
+            label = stringResource(R.string.label_confirm_password),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 12.dp)
@@ -119,7 +121,7 @@ fun AddNewUserScreen(
                 value = selectedRole.name,
                 onValueChange = {},
                 readOnly = true,
-                label = {Text("Role")},
+                label = {Text(stringResource(R.string.label_role))},
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 modifier = Modifier
                     .menuAnchor(
@@ -154,7 +156,7 @@ fun AddNewUserScreen(
         )
 
         LoadingButton(
-            text = "Create user",
+            text = stringResource(R.string.button_create_user),
             isLoading = uiState.isLoading,
             onClick = {
                 viewModel.addNewUser(
@@ -181,7 +183,7 @@ fun AddNewUserScreen(
                 .fillMaxWidth()
                 .padding(top = 12.dp)
         ) {
-            Text("Back")
+            Text(stringResource(R.string.button_back))
         }
     }
 }

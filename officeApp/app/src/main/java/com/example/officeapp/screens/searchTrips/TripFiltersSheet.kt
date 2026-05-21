@@ -24,7 +24,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.officeapp.R
 import com.example.officeapp.models.trip.TripStatus
 import com.example.officeapp.screens.reusableComponents.DatePickerField
 import com.example.officeapp.screens.reusableComponents.TimePickerField
@@ -76,7 +78,7 @@ fun TripFiltersSheet(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text("Filters")
+        Text(stringResource(R.string.button_filters))
 
         ExposedDropdownMenuBox(
             expanded = expandedStatus,
@@ -87,7 +89,7 @@ fun TripFiltersSheet(
                 value = selectedStatusTemp.name,
                 onValueChange = {},
                 readOnly = true,
-                label = { Text("Trip status") },
+                label = { Text(stringResource(R.string.label_trip_status)) },
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(expandedStatus)
                 },
@@ -123,11 +125,11 @@ fun TripFiltersSheet(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Add status filter")
+            Text(stringResource(R.string.button_add_status_filter))
         }
 
         AddTextFilterField(
-            label = "Pickup country",
+            label = stringResource(R.string.label_pickup_country),
             value = pickupCountryInput,
             onValueChange = { pickupCountryInput = it },
             onAdd = {
@@ -143,7 +145,7 @@ fun TripFiltersSheet(
         )
 
         AddTextFilterField(
-            label = "Pickup city",
+            label = stringResource(R.string.label_pickup_city),
             value = pickupCityInput,
             onValueChange = { pickupCityInput = it },
             onAdd = {
@@ -159,7 +161,7 @@ fun TripFiltersSheet(
         )
 
         AddTextFilterField(
-            label = "Delivery country",
+            label = stringResource(R.string.label_delivery_country),
             value = deliveryCountryInput,
             onValueChange = { deliveryCountryInput = it },
             onAdd = {
@@ -175,7 +177,7 @@ fun TripFiltersSheet(
         )
 
         AddTextFilterField(
-            label = "Delivery city",
+            label = stringResource(R.string.label_delivery_city),
             value = deliveryCityInput,
             onValueChange = { deliveryCityInput = it },
             onAdd = {
@@ -190,10 +192,10 @@ fun TripFiltersSheet(
             }
         )
 
-        Text("Pickup interval")
+        Text(stringResource(R.string.section_pickup_interval))
 
         DatePickerField(
-            label = "Pickup from date",
+            label = stringResource(R.string.label_pickup_from_date),
             value = pickupFromDate,
             onDateSelected = {
                 pickupFromDate = it
@@ -202,7 +204,7 @@ fun TripFiltersSheet(
         )
 
         TimePickerField(
-            label = "Pickup from time",
+            label = stringResource(R.string.label_pickup_from_time),
             value = pickupFromTime,
             onTimeSelected = {
                 pickupFromTime = it
@@ -211,7 +213,7 @@ fun TripFiltersSheet(
         )
 
         DatePickerField(
-            label = "Pickup to date",
+            label = stringResource(R.string.label_pickup_to_date),
             value = pickupToDate,
             onDateSelected = {
                 pickupToDate = it
@@ -220,7 +222,7 @@ fun TripFiltersSheet(
         )
 
         TimePickerField(
-            label = "Pickup to time",
+            label = stringResource(R.string.label_pickup_to_time),
             value = pickupToTime,
             onTimeSelected = {
                 pickupToTime = it
@@ -228,10 +230,10 @@ fun TripFiltersSheet(
             }
         )
 
-        Text("Delivery interval")
+        Text(stringResource(R.string.section_delivery_interval))
 
         DatePickerField(
-            label = "Delivery from date",
+            label = stringResource(R.string.label_pickup_from_date),
             value = deliveryFromDate,
             onDateSelected = {
                 deliveryFromDate = it
@@ -240,7 +242,7 @@ fun TripFiltersSheet(
         )
 
         TimePickerField(
-            label = "Delivery from time",
+            label = stringResource(R.string.label_pickup_from_time),
             value = deliveryFromTime,
             onTimeSelected = {
                 deliveryFromTime = it
@@ -249,7 +251,7 @@ fun TripFiltersSheet(
         )
 
         DatePickerField(
-            label = "Delivery to date",
+            label = stringResource(R.string.label_pickup_to_date),
             value = deliveryToDate,
             onDateSelected = {
                 deliveryToDate = it
@@ -258,7 +260,7 @@ fun TripFiltersSheet(
         )
 
         TimePickerField(
-            label = "Delivery to time",
+            label = stringResource(R.string.label_pickup_to_time),
             value = deliveryToTime,
             onTimeSelected = {
                 deliveryToTime = it
@@ -270,7 +272,7 @@ fun TripFiltersSheet(
             onClick = onApplyFilters,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Apply filters")
+            Text(stringResource(R.string.button_apply_filters))
         }
     }
 }
@@ -298,7 +300,7 @@ private fun AddTextFilterField(
             onClick = onAdd,
             modifier = Modifier.padding(top = 8.dp)
         ) {
-            Text("Add")
+            Text(stringResource(R.string.button_add_field))
         }
     }
 }

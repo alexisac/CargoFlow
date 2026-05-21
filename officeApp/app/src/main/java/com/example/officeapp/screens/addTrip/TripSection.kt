@@ -17,7 +17,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.officeapp.R
 
 @Composable
 fun TripSection (
@@ -56,9 +58,9 @@ fun TripSection (
                         Icons.Outlined.KeyboardArrowDown
                     },
                     contentDescription = if (expanded) {
-                        "Close section"
+                        stringResource(R.string.description_close_section)
                     } else {
-                        "Open section"
+                        stringResource(R.string.description_open_section)
                     }
                 )
             }

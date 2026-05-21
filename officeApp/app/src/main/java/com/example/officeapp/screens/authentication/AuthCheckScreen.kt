@@ -11,6 +11,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.example.officeapp.R
 import com.example.officeapp.viewModels.AuthenticationViewModel
 
 @Composable
@@ -40,6 +42,6 @@ fun AuthCheckScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CircularProgressIndicator()
-        Text("Checking session...")
+        Text(stringResource(R.string.checking_session))
     }
 }

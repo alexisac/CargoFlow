@@ -18,6 +18,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.example.officeapp.R
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -87,14 +89,14 @@ fun DatePickerField (
                         showDialog = false
                     }
                 ) {
-                    Text("Ok")
+                    Text(stringResource(R.string.button_ok))
                 }
             },
             dismissButton = {
                 TextButton(
                     onClick = { showDialog = false }
                 ) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.button_cancel))
                 }
             }
         ) {

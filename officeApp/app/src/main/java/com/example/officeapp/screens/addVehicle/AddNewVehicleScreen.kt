@@ -24,8 +24,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.officeapp.R
 import com.example.officeapp.viewModels.VehicleViewModel
 import com.example.officeapp.screens.reusableComponents.FormMessages
 import com.example.officeapp.screens.reusableComponents.LoadingButton
@@ -83,7 +85,7 @@ fun AddNewVehicleScreen (
         verticalArrangement = Arrangement.Top
     ) {
         Text (
-            text = "Add new vehicle",
+            text = stringResource(R.string.add_new_vehicle_title),
             modifier = Modifier
                 .padding(bottom = 24.dp)
         )
@@ -91,8 +93,8 @@ fun AddNewVehicleScreen (
         OutlinedTextField(
             value = licencePlate,
             onValueChange = { licencePlate = it.uppercase() },
-            label = { Text("Licence plate") },
-            supportingText = { Text("Format example: B-111-AAA or VN-123-ABC") },
+            label = { Text(stringResource(R.string.label_licence_plate)) },
+            supportingText = { Text(stringResource(R.string.description_licence_plate)) },
             modifier = Modifier
                 .fillMaxWidth(),
             singleLine = true
@@ -101,7 +103,7 @@ fun AddNewVehicleScreen (
         OutlinedTextField(
             value = vin,
             onValueChange = { vin = it },
-            label = { Text("VIN") },
+            label = { Text(stringResource(R.string.label_vin)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 12.dp),
@@ -111,7 +113,7 @@ fun AddNewVehicleScreen (
         OutlinedTextField(
             value = brand,
             onValueChange = { brand = it },
-            label = { Text("Brand") },
+            label = { Text(stringResource(R.string.label_brand)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 12.dp),
@@ -121,7 +123,7 @@ fun AddNewVehicleScreen (
         OutlinedTextField(
             value = model,
             onValueChange = { model = it },
-            label = { Text("Model") },
+            label = { Text(stringResource(R.string.label_model)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 12.dp),
@@ -131,7 +133,7 @@ fun AddNewVehicleScreen (
         OutlinedTextField(
             value = manufactureYear,
             onValueChange = { manufactureYear = it },
-            label = { Text("Manufacture year") },
+            label = { Text(stringResource(R.string.label_manufacture_year)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 12.dp),
@@ -152,7 +154,7 @@ fun AddNewVehicleScreen (
                 value = vehicleType.name,
                 onValueChange = {},
                 readOnly = true,
-                label = { Text("Vehicle type") },
+                label = { Text(stringResource(R.string.label_vehicle_type)) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expendedVehicleType) },
                 modifier = Modifier
                     .menuAnchor(
@@ -181,13 +183,13 @@ fun AddNewVehicleScreen (
         OutlinedTextField(
             value = maxWeight,
             onValueChange = { maxWeight = it },
-            label = { Text("Maximum weight") },
+            label = { Text(stringResource(R.string.label_maximum_weight)) },
             supportingText = {
                 Text(
                     if (maxWeightEnabled)
-                        "Required for this vehicle type"
+                        stringResource(R.string.description_max_weight_enabled)
                     else
-                        "Not applicable for this vehicle type"
+                        stringResource(R.string.description_max_weight_disabled)
                 )
             },
             enabled = maxWeightEnabled,
@@ -203,13 +205,13 @@ fun AddNewVehicleScreen (
         OutlinedTextField(
             value = maxVolume,
             onValueChange = { maxVolume = it },
-            label = { Text("Maximum volume") },
+            label = { Text(stringResource(R.string.label_maximum_volume)) },
             supportingText = {
                 Text(
                     if (maxVolumeEnabled)
-                        "Required for this vehicle type"
+                        stringResource(R.string.description_max_volume_enabled)
                     else
-                        "Not applicable for this vehicle type"
+                        stringResource(R.string.description_max_volume_disabled)
                 )
             },
             enabled = maxVolumeEnabled,
@@ -233,7 +235,7 @@ fun AddNewVehicleScreen (
                 value = vehicleStatus.name,
                 onValueChange = {},
                 readOnly = true,
-                label = { Text("Vehicle status") },
+                label = { Text(stringResource(R.string.label_vehicle_status)) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expendedVehicleStatus) },
                 modifier = Modifier
                     .menuAnchor(
@@ -262,8 +264,8 @@ fun AddNewVehicleScreen (
         OutlinedTextField(
             value = additionalInfo,
             onValueChange = { additionalInfo = it },
-            label = { Text("Additional info") },
-            supportingText = { Text("Optional details about the vehicle") },
+            label = { Text(stringResource(R.string.label_additional_info)) },
+            supportingText = { Text(stringResource(R.string.description_additional_info)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 12.dp),
@@ -281,7 +283,7 @@ fun AddNewVehicleScreen (
         )
 
         LoadingButton(
-            text = "Create vehicle",
+            text = stringResource(R.string.button_create_vehicle),
             isLoading = uiState.isLoading,
             onClick = {
                 viewModel.addNewVehicle(
@@ -312,7 +314,7 @@ fun AddNewVehicleScreen (
                 .fillMaxWidth()
                 .padding(top = 12.dp)
         ) {
-            Text("Back")
+            Text(stringResource(R.string.button_back))
         }
     }
 

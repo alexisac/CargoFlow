@@ -7,6 +7,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.example.officeapp.R
 
 @Composable
 fun FilterChipItem(
@@ -24,7 +26,7 @@ fun FilterChipItem(
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Close,
-                    contentDescription = "Remove filter"
+                    contentDescription = stringResource(R.string.description_remove_filter)
                 )
             }
         }

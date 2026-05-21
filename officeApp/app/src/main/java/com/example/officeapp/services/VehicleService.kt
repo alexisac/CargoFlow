@@ -32,42 +32,42 @@ class VehicleService @Inject constructor(
             ?.trim()
             ?.takeIf { it.isNotBlank() }
 
-        val licencePlateRegex = Regex("^[A-Z]{1,2}-[0-9]{2,3}-[A-Z]{3}$")
+        val licencePlateRegex = Regex(ValidationMessages.LICENCE_PLATE_REGEX)
 
         if (!licencePlateRegex.matches(normalizedLicencePlate))
-            return ApiResult.Error("LicencePlate format must be like B-11-AAA or VN-123-AAA.")
+            return ApiResult.Error(ValidationMessages.LICENCE_PLATE_FORMAT)
 
         if (normalizedVin.length != 17)
-            return ApiResult.Error("VIN must have exactly 17 characters.")
+            return ApiResult.Error(ValidationMessages.VIN_LENGTH)
 
         if (trimmedBrand.length !in 2..50)
-            return ApiResult.Error("Brand must be between 2 and 50 characters.")
+            return ApiResult.Error(ValidationMessages.BRAND_LENGTH)
 
         if (trimmedModel.length !in 3..50)
-            return ApiResult.Error("Model must be between 3 and 50 characters.")
+            return ApiResult.Error(ValidationMessages.MODEL_LENGTH)
 
         val currentYear = Year.now().value
 
         val manufactureYearInt = manufactureYear.trim().toIntOrNull()
-            ?: return ApiResult.Error("Manufacture year must be a number.")
+            ?: return ApiResult.Error(ValidationMessages.MANUFACTURE_YEAR_REQUIRED)
 
         if (manufactureYearInt !in 1900..currentYear)
-            return ApiResult.Error("ManufactureYear must be between 1900 and $currentYear")
+            return ApiResult.Error(ValidationMessages.MANUFACTURE_YEAR_RANGE + currentYear)
 
         val maxWeightInt = maxWeight.trim().toIntOrNull()
-            ?: return ApiResult.Error("Max weight must be a number.")
+            ?: return ApiResult.Error(ValidationMessages.MAX_WEIGHT_REQUIRED)
 
         if (maxWeightInt !in 1 .. 24000)
-            return ApiResult.Error("MaxWeight must be between 1 and 24000")
+            return ApiResult.Error(ValidationMessages.MAX_WEIGHT_RANGE)
 
         val maxVolumeInt = maxVolume.trim().toIntOrNull()
-            ?: return ApiResult.Error("Max volume must be a number.")
+            ?: return ApiResult.Error(ValidationMessages.MAX_VOLUME_REQUIRED)
 
         if (maxVolumeInt !in 1 .. 90)
-            return ApiResult.Error("MaxVolume must be between 1 and 90")
+            return ApiResult.Error(ValidationMessages.MAX_VOLUME_RANGE)
 
         if (trimmedAdditionalInfo != null && trimmedAdditionalInfo.length > 250)
-            return ApiResult.Error("Additional info needs to have maximum 250 characters")
+            return ApiResult.Error(ValidationMessages.ADDITIONAL_INFO_MAX_LENGTH)
 
         val request = AddNewVehicleRequest(
             licencePlate = normalizedLicencePlate,
