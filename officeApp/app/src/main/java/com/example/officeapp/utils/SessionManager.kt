@@ -21,6 +21,8 @@ class SessionManager @Inject constructor(@ApplicationContext private val context
         private val ACCESS_TOKEN = stringPreferencesKey("access_token")
         private val TOKEN_TYPE = stringPreferencesKey("token_type")
         private val USER_ROLE = stringPreferencesKey("user_role")
+        private val USER_FIRST_NAME = stringPreferencesKey("user_first_name")
+        private val USER_LAST_NAME = stringPreferencesKey("user_last_name")
     }
 
     val userId: Flow<Long?> = context.dataStore.data
@@ -54,6 +56,18 @@ class SessionManager @Inject constructor(@ApplicationContext private val context
         }
     }
 
+    suspend fun saveUserFirstName(firstName: String) {
+        context.dataStore.edit { prefs ->
+            prefs[USER_FIRST_NAME] = firstName
+        }
+    }
+
+    suspend fun saveUserLastName(lastName: String) {
+        context.dataStore.edit { prefs ->
+            prefs[USER_LAST_NAME] = lastName
+        }
+    }
+
     suspend fun getUserIdOnce(): Long? {
         return context.dataStore.data
             .map{ prefs -> prefs[USER_ID]}
@@ -75,6 +89,18 @@ class SessionManager @Inject constructor(@ApplicationContext private val context
     suspend fun getUserRole(): String? {
         return context.dataStore.data
             .map { prefs -> prefs[USER_ROLE] }
+            .firstOrNull()
+    }
+
+    suspend fun getUserFirstName(): String? {
+        return context.dataStore.data
+            .map { prefs -> prefs[USER_FIRST_NAME] }
+            .firstOrNull()
+    }
+
+    suspend fun getUserLastName(): String? {
+        return context.dataStore.data
+            .map{ prefs -> prefs[USER_LAST_NAME] }
             .firstOrNull()
     }
 

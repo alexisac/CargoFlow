@@ -43,7 +43,7 @@ fun HomeScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text (text = "Dashboard - ${uiState.userRole}")
+        Text (text = "Dashboard - ${uiState.userFirstName} ${uiState.userLastName} - ${uiState.userRole}")
 
         OldFormMessages(
             errorMessage = uiState.errorMessage,

@@ -87,6 +87,14 @@ class AuthenticationService @Inject constructor(
         return authenticationRepository.getUserRole()
     }
 
+    suspend fun getUserFirstName(): String? {
+        return authenticationRepository.getUserFirstName()
+    }
+
+    suspend fun getUserLastName(): String? {
+        return authenticationRepository.getUserLastName()
+    }
+
     suspend fun logout() {
         authenticationRepository.logout()
     }

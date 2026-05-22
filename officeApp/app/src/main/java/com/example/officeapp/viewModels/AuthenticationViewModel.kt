@@ -39,12 +39,16 @@ class AuthenticationViewModel @Inject constructor(
             ) {
                 is ApiResult.Success -> {
                     val role = authenticationService.getUserRole()
+                    val firstName = authenticationService.getUserFirstName()
+                    val lastName = authenticationService.getUserLastName()
 
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
                         isLoggedIn = true,
                         isCheckingSession = false,
                         userRole = role,
+                        userFirstName = firstName,
+                        userLastName = lastName,
                         successMessage = "Success authentication.",
                         errorMessage = null
                     )
@@ -129,6 +133,8 @@ class AuthenticationViewModel @Inject constructor(
                 isLoggedIn = false,
                 isCheckingSession = false,
                 userRole = null,
+                userFirstName = null,
+                userLastName = null,
                 successMessage = null,
                 errorMessage = null
             )
@@ -158,10 +164,24 @@ class AuthenticationViewModel @Inject constructor(
                 null
             }
 
+            val firstName = if (isValid) {
+                authenticationService.getUserFirstName()
+            } else {
+                null
+            }
+
+            val lastName = if (isValid) {
+                authenticationService.getUserLastName()
+            } else {
+                null
+            }
+
             _uiState.value = _uiState.value.copy(
                 isCheckingSession = false,
                 isLoggedIn = isValid,
-                userRole = role
+                userRole = role,
+                userFirstName = firstName,
+                userLastName = lastName
             )
         }
     }

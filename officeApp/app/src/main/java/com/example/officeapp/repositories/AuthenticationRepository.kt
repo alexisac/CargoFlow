@@ -41,6 +41,12 @@ class AuthenticationRepository @Inject constructor(
                     payload?.role?.let { role ->
                         sessionManager.saveUserRole(role)
                     }
+                    payload?.firstName?.let { firstName ->
+                        sessionManager.saveUserFirstName(firstName)
+                    }
+                    payload?.lastName?.let { lastName ->
+                        sessionManager.saveUserLastName(lastName)
+                    }
                     ApiResult.Success(body)
                 }
             } else {
@@ -78,6 +84,14 @@ class AuthenticationRepository @Inject constructor(
 
     suspend fun getUserRole(): String? {
         return sessionManager.getUserRole()
+    }
+
+    suspend fun getUserFirstName(): String? {
+        return sessionManager.getUserFirstName()
+    }
+
+    suspend fun getUserLastName(): String? {
+        return sessionManager.getUserLastName()
     }
 
     suspend fun logout() {
