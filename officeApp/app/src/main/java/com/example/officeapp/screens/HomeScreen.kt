@@ -1,6 +1,7 @@
 package com.example.officeapp.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,10 +21,13 @@ import com.example.officeapp.R
 import com.example.officeapp.viewModels.AuthenticationViewModel
 import com.example.officeapp.screens.reusableComponents.OldFormMessages
 import com.example.officeapp.models.user.UserRole
+import com.example.officeapp.screens.reusableComponents.ThemeToggle
 
 @Composable
 fun HomeScreen(
     viewModel: AuthenticationViewModel,
+    isDarkTheme: Boolean,
+    onThemeChange: (Boolean) -> Unit,
     onLogout: () -> Unit,
     onGoToAddUser: () -> Unit,
     onGoToAddVehicle: () -> Unit,
@@ -36,86 +40,101 @@ fun HomeScreen(
         viewModel.clearMessages()
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text (text = "Dashboard - ${uiState.userFirstName} ${uiState.userLastName} - ${uiState.userRole}")
-
-        OldFormMessages(
-            errorMessage = uiState.errorMessage,
-            successMessage = uiState.successMessage,
+    Box {
+        ThemeToggle(
+            isDarkTheme = isDarkTheme,
+            onThemeChange = onThemeChange,
             modifier = Modifier
-                .padding(top = 16.dp),
-            onMessageShown = { viewModel.clearMessages() }
+                .align(Alignment.TopEnd)
+                .padding(
+                    top = 42.dp,
+                    end = 24.dp
+                )
         )
-
-        if(uiState.userRole == UserRole.ADMIN.name) {
-            Button(
-                onClick = onGoToAddUser,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 32.dp)
-            ) {
-                Text(stringResource(R.string.add_new_user_title))
-            }
-        }
-
-        if (uiState.userRole in listOf(
-                UserRole.DISPATCHER.name,
-                UserRole.MANAGER.name,
-                UserRole.ADMIN.name
-        )) {
-            Button(
-                onClick = onGoToAddVehicle,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp)
-            ) {
-                Text(stringResource(R.string.add_new_vehicle_title))
-            }
-        }
-
-        if (uiState.userRole in listOf(
-                UserRole.DISPATCHER.name,
-                UserRole.MANAGER.name,
-                UserRole.ADMIN.name
-            )) {
-            Button(
-                onClick = onGoToAddTrip,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp)
-            ) {
-                Text(stringResource(R.string.add_new_trip_title))
-            }
-        }
-
-        if (uiState.userRole in listOf(
-                UserRole.DISPATCHER.name,
-                UserRole.MANAGER.name,
-                UserRole.ADMIN.name
-            )) {
-            Button(
-                onClick = onGoToSearchTrips,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp)
-            ) {
-                Text(stringResource(R.string.search_trips_title))
-            }
-        }
-
-        OutlinedButton(
-            onClick = onLogout,
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp)
+                .fillMaxSize()
+                .padding(24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(stringResource(R.string.button_logout))
+            Text(text = "Dashboard - ${uiState.userFirstName} ${uiState.userLastName} - ${uiState.userRole}")
+
+            OldFormMessages(
+                errorMessage = uiState.errorMessage,
+                successMessage = uiState.successMessage,
+                modifier = Modifier
+                    .padding(top = 16.dp),
+                onMessageShown = { viewModel.clearMessages() }
+            )
+
+            if (uiState.userRole == UserRole.ADMIN.name) {
+                Button(
+                    onClick = onGoToAddUser,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 32.dp)
+                ) {
+                    Text(stringResource(R.string.add_new_user_title))
+                }
+            }
+
+            if (uiState.userRole in listOf(
+                    UserRole.DISPATCHER.name,
+                    UserRole.MANAGER.name,
+                    UserRole.ADMIN.name
+                )
+            ) {
+                Button(
+                    onClick = onGoToAddVehicle,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 12.dp)
+                ) {
+                    Text(stringResource(R.string.add_new_vehicle_title))
+                }
+            }
+
+            if (uiState.userRole in listOf(
+                    UserRole.DISPATCHER.name,
+                    UserRole.MANAGER.name,
+                    UserRole.ADMIN.name
+                )
+            ) {
+                Button(
+                    onClick = onGoToAddTrip,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 12.dp)
+                ) {
+                    Text(stringResource(R.string.add_new_trip_title))
+                }
+            }
+
+            if (uiState.userRole in listOf(
+                    UserRole.DISPATCHER.name,
+                    UserRole.MANAGER.name,
+                    UserRole.ADMIN.name
+                )
+            ) {
+                Button(
+                    onClick = onGoToSearchTrips,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 12.dp)
+                ) {
+                    Text(stringResource(R.string.search_trips_title))
+                }
+            }
+
+            OutlinedButton(
+                onClick = onLogout,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp)
+            ) {
+                Text(stringResource(R.string.button_logout))
+            }
         }
     }
 }

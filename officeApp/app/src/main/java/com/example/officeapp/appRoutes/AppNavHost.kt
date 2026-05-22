@@ -75,6 +75,8 @@ fun AppNavHost(
         composable(AppRoutes.HOME_ROUTE) {
             HomeScreen(
                 viewModel = authenticationViewModel,
+                isDarkTheme = isDarkTheme,
+                onThemeChange = onThemeChange,
                 onLogout = {
                     navController.navigate(AppRoutes.LOGIN_ROUTE) {
                         popUpTo(0) {
