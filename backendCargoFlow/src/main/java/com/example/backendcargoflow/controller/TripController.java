@@ -4,11 +4,13 @@ import com.example.backendcargoflow.common.LogMessage;
 import com.example.backendcargoflow.controller.common.models.GenericApplicationResponseDto;
 import com.example.backendcargoflow.controller.trip.api.TripsApi;
 import com.example.backendcargoflow.controller.trip.models.AddNewTripRequestDto;
+import com.example.backendcargoflow.controller.trip.models.TripDto;
 import com.example.backendcargoflow.controller.trip.models.TripPageResponseDto;
 import com.example.backendcargoflow.controller.trip.models.TripSearchRequestDto;
 import com.example.backendcargoflow.service.TripService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -66,5 +68,11 @@ public class TripController implements TripsApi {
                 tripSearchRequestDto.getPageSize()
         ));
         return tripService.searchTrips(tripSearchRequestDto);
+    }
+
+    @Override
+    public TripDto getTrip(@PathVariable Long id) {
+        log.info(String.format(LogMessage.GET_TRIP, id));
+        return tripService.getTrip(id);
     }
 }

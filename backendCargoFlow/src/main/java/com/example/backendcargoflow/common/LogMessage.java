@@ -66,4 +66,6 @@ public class LogMessage {
             "deliveryDateTimeTo = %s, \n" +
             "pageNumber = %d, \n" +
             "pageSize = %d";
+
+    public static final String GET_TRIP = "GET_TRIP operation was invoked with: tripId = %d";
 }

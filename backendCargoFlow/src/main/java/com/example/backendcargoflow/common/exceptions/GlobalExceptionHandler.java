@@ -36,6 +36,12 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.FORBIDDEN, "403 - FORBIDDEN", "Access denied");
     }
 
+    // 404 - Not found
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<GenericApplicationResponseDto> handleNotFoundException(NotFoundException ex) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, "404 - NOT FOUND", ex.getMessage());
+    }
+
     // 409 - Conflict
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<GenericApplicationResponseDto> handleConflictException(ConflictException ex){

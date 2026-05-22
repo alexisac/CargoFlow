@@ -70,6 +70,40 @@ paths:
               schema:
                 $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
 
+  /trip/{id}:
+    get:
+      tags:
+        - Trips
+      summary: Get trip by ID
+      operationId: getTrip
+      parameters:
+        - name: id
+          in: path
+          description: Trip's ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Trip was retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trip'
+        '404':
+          description: Trip was not found
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+
 components:
   schemas:
     TripStatus:
@@ -360,3 +394,82 @@ components:
         lastPage:
           type: boolean
           example: false
+    Trip:
+      type: object
+      required:
+        - id
+        - tripStatus
+        - pickupAddress
+        - deliveryAddress
+        - pickupDateTime
+        - pickupTimeZone
+        - deliveryDateTime
+        - deliveryTimeZone
+        - cargoType
+        - price
+        - currency
+        - createdBy
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 123
+        tripStatus:
+          $ref: '#/components/schemas/TripStatus'
+        pickupAddress:
+          $ref: '#/components/schemas/Address'
+        deliveryAddress:
+          $ref: '#/components/schemas/Address'
+        pickupDateTime:
+          type: string
+          format: local-date-time
+          example: 2026-05-15T12:00:00
+        pickupTimeZone:
+          type: string
+          minLength: 3
+          maxLength: 50
+          example: Europe/Bucharest
+        deliveryDateTime:
+          type: string
+          format: local-date-time
+          example: 2026-05-16T19:00:00
+        deliveryTimeZone:
+          type: string
+          minLength: 3
+          maxLength: 50
+          example: Europe/Berlin
+        cargoDescription:
+          type: string
+          minLength: 3
+          maxLength: 250
+          nullable: true
+          example: 10 pallets of electronics
+        cargoWeight:
+          type: integer
+          minimum: 1
+          maximum: 24000
+          nullable: true
+          example: 12345
+        cargoVolume:
+          type: integer
+          minimum: 1
+          maximum: 90
+          nullable: true
+          example: 65
+        cargoType:
+          $ref: '#/components/schemas/CargoType'
+        price:
+          type: number
+          format: double
+          minimum: 0
+          example: 1200.5
+        currency:
+          $ref: '#/components/schemas/Currency'
+        additionalInfo:
+          type: string
+          maxLength: 250
+          nullable: true
+          example: Driver must call 30 minutes before arrival
+        createdBy:
+          type: string
+          example: Isac Alexandru

@@ -1,8 +1,11 @@
 package com.example.backendcargoflow.service;
 
+import com.example.backendcargoflow.common.ErrorMessage;
+import com.example.backendcargoflow.common.exceptions.NotFoundException;
 import com.example.backendcargoflow.common.security.CurrentUserService;
 import com.example.backendcargoflow.controller.common.models.GenericApplicationResponseDto;
 import com.example.backendcargoflow.controller.trip.models.AddNewTripRequestDto;
+import com.example.backendcargoflow.controller.trip.models.TripDto;
 import com.example.backendcargoflow.controller.trip.models.TripPageResponseDto;
 import com.example.backendcargoflow.controller.trip.models.TripSearchRequestDto;
 import com.example.backendcargoflow.domain.trip.entity.Trip;
@@ -28,6 +31,7 @@ public class TripService {
     private final TripRepository tripRepository;
     private final TripMapper tripMapper;
     private final CurrentUserService currentUserService;
+    private final UserLookupService userLookupService;
 
     @PreAuthorize("hasAnyRole('DISPATCHER', 'MANAGER', 'ADMIN')")
     public GenericApplicationResponseDto addNewTrip(AddNewTripRequestDto addNewTripRequestDto) {
@@ -70,6 +74,15 @@ public class TripService {
         response.setLastPage(tripPage.isLast());
 
         return response;
+    }
+
+    @PreAuthorize("hasAnyRole('DISPATCHER', 'MANAGER', 'ADMIN')")
+    public TripDto getTrip(Long id) {
+        Trip trip = tripRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.TRIP_NOT_FOUND));
+
+        String createdBy = userLookupService.getUserFullNameById(trip.getCreatedByUserId());
+        return tripMapper.mapTripToTripDto(trip, createdBy);
     }
 
     private LocalDateTime parseDateTime(String value) {

@@ -32,6 +32,8 @@ public interface TripMapper {
 
     List<TripSummaryDto> mapTripsToTripSummaryDtos(List<Trip> trips);
 
+    TripDto mapTripToTripDto(Trip trip, String createdBy);
+
     default CargoType mapTripCargoType(CargoTypeDto tripCargoTypeDto) {
         return tripCargoTypeDto == null ? null : CargoType.valueOf(tripCargoTypeDto.name());
     }
@@ -50,5 +52,9 @@ public interface TripMapper {
 
     default TripStatusDto mapTripStatus(TripStatus tripStatus) {
         return tripStatus == null ? null : TripStatusDto.valueOf(tripStatus.name());
+    }
+
+    default <T> JsonNullable<T> map(T value) {
+        return JsonNullable.of(value);
     }
 }
