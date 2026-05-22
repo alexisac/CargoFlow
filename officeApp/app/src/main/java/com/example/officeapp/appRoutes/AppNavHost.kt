@@ -105,6 +105,7 @@ fun AppNavHost(
         composable(AppRoutes.ADD_USER_ROUTE) {
             AddNewUserScreen(
                 viewModel = authenticationViewModel,
+                isDarkTheme = isDarkTheme,
                 onBack = {
                     navController.popBackStack()
                 }

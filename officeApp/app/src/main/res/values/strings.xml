@@ -10,6 +10,7 @@
     <string name="success_title">Success</string>
     <string name="trip_details_title">Trip details</string>
 
+    <string name="add_new_user_subtitle">Create a new user account</string>
     <string name="login_screen_subtitle">Sign in to continue</string>
 
     <string name="button_add_field">Add field</string>

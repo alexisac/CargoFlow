@@ -30,7 +30,8 @@ import com.example.officeapp.R
 fun PasswordField(
     value: String,
     onValueChange: (String) -> Unit,
-    label: String = "Password",
+    label: String? = "Password",
+    placeholder: String? = null,
     modifier: Modifier = Modifier
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
@@ -38,7 +39,12 @@ fun PasswordField(
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        label = { Text(label) },
+        label = label?.let {
+            { Text(text = it) }
+        },
+        placeholder = placeholder?.let {
+            { Text(text = it) }
+        },
         modifier = modifier,
         singleLine = true,
         shape = RoundedCornerShape(8.dp),
