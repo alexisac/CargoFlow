@@ -2,9 +2,11 @@ package com.example.officeapp.appRoutes
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.officeapp.viewModels.TripViewModel
 import com.example.officeapp.screens.addTrip.AddNewTripScreen
 import com.example.officeapp.viewModels.VehicleViewModel
@@ -14,6 +16,7 @@ import com.example.officeapp.screens.authentication.AddNewUserScreen
 import com.example.officeapp.screens.authentication.AuthCheckScreen
 import com.example.officeapp.screens.HomeScreen
 import com.example.officeapp.screens.authentication.LoginScreen
+import com.example.officeapp.screens.searchTrips.TripDetailsScreen
 import com.example.officeapp.screens.searchTrips.TripSearchScreen
 
 @Composable
@@ -126,8 +129,32 @@ fun AppNavHost(
 
         composable(AppRoutes.SEARCH_TRIPS_ROUTE) {
             TripSearchScreen(
-                viewModel = tripViewModel
+                viewModel = tripViewModel,
+                onTripClick = { tripId ->
+                    navController.navigate("${AppRoutes.TRIP_DETAILS_BASE_ROUTE}/$tripId")
+                }
             )
+        }
+
+        composable(
+            route = AppRoutes.TRIP_DETAILS_ROUTE,
+            arguments = listOf(
+                navArgument(AppRoutes.TRIP_ID_ARGUMENT) {
+                    type = NavType.LongType
+                }
+            )
+        ) { backStackEntry ->
+            val tripId = backStackEntry.arguments?.getLong(AppRoutes.TRIP_ID_ARGUMENT)
+
+            if (tripId != null) {
+                TripDetailsScreen(
+                    viewModel = tripViewModel,
+                    tripId = tripId,
+                    onBack = {
+                        navController.popBackStack()
+                    }
+                )
+            }
         }
     }
 }

@@ -214,6 +214,42 @@ class TripViewModel @Inject constructor(
         )
     }
 
+    fun getTrip(
+        tripId: Long
+    ) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isLoading = true,
+                errorMessage = null,
+                successMessage = null,
+                currentTrip = null
+            )
+
+            when (val result = tripService.getTrip(tripId)) {
+                is ApiResult.Success -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = null,
+                        currentTrip = result.data
+                    )
+                }
+
+                is ApiResult.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = result.message
+                    )
+                }
+
+                ApiResult.Loading -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = true
+                    )
+                }
+            }
+        }
+    }
+
     fun clearMessage() {
         _uiState.value = _uiState.value.copy(
             successMessage = null,

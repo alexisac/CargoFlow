@@ -8,4 +8,7 @@ object AppRoutes {
     const val ADD_VEHICLE_ROUTE = "add_vehicle"
     const val ADD_TRIP_ROUTE = "add_trip"
     const val SEARCH_TRIPS_ROUTE = "search_trips"
+    const val TRIP_ID_ARGUMENT = "tripId"
+    const val TRIP_DETAILS_BASE_ROUTE = "trip_details"
+    const val TRIP_DETAILS_ROUTE = "${TRIP_DETAILS_BASE_ROUTE}/{$TRIP_ID_ARGUMENT}"
 }

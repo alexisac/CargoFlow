@@ -25,6 +25,7 @@ object ValidationMessages {
     const val DELIVERY_TIME_ZONE_LENGTH = "Delivery time zone must be between 3 and 50 characters."
     const val EMAIL_MIN_LENGTH = "Email needs to have minimum 5 characters."
     const val FIRST_NAME_MIN_LENGTH = "First name needs to have minimum 3 characters."
+    const val ID_RANGE = "ID cannot be negative."
     const val LAST_NAME_MIN_LENGTH = "Last name needs to have minimum 3 characters."
     const val MANUFACTURE_YEAR_RANGE = "Manufacture year must be between 1900 and "
     const val MAX_VOLUME_RANGE = "Max volume must be between 1 and 90."

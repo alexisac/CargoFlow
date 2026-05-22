@@ -31,8 +31,8 @@ import com.example.officeapp.viewModels.TripViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TripSearchScreen (
-    viewModel: TripViewModel
-    //onTripClick: (Long) -> Unit
+    viewModel: TripViewModel,
+    onTripClick: (Long) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -119,9 +119,7 @@ fun TripSearchScreen (
             items(uiState.trips) { trip ->
                 TripSummaryCard(
                     trip = trip,
-                    onClick = {
-                        // TODO: Open trip details later
-                    }
+                    onClick = { onTripClick(trip.id) }
                 )
             }
         }

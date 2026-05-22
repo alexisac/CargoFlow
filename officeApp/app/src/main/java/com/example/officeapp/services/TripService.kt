@@ -5,6 +5,7 @@ import com.example.officeapp.models.trip.AddNewTripRequest
 import com.example.officeapp.models.trip.Address
 import com.example.officeapp.models.trip.CargoType
 import com.example.officeapp.models.trip.Currency
+import com.example.officeapp.models.trip.Trip
 import com.example.officeapp.models.trip.TripPageResponse
 import com.example.officeapp.models.trip.TripSearchRequest
 import com.example.officeapp.models.trip.TripStatus
@@ -199,6 +200,15 @@ class TripService @Inject constructor(
             pageSize = pageSize
         )
         return tripRepository.searchTrips(request)
+    }
+
+    suspend fun getTrip(
+        tripId: Long
+    ): ApiResult<Trip> {
+        if (tripId < 0)
+            return ApiResult.Error(ValidationMessages.ID_RANGE)
+
+        return tripRepository.getTrip(tripId)
     }
 
     private fun buildAddress(
