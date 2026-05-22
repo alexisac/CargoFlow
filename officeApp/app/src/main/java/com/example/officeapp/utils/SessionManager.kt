@@ -1,6 +1,7 @@
 package com.example.officeapp.utils
 
 import android.content.Context
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -23,6 +24,7 @@ class SessionManager @Inject constructor(@ApplicationContext private val context
         private val USER_ROLE = stringPreferencesKey("user_role")
         private val USER_FIRST_NAME = stringPreferencesKey("user_first_name")
         private val USER_LAST_NAME = stringPreferencesKey("user_last_name")
+        private val DARK_THEME = booleanPreferencesKey("dark_theme")
     }
 
     val userId: Flow<Long?> = context.dataStore.data
@@ -36,6 +38,9 @@ class SessionManager @Inject constructor(@ApplicationContext private val context
 
     val userRole: Flow<String?> = context.dataStore.data
         .map { prefs -> prefs[USER_ROLE] }
+
+    val isDarkTheme: Flow<Boolean> = context.dataStore.data
+        .map { prefs -> prefs[DARK_THEME] ?: true }
 
     suspend fun saveUserId(id: Long) {
         context.dataStore.edit { prefs ->
@@ -65,6 +70,12 @@ class SessionManager @Inject constructor(@ApplicationContext private val context
     suspend fun saveUserLastName(lastName: String) {
         context.dataStore.edit { prefs ->
             prefs[USER_LAST_NAME] = lastName
+        }
+    }
+
+    suspend fun saveDarkTheme(isDarkTheme: Boolean) {
+        context.dataStore.edit { prefs ->
+            prefs[DARK_THEME] = isDarkTheme
         }
     }
 
@@ -106,7 +117,12 @@ class SessionManager @Inject constructor(@ApplicationContext private val context
 
     suspend fun clearSession() {
         context.dataStore.edit { prefs ->
-            prefs.clear()
+            prefs.remove(USER_ID)
+            prefs.remove(ACCESS_TOKEN)
+            prefs.remove(TOKEN_TYPE)
+            prefs.remove(USER_ROLE)
+            prefs.remove(USER_FIRST_NAME)
+            prefs.remove(USER_LAST_NAME)
         }
     }
 }
