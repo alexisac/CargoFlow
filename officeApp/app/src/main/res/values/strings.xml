@@ -4,8 +4,9 @@
     <string name="add_new_trip_title">Add new trip</string>
     <string name="add_new_user_title">Add new user</string>
     <string name="add_new_vehicle_title">Add new vehicle</string>
+    <string name="assign_driver_for_trip">Assign driver for trip</string>
     <string name="login_screen_title">Welcome back!</string>
-    <string name="search_trips_title">Search trips</string>
+    <string name="search_and_associate_trips_title">Search and associate trips</string>
     <string name="something_went_wrong_title">Something went wrong</string>
     <string name="success_title">Success</string>
     <string name="trip_details_title">Trip details</string>
@@ -60,6 +61,7 @@
     <string name="label_maximum_volume">Maximum volume</string>
     <string name="label_maximum_weight">Maximum weight</string>
     <string name="label_model">Model</string>
+    <string name="label_no_available_drivers_found">No available drivers found.</string>
     <string name="label_password">Password</string>
     <string name="label_pickup">Pickup</string>
     <string name="label_pickup_city">Pickup city</string>

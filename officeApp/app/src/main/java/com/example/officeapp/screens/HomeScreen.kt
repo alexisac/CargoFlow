@@ -123,7 +123,7 @@ fun HomeScreen(
                         .fillMaxWidth()
                         .padding(top = 12.dp)
                 ) {
-                    Text(stringResource(R.string.search_trips_title))
+                    Text(stringResource(R.string.search_and_associate_trips_title))
                 }
             }
 

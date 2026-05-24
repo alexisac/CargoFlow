@@ -15,9 +15,11 @@ import com.example.officeapp.viewModels.AuthenticationViewModel
 import com.example.officeapp.screens.authentication.AddNewUserScreen
 import com.example.officeapp.screens.authentication.AuthCheckScreen
 import com.example.officeapp.screens.HomeScreen
+import com.example.officeapp.screens.assignDriver.AssignDriverScreen
 import com.example.officeapp.screens.authentication.LoginScreen
 import com.example.officeapp.screens.searchTrips.TripDetailsScreen
 import com.example.officeapp.screens.searchTrips.TripSearchScreen
+import com.example.officeapp.viewModels.TripAssignmentViewModel
 
 @Composable
 fun AppNavHost(
@@ -29,6 +31,7 @@ fun AppNavHost(
     val authenticationViewModel: AuthenticationViewModel = hiltViewModel()
     val vehicleViewModel: VehicleViewModel = hiltViewModel()
     val tripViewModel: TripViewModel = hiltViewModel()
+    val tripAssignmentViewModel: TripAssignmentViewModel = hiltViewModel()
 
     NavHost(
         navController = navController,
@@ -135,6 +138,9 @@ fun AppNavHost(
                 viewModel = tripViewModel,
                 onTripClick = { tripId ->
                     navController.navigate("${AppRoutes.TRIP_DETAILS_BASE_ROUTE}/$tripId")
+                },
+                onAssignDriver = { tripId ->
+                    navController.navigate("${AppRoutes.ASSIGN_DRIVER_BASE_ROUTE}/$tripId")
                 }
             )
         }
@@ -153,6 +159,27 @@ fun AppNavHost(
                 TripDetailsScreen(
                     viewModel = tripViewModel,
                     tripId = tripId,
+                    onBack = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+        }
+
+        composable(
+            route = AppRoutes.ASSIGN_DRIVER_ROUTE,
+            arguments = listOf(
+                navArgument(AppRoutes.TRIP_ID_ARGUMENT) {
+                    type = NavType.LongType
+                }
+            )
+        ) { backStackEntry ->
+            val tripId = backStackEntry.arguments?.getLong(AppRoutes.TRIP_ID_ARGUMENT)
+
+            if (tripId != null) {
+                AssignDriverScreen(
+                    tripId = tripId,
+                    viewModel = tripAssignmentViewModel,
                     onBack = {
                         navController.popBackStack()
                     }

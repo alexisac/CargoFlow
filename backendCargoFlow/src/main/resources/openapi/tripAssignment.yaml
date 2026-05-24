@@ -4,7 +4,7 @@ info:
   title: Trip assignment management
   description: API related to assigning drivers and vehicles to trips
 paths:
-  /trip/{tripId}/available-drivers:
+  /tripAssignment/{tripId}/available-drivers:
     get:
       tags:
         - Trip Assignments

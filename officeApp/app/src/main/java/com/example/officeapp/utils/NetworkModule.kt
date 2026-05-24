@@ -3,6 +3,7 @@ package com.example.officeapp.utils
 import com.example.officeapp.interfacesAPI.TripInterfaceAPI
 import com.example.officeapp.interfacesAPI.VehicleInterfaceAPI
 import com.example.officeapp.interfacesAPI.AuthenticationInterfaceAPI
+import com.example.officeapp.interfacesAPI.TripAssignmentInterfaceAPI
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -75,5 +76,11 @@ object NetworkModule {
     @Singleton
     fun provideTripInterfaceAPI(retrofit: Retrofit): TripInterfaceAPI {
         return retrofit.create(TripInterfaceAPI::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTripAssignmentInterfaceAPI(retrofit: Retrofit): TripAssignmentInterfaceAPI {
+        return retrofit.create(TripAssignmentInterfaceAPI::class.java)
     }
 }
