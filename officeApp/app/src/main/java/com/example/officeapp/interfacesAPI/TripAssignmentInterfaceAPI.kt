@@ -1,6 +1,7 @@
 package com.example.officeapp.interfacesAPI
 
 import com.example.officeapp.models.tripAssignment.AvailableDriversResponse
+import com.example.officeapp.models.tripAssignment.AvailableVehiclesResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -12,4 +13,9 @@ interface TripAssignmentInterfaceAPI {
     suspend fun getAvailableDriversForTrip(
         @Path("tripId") tripId: Long
     ): Response<AvailableDriversResponse>
+
+    @GET("tripAssignment/{tripId}/available-vehicles")
+    suspend fun getAvailableVehiclesForTrip(
+        @Path("tripId") tripId: Long
+    ): Response<AvailableVehiclesResponse>
 }

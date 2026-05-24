@@ -32,7 +32,8 @@ import com.example.officeapp.viewModels.TripViewModel
 @Composable
 fun TripSearchScreen (
     viewModel: TripViewModel,
-    onTripClick: (Long) -> Unit
+    onTripClick: (Long) -> Unit,
+    onAssignDriver: (Long) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -119,7 +120,8 @@ fun TripSearchScreen (
             items(uiState.trips) { trip ->
                 TripSummaryCard(
                     trip = trip,
-                    onClick = { onTripClick(trip.id) }
+                    onClick = { onTripClick(trip.id) },
+                    onAssignDriver = { onAssignDriver(trip.id) }
                 )
             }
         }

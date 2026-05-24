@@ -8,17 +8,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.officeapp.R
+import com.example.officeapp.models.tripAssignment.AvailableVehicle
+import com.example.officeapp.models.vehicle.VehicleType
 import com.example.officeapp.screens.reusableComponents.OldFormMessages
 import com.example.officeapp.viewModels.TripAssignmentViewModel
 
@@ -30,8 +36,15 @@ fun AssignDriverScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    var selectedDriverId by remember { mutableStateOf<Long?>(null) }
+    var selectedPrimaryVehicle by remember { mutableStateOf<AvailableVehicle?>(null) }
+    var selectedTrailerId by remember { mutableStateOf<Long?>(null) }
+
+    val trailerEnabled = selectedPrimaryVehicle?.vehicleType == VehicleType.TRACTOR_UNIT
+
     LaunchedEffect(tripId) {
         viewModel.getAvailableDriversForTrip(tripId)
+        viewModel.getAvailableVehiclesForTrip(tripId)
     }
 
     Column(
@@ -70,20 +83,103 @@ fun AssignDriverScreen(
                 CircularProgressIndicator()
             }
         } else {
-            if (uiState.availableDrivers.isEmpty() && uiState.errorMessage == null) {
-                Text(
-                    text = stringResource(R.string.label_no_available_drivers_found),
-                    modifier = Modifier.padding(top = 24.dp)
-                )
-            } else {
-                LazyColumn(
-                    modifier = Modifier.padding(top = 24.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
+            LazyColumn(
+                modifier = Modifier.padding(top = 24.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                item {
+                    Text(text = stringResource(R.string.section_drivers))
+                }
+
+                if (uiState.availableDrivers.isEmpty() && uiState.errorMessage == null) {
+                    item {
+                        Text(
+                            text = stringResource(R.string.label_no_available_drivers_found),
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                    }
+                } else {
                     items(uiState.availableDrivers) { driver ->
                         AvailableDriverCard(
-                            driver = driver
+                            driver = driver,
+                            selected = selectedDriverId == driver.id,
+                            onClick = {
+                                selectedDriverId = driver.id
+                            }
                         )
+                    }
+                }
+
+                item {
+                    HorizontalDivider(
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                }
+
+                item {
+                    Text(text = stringResource(R.string.section_primary_vehicle))
+                }
+
+                if (uiState.availablePrimaryVehicles.isEmpty() && uiState.errorMessage == null) {
+                    item {
+                        Text(
+                            text = stringResource(R.string.label_no_available_primary_vehicle_found),
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                    }
+                } else {
+                    items(uiState.availablePrimaryVehicles) { vehicle ->
+                        AvailableVehicleCard(
+                            vehicle = vehicle,
+                            selected = selectedPrimaryVehicle?.id == vehicle.id,
+                            enabled = true,
+                            onClick = {
+                                selectedPrimaryVehicle = vehicle
+
+                                if (vehicle.vehicleType != VehicleType.TRACTOR_UNIT) {
+                                    selectedTrailerId = null
+                                }
+                            }
+                        )
+                    }
+                }
+
+                item {
+                    HorizontalDivider(
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                }
+
+                item {
+                    Text(text = stringResource(R.string.section_trailers))
+                }
+
+                if (!trailerEnabled) {
+                    item {
+                        Text(
+                            text = stringResource(R.string.label_select_tractor_unit_for_trailer),
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                    }
+                } else {
+                    if (uiState.availableTrailers.isEmpty() && uiState.errorMessage == null) {
+                        item {
+                            Text(
+                                text = stringResource(R.string.label_no_available_trailer_found),
+                                modifier = Modifier.padding(top = 8.dp)
+                            )
+                        }
+                    } else {
+                        items(uiState.availableTrailers) { trailer ->
+                            AvailableVehicleCard(
+                                vehicle = trailer,
+                                selected = selectedTrailerId == trailer.id,
+                                enabled = true,
+                                onClick = {
+                                    selectedTrailerId = trailer.id
+                                }
+                            )
+                        }
                     }
                 }
             }

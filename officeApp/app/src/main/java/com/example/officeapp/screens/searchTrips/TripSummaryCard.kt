@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,12 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.officeapp.R
+import com.example.officeapp.models.trip.TripStatus
 import com.example.officeapp.models.trip.TripSummary
 
 @Composable
 fun TripSummaryCard(
     trip: TripSummary,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onAssignDriver: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -68,6 +71,17 @@ fun TripSummaryCard(
                     Text(
                         text = "${trip.deliveryDateTime} | ${trip.deliveryTimeZone}",
                     )
+                }
+            }
+
+            if (trip.tripStatus == TripStatus.PLANNED) {
+                Button(
+                    onClick = onAssignDriver,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                ) {
+                    Text(stringResource(R.string.assign_driver_for_trip))
                 }
             }
         }

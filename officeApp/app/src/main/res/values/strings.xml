@@ -62,6 +62,8 @@
     <string name="label_maximum_weight">Maximum weight</string>
     <string name="label_model">Model</string>
     <string name="label_no_available_drivers_found">No available drivers found.</string>
+    <string name="label_no_available_primary_vehicle_found">No available primary vehicle found.</string>
+    <string name="label_no_available_trailer_found">No available trailer found.</string>
     <string name="label_password">Password</string>
     <string name="label_pickup">Pickup</string>
     <string name="label_pickup_city">Pickup city</string>
@@ -78,6 +80,8 @@
     <string name="label_price">Price</string>
     <string name="label_required_field">*</string>
     <string name="label_role">Role</string>
+    <string name="label_select_tractor_unit_for_trailer">Select a tractor unit to enable trailers.</string>
+    <string name="label_selected">Selected</string>
     <string name="label_status">Status</string>
     <string name="label_street_name">Street name</string>
     <string name="label_street_number">Street number</string>
@@ -91,10 +95,13 @@
     <string name="section_delivery">Delivery</string>
     <string name="section_delivery_address">Delivery address</string>
     <string name="section_delivery_interval">Delivery interval</string>
+    <string name="section_drivers">Drivers</string>
     <string name="section_pickup">Pickup</string>
     <string name="section_pickup_address">Pickup address</string>
     <string name="section_pickup_interval">Pickup interval</string>
+    <string name="section_primary_vehicle">Primary vehicles</string>
     <string name="section_time">Time</string>
+    <string name="section_trailers">Trailers</string>
 
     <string name="description_action_completed_successfully">Your action was completed successfully.</string>
     <string name="description_additional_info">Optional details about the vehicle</string>

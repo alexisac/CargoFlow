@@ -11,27 +11,33 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.officeapp.R
-import com.example.officeapp.models.tripAssignment.AvailableDriver
-
+import com.example.officeapp.models.tripAssignment.AvailableVehicle
 
 @Composable
-fun AvailableDriverCard(
-    driver: AvailableDriver,
+fun AvailableVehicleCard(
+    vehicle: AvailableVehicle,
     selected: Boolean,
+    enabled: Boolean,
     onClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-                onClick()
-            }
+            .clickable(
+                enabled = enabled,
+                onClick = onClick
+            )
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "${driver.firstName} ${driver.lastName}"
+                text = vehicle.licencePlate
+            )
+
+            Text(
+                text = vehicle.vehicleType.name,
+                modifier = Modifier.padding(top = 4.dp)
             )
 
             if (selected) {
