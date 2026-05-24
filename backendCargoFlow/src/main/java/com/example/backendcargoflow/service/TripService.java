@@ -1,6 +1,7 @@
 package com.example.backendcargoflow.service;
 
 import com.example.backendcargoflow.common.ErrorMessage;
+import com.example.backendcargoflow.common.exceptions.BadRequestException;
 import com.example.backendcargoflow.common.exceptions.NotFoundException;
 import com.example.backendcargoflow.common.security.CurrentUserService;
 import com.example.backendcargoflow.controller.common.models.GenericApplicationResponseDto;
@@ -21,9 +22,11 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.time.DateTimeException;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
-
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +40,19 @@ public class TripService {
     public GenericApplicationResponseDto addNewTrip(AddNewTripRequestDto addNewTripRequestDto) {
         Long currentUserId = currentUserService.getCurrentUserId();
         Trip trip = tripMapper.mapAddNewTripRequestDtoToTrip(addNewTripRequestDto);
+
+        Instant pickupInstant = convertToInstant(
+                trip.getPickupDateTime(),
+                trip.getPickupTimeZone()
+        );
+
+        Instant deliveryInstant = convertToInstant(
+                trip.getDeliveryDateTime(),
+                trip.getDeliveryTimeZone()
+        );
+
+        trip.setPickupInstant(pickupInstant);
+        trip.setDeliveryInstant(deliveryInstant);
         trip.setTripStatus(TripStatus.PLANNED);
         trip.setCreatedByUserId(currentUserId);
         tripRepository.save(trip);
@@ -87,5 +103,15 @@ public class TripService {
 
     private LocalDateTime parseDateTime(String value) {
         return value == null || value.isBlank() ? null : LocalDateTime.parse(value);
+    }
+
+    private Instant convertToInstant(LocalDateTime dateTime, String timeZone) {
+        try {
+            return dateTime
+                    .atZone(ZoneId.of(timeZone))
+                    .toInstant();
+        } catch (DateTimeException exception) {
+            throw new BadRequestException(String.format(ErrorMessage.INVALID_TIME_ZONE, timeZone));
+        }
     }
 }

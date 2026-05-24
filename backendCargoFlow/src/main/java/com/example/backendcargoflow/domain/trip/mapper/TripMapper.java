@@ -18,6 +18,8 @@ public interface TripMapper {
     @Mapping(target = "tripStatus", ignore = true)
     @Mapping(target = "createdByUserId", ignore = true)
     @Mapping(target = "createdDate", ignore = true)
+    @Mapping(target = "pickupInstant", ignore = true)
+    @Mapping(target = "deliveryInstant", ignore = true)
     Trip mapAddNewTripRequestDtoToTrip(AddNewTripRequestDto addNewTripRequestDto);
 
     Address mapAddressDtoToAddress(AddressDto addressDto);

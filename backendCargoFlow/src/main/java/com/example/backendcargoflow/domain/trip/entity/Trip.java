@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Getter
@@ -88,4 +89,10 @@ public class Trip {
     @CreationTimestamp
     @Column(name = "created_date", nullable = false, updatable = false)
     private LocalDateTime createdDate;
+
+    @Column(name = "pickup_instant", nullable = false)
+    private Instant pickupInstant;
+
+    @Column(name = "delivery_instant", nullable = false)
+    private Instant deliveryInstant;
 }

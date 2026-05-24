@@ -12,4 +12,6 @@ public class ErrorMessage {
     public static final String MAX_VOLUME_NOT_REQUIRED = "MaxVolume must be empty for this vehicle type";
 
     public static final String TRIP_NOT_FOUND = "Trip with this id is not found in database";
+    public static final String INVALID_TIME_ZONE = "Invalid time zone: %s";
+    public static final String TRIP_IS_NOT_PLANNED = "Only planned trips can be assigned to a driver";
 }

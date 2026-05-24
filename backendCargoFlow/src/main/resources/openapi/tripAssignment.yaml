@@ -1,0 +1,77 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: Trip assignment management
+  description: API related to assigning drivers and vehicles to trips
+paths:
+  /trip/{tripId}/available-drivers:
+    get:
+      tags:
+        - Trip Assignments
+      summary: Get available drivers for trip
+      operationId: getAvailableDriversForTrip
+      parameters:
+        - name: tripId
+          in: path
+          description: Trip's ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Available drivers were retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailableDriversResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '404':
+          description: Trip was not found
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+components:
+  schemas:
+    AvailableDriver:
+      type: object
+      required:
+        - id
+        - firstName
+        - lastName
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 15
+        firstName:
+          type: string
+          minLength: 2
+          maxLength: 50
+          example: Ion
+        lastName:
+          type: string
+          minLength: 2
+          maxLength: 50
+          example: Popescu
+    AvailableDriversResponse:
+      type: object
+      required:
+        - drivers
+      properties:
+        drivers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AvailableDriver'
