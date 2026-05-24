@@ -43,6 +43,45 @@ paths:
             application/json:
               schema:
                 $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+  /tripAssignment/{tripId}/available-vehicles:
+    get:
+      tags:
+        - Trip Assignments
+      summary: Get available vehicles for trip
+      operationId: getAvailableVehiclesForTrip
+      parameters:
+        - name: tripId
+          in: path
+          description: Trip's ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Available vehicles were retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailableVehiclesResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '404':
+          description: Trip was not found
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
 components:
   schemas:
     AvailableDriver:
@@ -75,3 +114,33 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AvailableDriver'
+    AvailableVehicle:
+      type: object
+      required:
+        - id
+        - licencePlate
+        - vehicleType
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 12
+        licencePlate:
+          type: string
+          example: B-101-TRK
+        vehicleType:
+          $ref: 'vehicle.yaml#/components/schemas/VehicleType'
+    AvailableVehiclesResponse:
+      type: object
+      required:
+        - primaryVehicles
+        - trailers
+      properties:
+        primaryVehicles:
+          type: array
+          items:
+            $ref: '#/components/schemas/AvailableVehicle'
+        trailers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AvailableVehicle'

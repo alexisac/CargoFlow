@@ -5,6 +5,8 @@ import com.example.backendcargoflow.common.exceptions.BadRequestException;
 import com.example.backendcargoflow.common.exceptions.NotFoundException;
 import com.example.backendcargoflow.controller.tripAssignment.models.AvailableDriverDto;
 import com.example.backendcargoflow.controller.tripAssignment.models.AvailableDriversResponseDto;
+import com.example.backendcargoflow.controller.tripAssignment.models.AvailableVehicleDto;
+import com.example.backendcargoflow.controller.tripAssignment.models.AvailableVehiclesResponseDto;
 import com.example.backendcargoflow.domain.trip.entity.Trip;
 import com.example.backendcargoflow.domain.trip.entity.TripStatus;
 import com.example.backendcargoflow.domain.trip.repository.TripRepository;
@@ -12,6 +14,10 @@ import com.example.backendcargoflow.domain.tripAssignment.mapper.TripAssignmentM
 import com.example.backendcargoflow.domain.user.entity.AvailableDriverProjection;
 import com.example.backendcargoflow.domain.user.entity.UserRole;
 import com.example.backendcargoflow.domain.user.repository.UserRepository;
+import com.example.backendcargoflow.domain.vehicle.entity.AvailableVehicleProjection;
+import com.example.backendcargoflow.domain.vehicle.entity.VehicleStatus;
+import com.example.backendcargoflow.domain.vehicle.entity.VehicleType;
+import com.example.backendcargoflow.domain.vehicle.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -23,23 +29,16 @@ import java.util.List;
 public class TripAssignmentService {
     private final TripRepository tripRepository;
     private final UserRepository userRepository;
+    private final VehicleRepository vehicleRepository;
     private final TripAssignmentMapper tripAssignmentMapper;
 
     @PreAuthorize("hasAnyRole('DISPATCHER', 'MANAGER', 'ADMIN')")
     public AvailableDriversResponseDto getAvailableDriversForTrip(Long tripId) {
-        Trip trip = tripRepository.findById(tripId)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.TRIP_NOT_FOUND));
-
-        if (trip.getTripStatus() != TripStatus.PLANNED) {
-            throw new BadRequestException(ErrorMessage.TRIP_IS_NOT_PLANNED);
-        }
+        Trip trip = getPlannedTrip(tripId);
 
         List<AvailableDriverProjection> availableDriverProjections = userRepository.findAvailableDriversForTrip(
                 UserRole.DRIVER,
-                List.of(
-                        TripStatus.ASSIGNED,
-                        TripStatus.IN_PROGRESS
-                ),
+                getBlockingTripStatuses(),
                 trip.getPickupInstant(),
                 trip.getDeliveryInstant()
         );
@@ -50,5 +49,78 @@ public class TripAssignmentService {
         response.setDrivers(availableDrivers);
 
         return response;
+    }
+
+    @PreAuthorize("hasAnyRole('DISPATCHER', 'MANAGER', 'ADMIN')")
+    public AvailableVehiclesResponseDto getAvailableVehiclesForTrip(Long tripId) {
+        Trip trip = getPlannedTrip(tripId);
+
+        List<AvailableVehicleProjection> primaryVehicleProjections = vehicleRepository.findAvailableVehiclesForTrip(
+                VehicleStatus.AVAILABLE,
+                getPrimaryVehicleTypes(),
+                getBlockingTripStatuses(),
+                trip.getPickupInstant(),
+                trip.getDeliveryInstant()
+        );
+
+        List<AvailableVehicleProjection> trailerProjections = vehicleRepository.findAvailableVehiclesForTrip(
+                VehicleStatus.AVAILABLE,
+                getTrailerVehicleTypes(),
+                getBlockingTripStatuses(),
+                trip.getPickupInstant(),
+                trip.getDeliveryInstant()
+        );
+
+        List<AvailableVehicleDto> primaryVehicles =
+                tripAssignmentMapper.mapAvailableVehicleProjectionsToAvailableVehicleDtos(
+                        primaryVehicleProjections
+                );
+
+        List<AvailableVehicleDto> trailers =
+                tripAssignmentMapper.mapAvailableVehicleProjectionsToAvailableVehicleDtos(
+                        trailerProjections
+                );
+
+        AvailableVehiclesResponseDto response = new AvailableVehiclesResponseDto();
+        response.setPrimaryVehicles(primaryVehicles);
+        response.setTrailers(trailers);
+
+        return response;
+    }
+
+    private Trip getPlannedTrip(Long tripId) {
+        Trip trip = tripRepository.findById(tripId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.TRIP_NOT_FOUND));
+
+        if (trip.getTripStatus() != TripStatus.PLANNED) {
+            throw new BadRequestException(ErrorMessage.TRIP_IS_NOT_PLANNED);
+        }
+
+        return trip;
+    }
+
+    private List<TripStatus> getBlockingTripStatuses() {
+        return List.of(
+                TripStatus.ASSIGNED,
+                TripStatus.IN_PROGRESS
+        );
+    }
+
+    private List<VehicleType> getPrimaryVehicleTypes() {
+        return List.of(
+                VehicleType.VAN,
+                VehicleType.BOX_TRUCK,
+                VehicleType.REFRIGERATED_TRUCK,
+                VehicleType.TANKER_TRUCK,
+                VehicleType.TRACTOR_UNIT
+        );
+    }
+
+    private List<VehicleType> getTrailerVehicleTypes() {
+        return List.of(
+                VehicleType.SEMI_TRAILER,
+                VehicleType.REFRIGERATED_TRAILER,
+                VehicleType.TANKER_TRAILER
+        );
     }
 }
