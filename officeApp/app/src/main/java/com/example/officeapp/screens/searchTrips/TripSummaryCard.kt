@@ -81,7 +81,7 @@ fun TripSummaryCard(
                         .fillMaxWidth()
                         .padding(top = 16.dp)
                 ) {
-                    Text(stringResource(R.string.assign_driver_for_trip))
+                    Text(stringResource(R.string.button_assign_driver_for_trip))
                 }
             }
         }

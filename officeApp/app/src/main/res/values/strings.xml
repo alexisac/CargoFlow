@@ -4,7 +4,6 @@
     <string name="add_new_trip_title">Add new trip</string>
     <string name="add_new_user_title">Add new user</string>
     <string name="add_new_vehicle_title">Add new vehicle</string>
-    <string name="assign_driver_for_trip">Assign driver for trip</string>
     <string name="login_screen_title">Welcome back!</string>
     <string name="search_and_associate_trips_title">Search and associate trips</string>
     <string name="something_went_wrong_title">Something went wrong</string>
@@ -17,6 +16,8 @@
     <string name="button_add_field">Add field</string>
     <string name="button_add_status_filter">Add status filter</string>
     <string name="button_apply_filters">Apply filters</string>
+    <string name="button_assign">Assign</string>
+    <string name="button_assign_driver_for_trip">Assign driver for trip</string>
     <string name="button_back">Back</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_create_trip">Create trip</string>

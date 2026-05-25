@@ -100,31 +100,59 @@ class TripAssignmentViewModel @Inject constructor(
         }
     }
 
+    fun assignTrip(
+        tripId: Long,
+        driverId: Long,
+        primaryVehicleId: Long,
+        trailerVehicleId: Long?
+    ) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isLoading = true,
+                errorMessage = null,
+                successMessage = null
+            )
+
+            when (
+                val result = tripAssignmentService.assignTrip(
+                    tripId = tripId,
+                    driverId = driverId,
+                    primaryVehicleId = primaryVehicleId,
+                    trailerVehicleId = trailerVehicleId
+                )
+            ) {
+                is ApiResult.Success -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        successMessage = result.data.message ?: "Assigned was created with success.",
+                        errorMessage = null,
+                        availableDrivers = emptyList(),
+                        availablePrimaryVehicles = emptyList(),
+                        availableTrailers = emptyList()
+                    )
+                }
+
+                is ApiResult.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = result.message,
+                        successMessage = null
+                    )
+                }
+
+                is ApiResult.Loading -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = true
+                    )
+                }
+            }
+        }
+    }
+
     fun clearMessage() {
         _uiState.value = _uiState.value.copy(
             successMessage = null,
             errorMessage = null
-        )
-    }
-
-    fun clearAvailableDrivers() {
-        _uiState.value = _uiState.value.copy(
-            availableDrivers = emptyList()
-        )
-    }
-
-    fun clearAvailableVehicles() {
-        _uiState.value = _uiState.value.copy(
-            availablePrimaryVehicles = emptyList(),
-            availableTrailers = emptyList()
-        )
-    }
-
-    fun clearAssignmentData() {
-        _uiState.value = _uiState.value.copy(
-            availableDrivers = emptyList(),
-            availablePrimaryVehicles = emptyList(),
-            availableTrailers = emptyList()
         )
     }
 }

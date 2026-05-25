@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedButton
@@ -38,7 +39,7 @@ fun AssignDriverScreen(
 
     var selectedDriverId by remember { mutableStateOf<Long?>(null) }
     var selectedPrimaryVehicle by remember { mutableStateOf<AvailableVehicle?>(null) }
-    var selectedTrailerId by remember { mutableStateOf<Long?>(null) }
+    var selectedTrailerVehicleId by remember { mutableStateOf<Long?>(null) }
 
     val trailerEnabled = selectedPrimaryVehicle?.vehicleType == VehicleType.TRACTOR_UNIT
 
@@ -53,7 +54,7 @@ fun AssignDriverScreen(
             .padding(24.dp)
     ) {
         Text(
-            text = stringResource(R.string.assign_driver_for_trip) + " $tripId"
+            text = stringResource(R.string.button_assign_driver_for_trip) + " $tripId"
         )
 
         OutlinedButton(
@@ -137,7 +138,7 @@ fun AssignDriverScreen(
                                 selectedPrimaryVehicle = vehicle
 
                                 if (vehicle.vehicleType != VehicleType.TRACTOR_UNIT) {
-                                    selectedTrailerId = null
+                                    selectedTrailerVehicleId = null
                                 }
                             }
                         )
@@ -173,13 +174,45 @@ fun AssignDriverScreen(
                         items(uiState.availableTrailers) { trailer ->
                             AvailableVehicleCard(
                                 vehicle = trailer,
-                                selected = selectedTrailerId == trailer.id,
+                                selected = selectedTrailerVehicleId == trailer.id,
                                 enabled = true,
                                 onClick = {
-                                    selectedTrailerId = trailer.id
+                                    selectedTrailerVehicleId = trailer.id
                                 }
                             )
                         }
+                    }
+                }
+                item {
+                    Button(
+                        onClick = {
+                            val driverId = selectedDriverId
+                            val primaryVehicle = selectedPrimaryVehicle
+                            if (driverId != null && primaryVehicle != null) {
+                                viewModel.assignTrip(
+                                    tripId = tripId,
+                                    driverId = driverId,
+                                    primaryVehicleId = primaryVehicle.id,
+                                    trailerVehicleId = if (primaryVehicle.vehicleType == VehicleType.TRACTOR_UNIT) {
+                                        selectedTrailerVehicleId
+                                    } else {
+                                        null
+                                    }
+                                )
+                                selectedDriverId = null
+                                selectedPrimaryVehicle = null
+                                selectedTrailerVehicleId = null
+                                onBack()
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp),
+                        enabled = selectedDriverId != null &&
+                                selectedPrimaryVehicle != null &&
+                                (!trailerEnabled || selectedTrailerVehicleId != null)
+                    ) {
+                        Text(stringResource(R.string.button_assign))
                     }
                 }
             }
