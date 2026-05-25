@@ -34,6 +34,7 @@ import com.example.officeapp.screens.reusableComponents.LoadingButton
 import com.example.officeapp.models.vehicle.VehicleCapacityRequirement
 import com.example.officeapp.models.vehicle.VehicleStatus
 import com.example.officeapp.models.vehicle.VehicleType
+import com.example.officeapp.models.vehicle.capacityRequirement
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

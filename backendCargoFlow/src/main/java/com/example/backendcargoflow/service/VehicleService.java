@@ -48,29 +48,33 @@ public class VehicleService {
                  REFRIGERATED_TRUCK,
                  SEMI_TRAILER,
                  REFRIGERATED_TRAILER -> {
-                if (addNewVehicleRequestDto.getMaxWeight() == null)
+                if (!hasValue(addNewVehicleRequestDto.getMaxWeight()))
                     throw new BadRequestException(ErrorMessage.MAX_WEIGHT_REQUIRED);
 
-                if (addNewVehicleRequestDto.getMaxVolume() == null)
+                if (!hasValue(addNewVehicleRequestDto.getMaxVolume()))
                     throw new BadRequestException(ErrorMessage.MAX_VOLUME_REQUIRED);
             }
 
             case TANKER_TRUCK,
                  TANKER_TRAILER -> {
-                if (addNewVehicleRequestDto.getMaxWeight() != null)
+                if (hasValue(addNewVehicleRequestDto.getMaxWeight()))
                     throw new BadRequestException(ErrorMessage.MAX_WEIGHT_NOT_REQUIRED);
 
-                if (addNewVehicleRequestDto.getMaxVolume() == null)
+                if (!hasValue(addNewVehicleRequestDto.getMaxVolume()))
                     throw new BadRequestException(ErrorMessage.MAX_VOLUME_REQUIRED);
             }
 
             case TRACTOR_UNIT -> {
-                if (addNewVehicleRequestDto.getMaxWeight() != null)
+                if (hasValue(addNewVehicleRequestDto.getMaxWeight()))
                     throw new BadRequestException(ErrorMessage.MAX_WEIGHT_NOT_REQUIRED);
 
-                if (addNewVehicleRequestDto.getMaxVolume() != null)
+                if (hasValue(addNewVehicleRequestDto.getMaxVolume()))
                     throw new BadRequestException(ErrorMessage.MAX_VOLUME_NOT_REQUIRED);
             }
         }
+    }
+
+    private boolean hasValue(org.openapitools.jackson.nullable.JsonNullable<?> value) {
+        return value != null && value.isPresent();
     }
 }

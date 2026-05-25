@@ -2,8 +2,10 @@ package com.example.officeapp.services
 
 import com.example.officeapp.models.GenericApplicationResponse
 import com.example.officeapp.models.vehicle.AddNewVehicleRequest
+import com.example.officeapp.models.vehicle.VehicleCapacityRequirement
 import com.example.officeapp.models.vehicle.VehicleStatus
 import com.example.officeapp.models.vehicle.VehicleType
+import com.example.officeapp.models.vehicle.capacityRequirement
 import com.example.officeapp.repositories.VehicleRepository
 import com.example.officeapp.utils.ApiResult
 import java.time.Year
@@ -54,17 +56,39 @@ class VehicleService @Inject constructor(
         if (manufactureYearInt !in 1900..currentYear)
             return ApiResult.Error(ValidationMessages.MANUFACTURE_YEAR_RANGE + currentYear)
 
-        val maxWeightInt = maxWeight.trim().toIntOrNull()
-            ?: return ApiResult.Error(ValidationMessages.MAX_WEIGHT_REQUIRED)
+        val capacityRequirement = vehicleType.capacityRequirement()
 
-        if (maxWeightInt !in 1 .. 24000)
-            return ApiResult.Error(ValidationMessages.MAX_WEIGHT_RANGE)
+        val maxWeightInt: Int? = when(capacityRequirement) {
+            VehicleCapacityRequirement.WEIGHT_AND_VOLUME -> {
+                val value = maxWeight.trim().toIntOrNull()
+                    ?: return ApiResult.Error(ValidationMessages.MAX_WEIGHT_REQUIRED)
 
-        val maxVolumeInt = maxVolume.trim().toIntOrNull()
-            ?: return ApiResult.Error(ValidationMessages.MAX_VOLUME_REQUIRED)
+                if (value !in 1 .. 24000)
+                    return ApiResult.Error(ValidationMessages.MAX_WEIGHT_RANGE)
 
-        if (maxVolumeInt !in 1 .. 90)
-            return ApiResult.Error(ValidationMessages.MAX_VOLUME_RANGE)
+                value
+            }
+            VehicleCapacityRequirement.ONLY_VOLUME,
+            VehicleCapacityRequirement.NONE -> {
+                null
+            }
+        }
+
+        val maxVolumeInt: Int? = when (capacityRequirement) {
+            VehicleCapacityRequirement.WEIGHT_AND_VOLUME,
+            VehicleCapacityRequirement.ONLY_VOLUME -> {
+                val value = maxVolume.trim().toIntOrNull()
+                    ?: return ApiResult.Error(ValidationMessages.MAX_VOLUME_REQUIRED)
+
+                if (value !in 1 .. 90)
+                    return ApiResult.Error(ValidationMessages.MAX_VOLUME_RANGE)
+
+                value
+            }
+            VehicleCapacityRequirement.NONE -> {
+                null
+            }
+        }
 
         if (trimmedAdditionalInfo != null && trimmedAdditionalInfo.length > 250)
             return ApiResult.Error(ValidationMessages.ADDITIONAL_INFO_MAX_LENGTH)

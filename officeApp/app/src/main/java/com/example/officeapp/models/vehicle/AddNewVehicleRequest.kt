@@ -7,8 +7,8 @@ data class AddNewVehicleRequest (
     val model: String,
     val manufactureYear: Int,
     val vehicleType: VehicleType,
-    val maxWeight: Int,
-    val maxVolume: Int,
+    val maxWeight: Int?,
+    val maxVolume: Int?,
     val vehicleStatus: VehicleStatus,
     val additionalInfo: String?
 )

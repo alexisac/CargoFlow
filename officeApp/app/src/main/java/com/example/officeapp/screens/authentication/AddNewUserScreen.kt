@@ -96,6 +96,13 @@ fun AddNewUserScreen(
         viewModel.clearMessages()
     }
 
+    LaunchedEffect(uiState.successMessage) {
+        if (uiState.successMessage != null) {
+            viewModel.clearMessages()
+            onBack()
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
