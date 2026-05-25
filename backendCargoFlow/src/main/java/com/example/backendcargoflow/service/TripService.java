@@ -5,10 +5,7 @@ import com.example.backendcargoflow.common.exceptions.BadRequestException;
 import com.example.backendcargoflow.common.exceptions.NotFoundException;
 import com.example.backendcargoflow.common.security.CurrentUserService;
 import com.example.backendcargoflow.controller.common.models.GenericApplicationResponseDto;
-import com.example.backendcargoflow.controller.trip.models.AddNewTripRequestDto;
-import com.example.backendcargoflow.controller.trip.models.TripDto;
-import com.example.backendcargoflow.controller.trip.models.TripPageResponseDto;
-import com.example.backendcargoflow.controller.trip.models.TripSearchRequestDto;
+import com.example.backendcargoflow.controller.trip.models.*;
 import com.example.backendcargoflow.domain.trip.entity.Trip;
 import com.example.backendcargoflow.domain.trip.entity.TripStatus;
 import com.example.backendcargoflow.domain.trip.mapper.TripMapper;
@@ -99,6 +96,17 @@ public class TripService {
 
         String createdBy = userLookupService.getUserFullNameById(trip.getCreatedByUserId());
         return tripMapper.mapTripToTripDto(trip, createdBy);
+    }
+
+    @PreAuthorize("hasRole('DRIVER')")
+    public CurrentTripDto getCurrentTrip() {
+        Long currentDriverId = currentUserService.getCurrentUserId();
+
+        Trip trip = tripRepository.findCurrentInProgressTripForDriver(currentDriverId, TripStatus.IN_PROGRESS)
+                .or(() -> tripRepository.findOldestAssignedTripForDriver(currentDriverId, TripStatus.ASSIGNED))
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.CURRENT_TRIP_NOT_FOUND));
+
+        return tripMapper.mapTripToCurrentTripDto(trip);
     }
 
     private LocalDateTime parseDateTime(String value) {
