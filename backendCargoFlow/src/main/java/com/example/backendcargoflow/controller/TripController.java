@@ -78,4 +78,10 @@ public class TripController implements TripsApi {
         log.info(LogMessage.GET_CURRENT_TRIP);
         return tripService.getCurrentTrip();
     }
+
+    @Override
+    public CompletedTripsResponseDto getCompletedTrips(Integer days) {
+        log.info(String.format(LogMessage.GET_COMPLETED_TRIPS, days));
+        return tripService.getCompletedTrips(days);
+    }
 }

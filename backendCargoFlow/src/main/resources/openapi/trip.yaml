@@ -129,6 +129,43 @@ paths:
             application/json:
               schema:
                 $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+  /trip/completedTrips:
+    get:
+      tags:
+        - Trips
+      summary: Get completed trips for authenticated driver
+      operationId: getCompletedTrips
+      parameters:
+        - name: days
+          in: query
+          description: Number of days in the past. Allowed values are 30, 60 or 90
+          required: true
+          schema:
+            type: integer
+            enum:
+              - 30
+              - 60
+              - 90
+            example: 30
+      responses:
+        '200':
+          description: Completed driver trips were retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompletedTripsResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
 
 components:
   schemas:
@@ -565,3 +602,75 @@ components:
           maxLength: 250
           nullable: true
           example: Driver must call 30 minutes before arrival
+    CompletedTrip:
+      type: object
+      required:
+        - tripId
+        - pickupAddress
+        - deliveryAddress
+        - pickupDateTime
+        - pickupTimeZone
+        - deliveryDateTime
+        - deliveryTimeZone
+        - cargoType
+      properties:
+        tripId:
+          type: integer
+          format: int64
+          example: 123
+        pickupAddress:
+          $ref: '#/components/schemas/Address'
+        deliveryAddress:
+          $ref: '#/components/schemas/Address'
+        pickupDateTime:
+          type: string
+          format: local-date-time
+          example: 2026-05-15T12:00:00
+        pickupTimeZone:
+          type: string
+          minLength: 3
+          maxLength: 50
+          example: Europe/Bucharest
+        deliveryDateTime:
+          type: string
+          format: local-date-time
+          example: 2026-05-16T19:00:00
+        deliveryTimeZone:
+          type: string
+          minLength: 3
+          maxLength: 50
+          example: Europe/Berlin
+        cargoDescription:
+          type: string
+          minLength: 3
+          maxLength: 250
+          nullable: true
+          example: 10 pallets of electronics
+        cargoWeight:
+          type: integer
+          minimum: 1
+          maximum: 24000
+          nullable: true
+          example: 12345
+        cargoVolume:
+          type: integer
+          minimum: 1
+          maximum: 90
+          nullable: true
+          example: 65
+        cargoType:
+          $ref: '#/components/schemas/CargoType'
+        additionalInfo:
+          type: string
+          maxLength: 250
+          nullable: true
+          example: Driver must call 30 minutes before arrival
+    CompletedTripsResponse:
+      type: object
+      required:
+        - trips
+      properties:
+        trips:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompletedTrip'

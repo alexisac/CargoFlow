@@ -15,4 +15,5 @@ public class ErrorMessage {
     public static final String INVALID_TIME_ZONE = "Invalid time zone: %s";
     public static final String TRIP_IS_NOT_PLANNED = "Only planned trips can be assigned to a driver";
     public static final String CURRENT_TRIP_NOT_FOUND = "Current trip was not found";
+    public static final String INVALID_COMPLETED_TRIPS_PERIOD = "Completed trips period must be 30, 60 or 90 days";
 }

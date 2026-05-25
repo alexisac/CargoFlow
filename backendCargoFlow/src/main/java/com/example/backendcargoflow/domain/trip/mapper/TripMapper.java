@@ -39,6 +39,11 @@ public interface TripMapper {
     @Mapping(target = "tripId", source = "id")
     CurrentTripDto mapTripToCurrentTripDto(Trip trip);
 
+    @Mapping(target = "tripId", source = "id")
+    CompletedTripDto mapTripToCompletedDriverTripDto(Trip trip);
+
+    List<CompletedTripDto> mapTripsToCompletedDriverTripDtos(List<Trip> trips);
+
     default CargoType mapTripCargoType(CargoTypeDto tripCargoTypeDto) {
         return tripCargoTypeDto == null ? null : CargoType.valueOf(tripCargoTypeDto.name());
     }

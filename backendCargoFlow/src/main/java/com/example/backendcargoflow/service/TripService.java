@@ -109,6 +109,32 @@ public class TripService {
         return tripMapper.mapTripToCurrentTripDto(trip);
     }
 
+    @PreAuthorize("hasRole('DRIVER')")
+    public CompletedTripsResponseDto getCompletedTrips(Integer days) {
+        validateCompletedTripsDays(days);
+
+        Long currentDriverId = currentUserService.getCurrentUserId();
+
+        Instant fromInstant = Instant.now().minus(days, java.time.temporal.ChronoUnit.DAYS);
+
+        List<Trip> completedTrips = tripRepository.findCompletedTripsForDriverFromDate(
+                currentDriverId,
+                TripStatus.COMPLETED,
+                fromInstant
+        );
+
+        CompletedTripsResponseDto response = new CompletedTripsResponseDto();
+        response.setTrips(tripMapper.mapTripsToCompletedDriverTripDtos(completedTrips));
+
+        return response;
+    }
+
+    private void validateCompletedTripsDays(Integer days) {
+        if (days == null || !(days == 30 || days == 60 || days == 90)) {
+            throw new BadRequestException(ErrorMessage.INVALID_COMPLETED_TRIPS_PERIOD);
+        }
+    }
+
     private LocalDateTime parseDateTime(String value) {
         return value == null || value.isBlank() ? null : LocalDateTime.parse(value);
     }

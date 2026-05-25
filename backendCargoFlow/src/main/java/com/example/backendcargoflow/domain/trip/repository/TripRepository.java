@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 public interface TripRepository extends JpaRepository<Trip, Long>, JpaSpecificationExecutor<Trip> {
@@ -36,5 +38,20 @@ public interface TripRepository extends JpaRepository<Trip, Long>, JpaSpecificat
     Optional<Trip> findCurrentInProgressTripForDriver(
             @Param("driverId") Long driverId,
             @Param("tripStatus") TripStatus tripStatus
+    );
+
+    @Query("""
+        SELECT t
+        FROM Trip t
+        JOIN TripAssignment ta ON ta.tripId = t.id
+        WHERE ta.driverId = :driverId
+          AND t.tripStatus = :tripStatus
+          AND t.deliveryInstant >= :fromInstant
+        ORDER BY t.deliveryInstant DESC
+        """)
+    List<Trip> findCompletedTripsForDriverFromDate(
+            @Param("driverId") Long driverId,
+            @Param("tripStatus") TripStatus tripStatus,
+            @Param("fromInstant") Instant fromInstant
     );
 }
