@@ -3,14 +3,15 @@ package com.example.backendcargoflow.service;
 import com.example.backendcargoflow.common.ErrorMessage;
 import com.example.backendcargoflow.common.exceptions.BadRequestException;
 import com.example.backendcargoflow.common.exceptions.NotFoundException;
-import com.example.backendcargoflow.controller.tripAssignment.models.AvailableDriverDto;
-import com.example.backendcargoflow.controller.tripAssignment.models.AvailableDriversResponseDto;
-import com.example.backendcargoflow.controller.tripAssignment.models.AvailableVehicleDto;
-import com.example.backendcargoflow.controller.tripAssignment.models.AvailableVehiclesResponseDto;
+import com.example.backendcargoflow.common.security.CurrentUserService;
+import com.example.backendcargoflow.controller.common.models.GenericApplicationResponseDto;
+import com.example.backendcargoflow.controller.tripAssignment.models.*;
 import com.example.backendcargoflow.domain.trip.entity.Trip;
 import com.example.backendcargoflow.domain.trip.entity.TripStatus;
 import com.example.backendcargoflow.domain.trip.repository.TripRepository;
+import com.example.backendcargoflow.domain.tripAssignment.entity.TripAssignment;
 import com.example.backendcargoflow.domain.tripAssignment.mapper.TripAssignmentMapper;
+import com.example.backendcargoflow.domain.tripAssignment.repository.TripAssignmentRepository;
 import com.example.backendcargoflow.domain.user.entity.AvailableDriverProjection;
 import com.example.backendcargoflow.domain.user.entity.UserRole;
 import com.example.backendcargoflow.domain.user.repository.UserRepository;
@@ -18,6 +19,7 @@ import com.example.backendcargoflow.domain.vehicle.entity.AvailableVehicleProjec
 import com.example.backendcargoflow.domain.vehicle.entity.VehicleStatus;
 import com.example.backendcargoflow.domain.vehicle.entity.VehicleType;
 import com.example.backendcargoflow.domain.vehicle.repository.VehicleRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,8 @@ public class TripAssignmentService {
     private final UserRepository userRepository;
     private final VehicleRepository vehicleRepository;
     private final TripAssignmentMapper tripAssignmentMapper;
+    private final TripAssignmentRepository tripAssignmentRepository;
+    private final CurrentUserService currentUserService;
 
     @PreAuthorize("hasAnyRole('DISPATCHER', 'MANAGER', 'ADMIN')")
     public AvailableDriversResponseDto getAvailableDriversForTrip(Long tripId) {
@@ -86,6 +90,25 @@ public class TripAssignmentService {
         response.setTrailers(trailers);
 
         return response;
+    }
+
+    @Transactional
+    @PreAuthorize("hasAnyRole('DISPATCHER', 'MANAGER', 'ADMIN')")
+    public GenericApplicationResponseDto assignTrip(AssignTripRequestDto assignTripRequestDto) {
+        Trip trip = getPlannedTrip(assignTripRequestDto.getTripId());
+
+        Long currentUserId = currentUserService.getCurrentUserId();
+        TripAssignment tripAssignment = tripAssignmentMapper.mapAssignTripRequestDtoToTripAssignment(assignTripRequestDto);
+        tripAssignment.setAssignedByUserId(currentUserId);
+        tripAssignmentRepository.save(tripAssignment);
+
+        trip.setTripStatus(TripStatus.ASSIGNED);
+        tripRepository.save(trip);
+
+        return GenericApplicationResponseFactory.success(
+                "201 - TRIP_ASSIGNED",
+                "Trip was assigned successfully"
+        );
     }
 
     private Trip getPlannedTrip(Long tripId) {

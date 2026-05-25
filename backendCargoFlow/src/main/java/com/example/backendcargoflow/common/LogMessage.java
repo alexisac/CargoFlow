@@ -71,4 +71,9 @@ public class LogMessage {
 
     public static final String GET_AVAILABLE_DRIVERS_FOR_TRIP = "GET_AVAILABLE_DRIVERS_FOR_TRIP operation was invoked with: tripId %s";
     public static final String GET_AVAILABLE_VEHICLES_FOR_TRIP = "GET_AVAILABLE_VEHICLES_FOR_TRIP operation was invoked with: tripId %s";
+    public static final String ASSIGN_TRIP = "ASSIGN_TRIP operation was invoked with: \n" +
+            "tripID: %s, \n" +
+            "driverID: %s, \n" +
+            "primaryVehicleID: %s, \n" +
+            "trailerID: %s";
 }

@@ -82,6 +82,50 @@ paths:
             application/json:
               schema:
                 $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+  /tripAssignment/assign:
+    post:
+      tags:
+        - Trip Assignments
+      summary: Assign driver and vehicle to trip
+      operationId: assignTrip
+      requestBody:
+        description: Trip assignment data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignTripRequest'
+      responses:
+        '201':
+          description: Trip was assigned successfully
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '404':
+          description: Trip, driver or vehicle was not found
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '409':
+          description: Driver or vehicle is no longer available
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
 components:
   schemas:
     AvailableDriver:
@@ -144,3 +188,27 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AvailableVehicle'
+    AssignTripRequest:
+      type: object
+      required:
+        - tripId
+        - driverId
+        - primaryVehicleId
+      properties:
+        tripId:
+          type: integer
+          format: int64
+          example: 28
+        driverId:
+          type: integer
+          format: int64
+          example: 6
+        primaryVehicleId:
+          type: integer
+          format: int64
+          example: 1
+        trailerVehicleId:
+          type: integer
+          format: int64
+          nullable: true
+          example: 5
