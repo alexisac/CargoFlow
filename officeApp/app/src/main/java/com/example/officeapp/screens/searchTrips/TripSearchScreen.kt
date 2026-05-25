@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -15,6 +16,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -49,6 +51,20 @@ fun TripSearchScreen (
     var deliveryDateTimeFrom by remember { mutableStateOf("") }
     var deliveryDateTimeTo by remember { mutableStateOf("") }
 
+    val listState = rememberLazyListState()
+
+    val shouldLoadNextPage by remember {
+        derivedStateOf {
+            val lastVisibleItemIndex = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+            val totalItemsCount = listState.layoutInfo.totalItemsCount
+
+            totalItemsCount > 0 &&
+                    lastVisibleItemIndex >= totalItemsCount - 5 &&
+                    !uiState.isLoading &&
+                    !uiState.lastPage
+        }
+    }
+
     LaunchedEffect(Unit) {
         viewModel.searchTrips(
             tripStatusList = selectedStatusList.toList(),
@@ -64,6 +80,22 @@ fun TripSearchScreen (
             pageSize = 20,
             append = false
         )
+    }
+
+    LaunchedEffect(shouldLoadNextPage) {
+        if (shouldLoadNextPage) {
+            viewModel.loadNextTripsPage(
+                tripStatusList = selectedStatusList.toList(),
+                pickupCountries = pickupCountries.toList(),
+                pickupCities = pickupCities.toList(),
+                deliveryCountries = deliveryCountries.toList(),
+                deliveryCities = deliveryCities.toList(),
+                pickupDateTimeFrom = pickupDateTimeFrom,
+                pickupDateTimeTo = pickupDateTimeTo,
+                deliveryDateTimeFrom = deliveryDateTimeFrom,
+                deliveryDateTimeTo = deliveryDateTimeTo
+            )
+        }
     }
 
     Column(
@@ -99,7 +131,7 @@ fun TripSearchScreen (
             modifier = Modifier.padding(top = 12.dp)
         )
 
-        if (uiState.isLoading) {
+        if (uiState.isLoading && uiState.trips.isEmpty()) {
             CircularProgressIndicator(
                 modifier = Modifier.padding(top = 24.dp)
             )
@@ -109,11 +141,13 @@ fun TripSearchScreen (
             errorMessage = uiState.errorMessage,
             successMessage = uiState.successMessage,
             modifier = Modifier
+                .weight(1f)
                 .padding(top = 16.dp),
             onMessageShown = { viewModel.clearMessage() }
         )
 
         LazyColumn(
+            state = listState,
             modifier = Modifier.padding(top = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -123,6 +157,14 @@ fun TripSearchScreen (
                     onClick = { onTripClick(trip.id) },
                     onAssignDriver = { onAssignDriver(trip.id) }
                 )
+            }
+
+            if (uiState.isLoading && uiState.trips.isNotEmpty()) {
+                item {
+                    CircularProgressIndicator(
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
             }
         }
     }
