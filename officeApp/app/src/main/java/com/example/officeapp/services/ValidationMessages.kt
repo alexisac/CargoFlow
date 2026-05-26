@@ -21,6 +21,7 @@ object ValidationMessages {
     const val CARGO_VOLUME_RANGE = "Cargo volume must be between 1 and 90."
     const val CARGO_WEIGHT_RANGE = "Cargo weight must be between 1 and 24000."
     const val CITY_LENGTH = "City must be between 2 and 50 characters."
+    const val COMPLETED_TRIPS_PERIOD_INVALID = "Completed trips period must be 30, 60 or 90 days."
     const val COUNTRY_LENGTH = "Country must be between 2 and 50 characters."
     const val DELIVERY_TIME_ZONE_LENGTH = "Delivery time zone must be between 3 and 50 characters."
     const val EMAIL_MIN_LENGTH = "Email needs to have minimum 5 characters."

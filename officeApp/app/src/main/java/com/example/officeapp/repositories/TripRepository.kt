@@ -3,6 +3,8 @@ package com.example.officeapp.repositories
 import com.example.officeapp.interfacesAPI.TripInterfaceAPI
 import com.example.officeapp.models.GenericApplicationResponse
 import com.example.officeapp.models.trip.AddNewTripRequest
+import com.example.officeapp.models.trip.CompletedTripsResponse
+import com.example.officeapp.models.trip.CurrentTrip
 import com.example.officeapp.models.trip.Trip
 import com.example.officeapp.models.trip.TripPageResponse
 import com.example.officeapp.models.trip.TripSearchRequest
@@ -54,6 +56,44 @@ class TripRepository @Inject constructor(
     suspend fun getTrip(tripId: Long): ApiResult<Trip> {
         return try {
             val response = tripInterfaceAPI.getTrip(tripId)
+
+            if (response.isSuccessful) {
+                val body = response.body()
+
+                if (body == null)
+                    ApiResult.Error("Empty response from server.")
+                else
+                    ApiResult.Success(body)
+            } else {
+                parseApiError(response)
+            }
+        } catch (ex: Exception) {
+            ApiResult.Error(ex.message ?: "Unexpected error occurred.")
+        }
+    }
+
+    suspend fun getCurrentTrip(): ApiResult<CurrentTrip> {
+        return try {
+            val response = tripInterfaceAPI.getCurrentTrip()
+
+            if (response.isSuccessful) {
+                val body = response.body()
+
+                if (body == null)
+                    ApiResult.Error("Empty response from server.")
+                else
+                    ApiResult.Success(body)
+            } else {
+                parseApiError(response)
+            }
+        } catch (ex: Exception) {
+            ApiResult.Error(ex.message ?: "Unexpected error occurred.")
+        }
+    }
+
+    suspend fun getCompletedTrips(days: Int): ApiResult<CompletedTripsResponse> {
+        return try {
+            val response = tripInterfaceAPI.getCompletedTrips(days)
 
             if (response.isSuccessful) {
                 val body = response.body()

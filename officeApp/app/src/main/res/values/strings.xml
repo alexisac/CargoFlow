@@ -4,10 +4,13 @@
     <string name="add_new_trip_title">Add new trip</string>
     <string name="add_new_user_title">Add new user</string>
     <string name="add_new_vehicle_title">Add new vehicle</string>
+    <string name="completed_trips_history_title">Completed trips history</string>
+    <string name="current_trip_title">Current trip</string>
     <string name="login_screen_title">Welcome back!</string>
     <string name="search_and_associate_trips_title">Search and associate trips</string>
     <string name="something_went_wrong_title">Something went wrong</string>
     <string name="success_title">Success</string>
+    <string name="trip_completed_title">Trip #</string>
     <string name="trip_details_title">Trip details</string>
 
     <string name="add_new_user_subtitle">Create a new user account</string>
@@ -20,6 +23,7 @@
     <string name="button_assign_driver_for_trip">Assign driver for trip</string>
     <string name="button_back">Back</string>
     <string name="button_cancel">Cancel</string>
+    <string name="button_completed_trips_history">Completed trips history</string>
     <string name="button_create_trip">Create trip</string>
     <string name="button_create_user">Create user</string>
     <string name="button_create_vehicle">Create vehicle</string>
@@ -27,6 +31,7 @@
     <string name="button_got_it">Ok, got it</string>
     <string name="button_login">Login</string>
     <string name="button_logout">Logout</string>
+    <string name="button_menu">Menu</string>
     <string name="button_ok">Ok</string>
 
     <string name="label_additional_details">Additional details</string>
@@ -43,6 +48,7 @@
     <string name="label_copy">Copy</string>
     <string name="label_country">Country</string>
     <string name="label_created_by">Created by</string>
+    <string name="label_cubic_meters">m³</string>
     <string name="label_currency">Currency</string>
     <string name="label_delivery">Delivery</string>
     <string name="label_delivery_city">Delivery city</string>
@@ -51,11 +57,13 @@
     <string name="label_delivery_date_time">Delivery date time</string>
     <string name="label_delivery_time">Delivery time</string>
     <string name="label_delivery_time_zone">Delivery time zone</string>
+    <string name="label_description">Description</string>
     <string name="label_details">Details</string>
     <string name="label_email">Email</string>
     <string name="label_first_name">First name</string>
     <string name="label_general">General</string>
     <string name="label_id">Id</string>
+    <string name="label_kilograms">kg</string>
     <string name="label_last_name">Last name</string>
     <string name="label_licence_plate">Licence plate</string>
     <string name="label_manufacture_year">Manufacture year</string>
@@ -65,6 +73,8 @@
     <string name="label_no_available_drivers_found">No available drivers found.</string>
     <string name="label_no_available_primary_vehicle_found">No available primary vehicle found.</string>
     <string name="label_no_available_trailer_found">No available trailer found.</string>
+    <string name="label_no_completed_trips_found">No completed trips found.</string>
+    <string name="label_no_current_trip_found">No current trip found.</string>
     <string name="label_password">Password</string>
     <string name="label_pickup">Pickup</string>
     <string name="label_pickup_city">Pickup city</string>
@@ -88,9 +98,15 @@
     <string name="label_street_number">Street number</string>
     <string name="label_theme_toggle">ThemeToggleOffset</string>
     <string name="label_trip_status">Trip status</string>
+    <string name="label_type">Type</string>
     <string name="label_vehicle_status">Vehicle status</string>
     <string name="label_vehicle_type">Vehicle type</string>
     <string name="label_vin">VIN</string>
+    <string name="label_volume">Volume</string>
+    <string name="label_weight">Weight</string>
+    <string name="label_30_days">30 days</string>
+    <string name="label_60_days">60 days</string>
+    <string name="label_90_days">90 days</string>
 
     <string name="section_cargo_and_payment">Cargo and Payment</string>
     <string name="section_delivery">Delivery</string>

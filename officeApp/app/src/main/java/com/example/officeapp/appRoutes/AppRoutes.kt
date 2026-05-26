@@ -13,4 +13,5 @@ object AppRoutes {
     const val TRIP_DETAILS_ROUTE = "${TRIP_DETAILS_BASE_ROUTE}/{$TRIP_ID_ARGUMENT}"
     const val ASSIGN_DRIVER_BASE_ROUTE = "assign_driver"
     const val ASSIGN_DRIVER_ROUTE = "$ASSIGN_DRIVER_BASE_ROUTE/{$TRIP_ID_ARGUMENT}"
+    const val DRIVER_COMPLETED_TRIPS_ROUTE = "driver_completed_trips"
 }

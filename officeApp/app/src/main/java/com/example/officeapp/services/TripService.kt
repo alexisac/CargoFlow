@@ -4,7 +4,9 @@ import com.example.officeapp.models.GenericApplicationResponse
 import com.example.officeapp.models.trip.AddNewTripRequest
 import com.example.officeapp.models.trip.Address
 import com.example.officeapp.models.trip.CargoType
+import com.example.officeapp.models.trip.CompletedTripsResponse
 import com.example.officeapp.models.trip.Currency
+import com.example.officeapp.models.trip.CurrentTrip
 import com.example.officeapp.models.trip.Trip
 import com.example.officeapp.models.trip.TripPageResponse
 import com.example.officeapp.models.trip.TripSearchRequest
@@ -209,6 +211,17 @@ class TripService @Inject constructor(
             return ApiResult.Error(ValidationMessages.ID_RANGE)
 
         return tripRepository.getTrip(tripId)
+    }
+
+    suspend fun getCurrentTrip(): ApiResult<CurrentTrip> {
+        return tripRepository.getCurrentTrip()
+    }
+
+    suspend fun getCompletedTrips(days: Int): ApiResult<CompletedTripsResponse> {
+        if (days !in listOf(30, 60, 90))
+            return ApiResult.Error(ValidationMessages.COMPLETED_TRIPS_PERIOD_INVALID)
+
+        return tripRepository.getCompletedTrips(days)
     }
 
     private fun buildAddress(

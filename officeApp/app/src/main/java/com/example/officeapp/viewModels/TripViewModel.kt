@@ -250,10 +250,81 @@ class TripViewModel @Inject constructor(
         }
     }
 
+    fun getCurrentTrip() {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isLoading = true,
+                errorMessage = null,
+                successMessage = null,
+                currentDriverTrip = null
+            )
+
+            when (val result = tripService.getCurrentTrip()) {
+                is ApiResult.Success -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = null,
+                        currentDriverTrip = result.data
+                    )
+                }
+
+                is ApiResult.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = result.message,
+                        currentDriverTrip = null
+                    )
+                }
+
+                ApiResult.Loading -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = true
+                    )
+                }
+            }
+        }
+    }
+
+    fun getCompletedTrips(days: Int) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isLoading = true,
+                errorMessage = null,
+                successMessage = null,
+                completedTrips = emptyList()
+            )
+
+            when (val result = tripService.getCompletedTrips(days)) {
+                is ApiResult.Success -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = null,
+                        completedTrips = result.data.trips
+                    )
+                }
+
+                is ApiResult.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = result.message,
+                        completedTrips = emptyList()
+                    )
+                }
+
+                ApiResult.Loading -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = true
+                    )
+                }
+            }
+        }
+    }
+
     fun clearMessage() {
         _uiState.value = _uiState.value.copy(
             successMessage = null,
-            errorMessage = null
+            errorMessage = null,
+            completedTrips = emptyList()
         )
     }
 }

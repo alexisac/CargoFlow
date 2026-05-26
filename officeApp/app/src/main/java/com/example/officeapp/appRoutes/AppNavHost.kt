@@ -17,6 +17,7 @@ import com.example.officeapp.screens.authentication.AuthCheckScreen
 import com.example.officeapp.screens.HomeScreen
 import com.example.officeapp.screens.assignDriver.AssignDriverScreen
 import com.example.officeapp.screens.authentication.LoginScreen
+import com.example.officeapp.screens.currentDriverTrip.DriverCompletedTripsScreen
 import com.example.officeapp.screens.searchTrips.TripDetailsScreen
 import com.example.officeapp.screens.searchTrips.TripSearchScreen
 import com.example.officeapp.viewModels.TripAssignmentViewModel
@@ -78,6 +79,7 @@ fun AppNavHost(
         composable(AppRoutes.HOME_ROUTE) {
             HomeScreen(
                 viewModel = authenticationViewModel,
+                tripViewModel = tripViewModel,
                 isDarkTheme = isDarkTheme,
                 onThemeChange = onThemeChange,
                 onLogout = {
@@ -101,6 +103,9 @@ fun AppNavHost(
                 },
                 onGoToSearchTrips = {
                     navController.navigate(AppRoutes.SEARCH_TRIPS_ROUTE)
+                },
+                onGoToDriverCompletedTrips = {
+                    navController.navigate(AppRoutes.DRIVER_COMPLETED_TRIPS_ROUTE)
                 }
             )
         }
@@ -185,6 +190,15 @@ fun AppNavHost(
                     }
                 )
             }
+        }
+
+        composable(AppRoutes.DRIVER_COMPLETED_TRIPS_ROUTE) {
+            DriverCompletedTripsScreen(
+                viewModel = tripViewModel,
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }

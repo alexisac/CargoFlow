@@ -4,10 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -15,29 +12,40 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.officeapp.R
 import com.example.officeapp.viewModels.AuthenticationViewModel
 import com.example.officeapp.screens.reusableComponents.OldFormMessages
 import com.example.officeapp.models.user.UserRole
+import com.example.officeapp.screens.currentDriverTrip.CurrentDriverTripCard
 import com.example.officeapp.screens.reusableComponents.ThemeToggle
+import com.example.officeapp.viewModels.TripViewModel
 
 @Composable
 fun HomeScreen(
     viewModel: AuthenticationViewModel,
+    tripViewModel: TripViewModel,
     isDarkTheme: Boolean,
     onThemeChange: (Boolean) -> Unit,
     onLogout: () -> Unit,
     onGoToAddUser: () -> Unit,
     onGoToAddVehicle: () -> Unit,
     onGoToAddTrip: () -> Unit,
-    onGoToSearchTrips: () -> Unit
+    onGoToSearchTrips: () -> Unit,
+    onGoToDriverCompletedTrips: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val tripUiState by tripViewModel.uiState.collectAsState()
+
+    val isDriver = uiState.userRole == UserRole.DRIVER.name
 
     LaunchedEffect(Unit) {
         viewModel.clearMessages()
+    }
+
+    LaunchedEffect(isDriver) {
+        if (isDriver) {
+            tripViewModel.getCurrentTrip()
+        }
     }
 
     Box {
@@ -68,72 +76,30 @@ fun HomeScreen(
                 onMessageShown = { viewModel.clearMessages() }
             )
 
-            if (uiState.userRole == UserRole.ADMIN.name) {
-                Button(
-                    onClick = onGoToAddUser,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 32.dp)
-                ) {
-                    Text(stringResource(R.string.add_new_user_title))
-                }
-            }
-
-            if (uiState.userRole in listOf(
-                    UserRole.DISPATCHER.name,
-                    UserRole.MANAGER.name,
-                    UserRole.ADMIN.name
+            if (isDriver) {
+                DriverHomeContent(
+                    isLoading = tripUiState.isLoading,
+                    errorMessage = tripUiState.errorMessage,
+                    hasCurrentTrip = tripUiState.currentDriverTrip != null,
+                    currentTripContent = {
+                        tripUiState.currentDriverTrip?.let { currentTrip ->
+                            CurrentDriverTripCard(
+                                trip = currentTrip
+                            )
+                        }
+                    },
+                    onGoToDriverCompletedTrips = onGoToDriverCompletedTrips,
+                    onLogout = onLogout
                 )
-            ) {
-                Button(
-                    onClick = onGoToAddVehicle,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 12.dp)
-                ) {
-                    Text(stringResource(R.string.add_new_vehicle_title))
-                }
-            }
-
-            if (uiState.userRole in listOf(
-                    UserRole.DISPATCHER.name,
-                    UserRole.MANAGER.name,
-                    UserRole.ADMIN.name
+            } else {
+                OfficeHomeMenu(
+                    userRole = uiState.userRole,
+                    onGoToAddUser = onGoToAddUser,
+                    onGoToAddVehicle = onGoToAddVehicle,
+                    onGoToAddTrip = onGoToAddTrip,
+                    onGoToSearchTrips = onGoToSearchTrips,
+                    onLogout = onLogout
                 )
-            ) {
-                Button(
-                    onClick = onGoToAddTrip,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 12.dp)
-                ) {
-                    Text(stringResource(R.string.add_new_trip_title))
-                }
-            }
-
-            if (uiState.userRole in listOf(
-                    UserRole.DISPATCHER.name,
-                    UserRole.MANAGER.name,
-                    UserRole.ADMIN.name
-                )
-            ) {
-                Button(
-                    onClick = onGoToSearchTrips,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 12.dp)
-                ) {
-                    Text(stringResource(R.string.search_and_associate_trips_title))
-                }
-            }
-
-            OutlinedButton(
-                onClick = onLogout,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp)
-            ) {
-                Text(stringResource(R.string.button_logout))
             }
         }
     }
