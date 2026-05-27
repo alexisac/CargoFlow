@@ -43,6 +43,97 @@ paths:
               schema:
                 $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
 
+  /vehicle/getAll:
+    get:
+      tags:
+        - Vehicles
+      summary: Get all vehicles
+      operationId: getAllVehicles
+      parameters:
+        - name: pageNumber
+          in: query
+          description: Page number
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+            example: 0
+        - name: pageSize
+          in: query
+          description: Page size
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            example: 20
+      responses:
+        '200':
+          description: Vehicles were retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllVehiclesResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+
+  /vehicle/{vehicleId}/changeStatus:
+    patch:
+      tags:
+        - Vehicles
+      summary: Change vehicle status
+      operationId: changeVehicleStatus
+      parameters:
+        - name: vehicleId
+          in: path
+          description: Vehicle's ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: New vehicle status
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeVehicleStatusRequest'
+      responses:
+        '200':
+          description: Vehicle status was changed successfully
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '404':
+          description: Vehicle was not found
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+
 components:
   schemas:
     VehicleType:
@@ -122,3 +213,78 @@ components:
           type: string
           maxLength: 250
           example: This truck has a flat front-right tyre
+    VehicleSummary:
+      type: object
+      required:
+        - id
+        - licencePlate
+        - vin
+        - brand
+        - model
+        - manufactureYear
+        - vehicleType
+        - vehicleStatus
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 12
+        licencePlate:
+          type: string
+          example: B-101-TRK
+        vin:
+          type: string
+          example: 1HGCM82633A004352
+        brand:
+          type: string
+          example: Mercedes-Benz
+        model:
+          type: string
+          example: Actros 1845
+        manufactureYear:
+          type: integer
+          example: 2021
+        vehicleType:
+          $ref: '#/components/schemas/VehicleType'
+        maxWeight:
+          type: integer
+          nullable: true
+          example: 24000
+        maxVolume:
+          type: integer
+          nullable: true
+          example: 90
+        vehicleStatus:
+          $ref: '#/components/schemas/VehicleStatus'
+        additionalInfo:
+          type: string
+          nullable: true
+          example: Euro 6 tractor unit
+    GetAllVehiclesResponse:
+      type: object
+      required:
+        - vehicles
+        - pageNumber
+        - pageSize
+        - lastPage
+      properties:
+        vehicles:
+          type: array
+          items:
+            $ref: '#/components/schemas/VehicleSummary'
+        pageNumber:
+          type: integer
+          example: 0
+        pageSize:
+          type: integer
+          example: 20
+        lastPage:
+          type: boolean
+          example: false
+    ChangeVehicleStatusRequest:
+      type: object
+      required:
+        - vehicleStatus
+      properties:
+        vehicleStatus:
+          $ref: '#/components/schemas/VehicleStatus'

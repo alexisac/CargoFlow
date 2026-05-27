@@ -11,6 +11,7 @@ public class ErrorMessage {
     public static final String MAX_WEIGHT_NOT_REQUIRED = "MaxWeight must be empty for this vehicle type";
     public static final String MAX_VOLUME_REQUIRED = "MaxVolume is required for this vehicle type";
     public static final String MAX_VOLUME_NOT_REQUIRED = "MaxVolume must be empty for this vehicle type";
+    public static final String VEHICLE_NOT_FOUND = "Vehicle was not found";
 
     public static final String TRIP_NOT_FOUND = "Trip with this id is not found in database";
     public static final String INVALID_TIME_ZONE = "Invalid time zone: %s";

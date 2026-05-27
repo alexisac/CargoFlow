@@ -47,4 +47,6 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
             @Param("newTripEndInstant") Instant newTripEndInstant,
             Pageable pageable
     );
+
+    Page<Vehicle> findAllByOrderByCreateDateDesc(Pageable pageable);
 }

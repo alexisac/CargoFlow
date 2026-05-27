@@ -4,9 +4,12 @@ import com.example.backendcargoflow.common.LogMessage;
 import com.example.backendcargoflow.controller.common.models.GenericApplicationResponseDto;
 import com.example.backendcargoflow.controller.vehicle.api.VehiclesApi;
 import com.example.backendcargoflow.controller.vehicle.models.AddNewVehicleRequestDto;
+import com.example.backendcargoflow.controller.vehicle.models.ChangeVehicleStatusRequestDto;
+import com.example.backendcargoflow.controller.vehicle.models.GetAllVehiclesResponseDto;
 import com.example.backendcargoflow.service.VehicleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,5 +34,21 @@ public class VehicleController implements VehiclesApi {
                 addNewVehicleRequestDto.getAdditionalInfo()
         ));
         return vehicleService.addNewVehicle(addNewVehicleRequestDto);
+    }
+
+    @Override
+    public GetAllVehiclesResponseDto getAllVehicles(
+            Integer pageNumber,
+            Integer pageSize
+    ) {
+        return vehicleService.getAllVehicles(pageNumber, pageSize);
+    }
+
+    @Override
+    public GenericApplicationResponseDto changeVehicleStatus(
+            @PathVariable Long vehicleId,
+            @RequestBody ChangeVehicleStatusRequestDto changeVehicleStatusRequestDto
+    ) {
+        return vehicleService.changeVehicleStatus(vehicleId, changeVehicleStatusRequestDto);
     }
 }
