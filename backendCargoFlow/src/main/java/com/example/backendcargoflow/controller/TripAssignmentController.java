@@ -20,15 +20,48 @@ public class TripAssignmentController implements TripAssignmentsApi {
     private final TripAssignmentService tripAssignmentService;
 
     @Override
-    public AvailableDriversResponseDto getAvailableDriversForTrip(@PathVariable Long tripId) {
-        log.info(String.format(LogMessage.GET_AVAILABLE_DRIVERS_FOR_TRIP, tripId));
-        return tripAssignmentService.getAvailableDriversForTrip(tripId);
+    public AvailableDriversResponseDto getAvailableDriversForTrip(
+            @PathVariable Long tripId,
+            Integer pageNumber,
+            Integer pageSize
+    ) {
+        log.info(String.format(
+                LogMessage.GET_AVAILABLE_DRIVERS_FOR_TRIP,
+                tripId,
+                pageNumber,
+                pageSize
+        ));
+        return tripAssignmentService.getAvailableDriversForTrip(tripId, pageNumber, pageSize);
     }
 
     @Override
-    public AvailableVehiclesResponseDto getAvailableVehiclesForTrip(@PathVariable Long tripId) {
-        log.info(String.format(LogMessage.GET_AVAILABLE_VEHICLES_FOR_TRIP, tripId));
-        return tripAssignmentService.getAvailableVehiclesForTrip(tripId);
+    public AvailableVehiclesResponseDto getAvailablePrimaryVehiclesForTrip(
+            @PathVariable Long tripId,
+            Integer pageNumber,
+            Integer pageSize
+    ) {
+        log.info(String.format(
+                LogMessage.GET_AVAILABLE_PRIMARY_VEHICLES_FOR_TRIP,
+                tripId,
+                pageNumber,
+                pageSize
+        ));
+        return tripAssignmentService.getAvailablePrimaryVehiclesForTrip(tripId, pageNumber, pageSize);
+    }
+
+    @Override
+    public AvailableVehiclesResponseDto getAvailableTrailersForTrip(
+            @PathVariable Long tripId,
+            Integer pageNumber,
+            Integer pageSize
+    ) {
+        log.info(String.format(
+                LogMessage.GET_AVAILABLE_TRAILERS_FOR_TRIP,
+                tripId,
+                pageNumber,
+                pageSize
+        ));
+        return tripAssignmentService.getAvailableTrailersForTrip(tripId, pageNumber, pageSize);
     }
 
     @Override

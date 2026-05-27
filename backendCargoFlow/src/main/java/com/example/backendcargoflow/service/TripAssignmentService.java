@@ -21,6 +21,9 @@ import com.example.backendcargoflow.domain.vehicle.entity.VehicleType;
 import com.example.backendcargoflow.domain.vehicle.repository.VehicleRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -37,59 +40,75 @@ public class TripAssignmentService {
     private final CurrentUserService currentUserService;
 
     @PreAuthorize("hasAnyRole('DISPATCHER', 'MANAGER', 'ADMIN')")
-    public AvailableDriversResponseDto getAvailableDriversForTrip(Long tripId) {
+    public AvailableDriversResponseDto getAvailableDriversForTrip(
+            Long tripId,
+            Integer pageNumber,
+            Integer pageSize
+            ) {
         Trip trip = getPlannedTrip(tripId);
 
-        List<AvailableDriverProjection> availableDriverProjections = userRepository.findAvailableDriversForTrip(
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        Page<AvailableDriverProjection> availableDriverPage = userRepository.findAvailableDriversForTrip(
                 UserRole.DRIVER,
                 getBlockingTripStatuses(),
                 trip.getPickupInstant(),
-                trip.getDeliveryInstant()
+                trip.getDeliveryInstant(),
+                pageable
         );
 
-        List<AvailableDriverDto> availableDrivers = tripAssignmentMapper.mapAvailableDriverProjectionsToAvailableDriverDtos(availableDriverProjections);
+        List<AvailableDriverDto> availableDrivers = tripAssignmentMapper.mapAvailableDriverProjectionsToAvailableDriverDtos(availableDriverPage.getContent());
 
         AvailableDriversResponseDto response = new AvailableDriversResponseDto();
         response.setDrivers(availableDrivers);
-
+        response.setPageNumber(availableDriverPage.getNumber());
+        response.setPageSize(availableDriverPage.getSize());
+        response.setLastPage(availableDriverPage.isLast());
         return response;
     }
 
     @PreAuthorize("hasAnyRole('DISPATCHER', 'MANAGER', 'ADMIN')")
-    public AvailableVehiclesResponseDto getAvailableVehiclesForTrip(Long tripId) {
+    public AvailableVehiclesResponseDto getAvailablePrimaryVehiclesForTrip(
+            Long tripId,
+            Integer pageNumber,
+            Integer pageSize
+    ) {
         Trip trip = getPlannedTrip(tripId);
 
-        List<AvailableVehicleProjection> primaryVehicleProjections = vehicleRepository.findAvailableVehiclesForTrip(
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        Page<AvailableVehicleProjection> vehiclePage = vehicleRepository.findAvailableVehiclesForTrip(
                 VehicleStatus.AVAILABLE,
                 getPrimaryVehicleTypes(),
                 getBlockingTripStatuses(),
                 trip.getPickupInstant(),
-                trip.getDeliveryInstant()
+                trip.getDeliveryInstant(),
+                pageable
         );
 
-        List<AvailableVehicleProjection> trailerProjections = vehicleRepository.findAvailableVehiclesForTrip(
+        return buildAvailableVehiclesPageResponse(vehiclePage);
+    }
+
+    @PreAuthorize("hasAnyRole('DISPATCHER', 'MANAGER', 'ADMIN')")
+    public AvailableVehiclesResponseDto getAvailableTrailersForTrip(
+            Long tripId,
+            Integer pageNumber,
+            Integer pageSize
+    ) {
+        Trip trip = getPlannedTrip(tripId);
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        Page<AvailableVehicleProjection> vehiclePage = vehicleRepository.findAvailableVehiclesForTrip(
                 VehicleStatus.AVAILABLE,
                 getTrailerVehicleTypes(),
                 getBlockingTripStatuses(),
                 trip.getPickupInstant(),
-                trip.getDeliveryInstant()
+                trip.getDeliveryInstant(),
+                pageable
         );
 
-        List<AvailableVehicleDto> primaryVehicles =
-                tripAssignmentMapper.mapAvailableVehicleProjectionsToAvailableVehicleDtos(
-                        primaryVehicleProjections
-                );
-
-        List<AvailableVehicleDto> trailers =
-                tripAssignmentMapper.mapAvailableVehicleProjectionsToAvailableVehicleDtos(
-                        trailerProjections
-                );
-
-        AvailableVehiclesResponseDto response = new AvailableVehiclesResponseDto();
-        response.setPrimaryVehicles(primaryVehicles);
-        response.setTrailers(trailers);
-
-        return response;
+        return buildAvailableVehiclesPageResponse(vehiclePage);
     }
 
     @Transactional
@@ -145,5 +164,17 @@ public class TripAssignmentService {
                 VehicleType.REFRIGERATED_TRAILER,
                 VehicleType.TANKER_TRAILER
         );
+    }
+
+    private AvailableVehiclesResponseDto buildAvailableVehiclesPageResponse(Page<AvailableVehicleProjection> vehiclePage) {
+        List<AvailableVehicleDto> vehicles = tripAssignmentMapper.mapAvailableVehicleProjectionsToAvailableVehicleDtos(vehiclePage.getContent());
+
+        AvailableVehiclesResponseDto response = new AvailableVehiclesResponseDto();
+        response.setVehicles(vehicles);
+        response.setPageNumber(vehiclePage.getNumber());
+        response.setPageSize(vehiclePage.getSize());
+        response.setLastPage(vehiclePage.isLast());
+
+        return response;
     }
 }

@@ -5,6 +5,8 @@ import com.example.backendcargoflow.domain.vehicle.entity.AvailableVehicleProjec
 import com.example.backendcargoflow.domain.vehicle.entity.Vehicle;
 import com.example.backendcargoflow.domain.vehicle.entity.VehicleStatus;
 import com.example.backendcargoflow.domain.vehicle.entity.VehicleType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -37,11 +39,12 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
           )
         ORDER BY v.vehicleType, v.licencePlate
         """)
-    List<AvailableVehicleProjection> findAvailableVehiclesForTrip(
+    Page<AvailableVehicleProjection> findAvailableVehiclesForTrip(
             @Param("vehicleStatus") VehicleStatus vehicleStatus,
             @Param("vehicleTypes") List<VehicleType> vehicleTypes,
             @Param("blockingTripStatuses") List<TripStatus> blockingTripStatuses,
             @Param("newTripStartInstant") Instant newTripStartInstant,
-            @Param("newTripEndInstant") Instant newTripEndInstant
+            @Param("newTripEndInstant") Instant newTripEndInstant,
+            Pageable pageable
     );
 }

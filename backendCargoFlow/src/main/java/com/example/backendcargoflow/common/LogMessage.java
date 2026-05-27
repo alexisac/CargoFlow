@@ -70,8 +70,18 @@ public class LogMessage {
     public static final String GET_CURRENT_TRIP = "GET_CURRENT_TRIP operation was invoked";
     public static final String GET_COMPLETED_TRIPS = "GET_COMPLETED_TRIPS operation was invoked with days: %s";
 
-    public static final String GET_AVAILABLE_DRIVERS_FOR_TRIP = "GET_AVAILABLE_DRIVERS_FOR_TRIP operation was invoked with: tripId %s";
-    public static final String GET_AVAILABLE_VEHICLES_FOR_TRIP = "GET_AVAILABLE_VEHICLES_FOR_TRIP operation was invoked with: tripId %s";
+    public static final String GET_AVAILABLE_DRIVERS_FOR_TRIP = "GET_AVAILABLE_DRIVERS_FOR_TRIP operation was invoked with:" +
+            "tripId: %s, \n" +
+            "pageNumber: %d, \n" +
+            "pageSize: %d";
+    public static final String GET_AVAILABLE_PRIMARY_VEHICLES_FOR_TRIP = "GET_AVAILABLE_PRIMARY_VEHICLES_FOR_TRIP operation was invoked with:" +
+            "tripId: %s, \n" +
+            "pageNumber: %d, \n" +
+            "pageSize: %d";
+    public static final String GET_AVAILABLE_TRAILERS_FOR_TRIP = "GET_AVAILABLE_TRAILERS_FOR_TRIP operation was invoked with:" +
+            "tripId: %s, \n" +
+            "pageNumber: %d, \n" +
+            "pageSize: %d";
     public static final String ASSIGN_TRIP = "ASSIGN_TRIP operation was invoked with: \n" +
             "tripID: %s, \n" +
             "driverID: %s, \n" +

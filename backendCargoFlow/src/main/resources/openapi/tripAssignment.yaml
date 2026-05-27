@@ -4,7 +4,7 @@ info:
   title: Trip assignment management
   description: API related to assigning drivers and vehicles to trips
 paths:
-  /tripAssignment/{tripId}/available-drivers:
+  /tripAssignment/{tripId}/availableDrivers:
     get:
       tags:
         - Trip Assignments
@@ -18,6 +18,23 @@ paths:
           schema:
             type: integer
             format: int64
+        - name: pageNumber
+          in: query
+          description: Page number
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+            example: 0
+        - name: pageSize
+          in: query
+          description: Page size
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            example: 20
       responses:
         '200':
           description: Available drivers were retrieved successfully
@@ -43,12 +60,12 @@ paths:
             application/json:
               schema:
                 $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
-  /tripAssignment/{tripId}/available-vehicles:
+  /tripAssignment/{tripId}/availablePrimaryVehicles:
     get:
       tags:
         - Trip Assignments
-      summary: Get available vehicles for trip
-      operationId: getAvailableVehiclesForTrip
+      summary: Get available primary vehicles for trip
+      operationId: getAvailablePrimaryVehiclesForTrip
       parameters:
         - name: tripId
           in: path
@@ -57,9 +74,82 @@ paths:
           schema:
             type: integer
             format: int64
+        - name: pageNumber
+          in: query
+          description: Page number
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+            example: 0
+        - name: pageSize
+          in: query
+          description: Page size
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            example: 20
       responses:
         '200':
-          description: Available vehicles were retrieved successfully
+          description: Available primary vehicles were retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailableVehiclesResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '404':
+          description: Trip was not found
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+  /tripAssignment/{tripId}/availableTrailers:
+    get:
+      tags:
+        - Trip Assignments
+      summary: Get available trailers for trip
+      operationId: getAvailableTrailersForTrip
+      parameters:
+        - name: tripId
+          in: path
+          description: Trip's ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: pageNumber
+          in: query
+          description: Page number
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+            example: 0
+        - name: pageSize
+          in: query
+          description: Page size
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            example: 20
+      responses:
+        '200':
+          description: Available trailers were retrieved successfully
           content:
             application/json:
               schema:
@@ -153,11 +243,23 @@ components:
       type: object
       required:
         - drivers
+        - pageNumber
+        - pageSize
+        - lastPage
       properties:
         drivers:
           type: array
           items:
             $ref: '#/components/schemas/AvailableDriver'
+        pageNumber:
+          type: integer
+          example: 0
+        pageSize:
+          type: integer
+          example: 20
+        lastPage:
+          type: boolean
+          example: false
     AvailableVehicle:
       type: object
       required:
@@ -177,17 +279,24 @@ components:
     AvailableVehiclesResponse:
       type: object
       required:
-        - primaryVehicles
-        - trailers
+        - vehicles
+        - pageNumber
+        - pageSize
+        - lastPage
       properties:
-        primaryVehicles:
+        vehicles:
           type: array
           items:
             $ref: '#/components/schemas/AvailableVehicle'
-        trailers:
-          type: array
-          items:
-            $ref: '#/components/schemas/AvailableVehicle'
+        pageNumber:
+          type: integer
+          example: 0
+        pageSize:
+          type: integer
+          example: 20
+        lastPage:
+          type: boolean
+          example: false
     AssignTripRequest:
       type: object
       required:

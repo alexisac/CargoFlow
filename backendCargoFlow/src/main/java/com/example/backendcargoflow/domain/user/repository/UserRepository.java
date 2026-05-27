@@ -5,6 +5,8 @@ import com.example.backendcargoflow.domain.user.entity.AvailableDriverProjection
 import com.example.backendcargoflow.domain.user.entity.User;
 import com.example.backendcargoflow.domain.user.entity.UserFullNameProjection;
 import com.example.backendcargoflow.domain.user.entity.UserRole;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -35,10 +37,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
       )
     ORDER BY u.firstName, u.lastName
     """)
-    List<AvailableDriverProjection> findAvailableDriversForTrip(
+    Page<AvailableDriverProjection> findAvailableDriversForTrip(
             @Param("driverRole") UserRole driverRole,
             @Param("blockingTripStatuses") List<TripStatus> blockingTripStatuses,
             @Param("newTripStartInstant") Instant newTripStartInstant,
-            @Param("newTripEndInstant") Instant newTripEndInstant
+            @Param("newTripEndInstant") Instant newTripEndInstant,
+            Pageable pageable
     );
 }
