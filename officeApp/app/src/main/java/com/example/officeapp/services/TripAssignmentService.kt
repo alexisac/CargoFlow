@@ -11,18 +11,63 @@ import jakarta.inject.Inject
 class TripAssignmentService @Inject constructor(
     private val tripAssignmentRepository: TripAssignmentRepository
 ) {
-    suspend fun getAvailableDriversForTrip(tripId: Long): ApiResult<AvailableDriversResponse> {
+    suspend fun getAvailableDriversForTrip(
+        tripId: Long,
+        pageNumber: Int,
+        pageSize: Int
+    ): ApiResult<AvailableDriversResponse> {
         if (tripId < 0)
             return ApiResult.Error(ValidationMessages.ID_RANGE)
+        if (pageNumber < 0)
+            return ApiResult.Error(ValidationMessages.PAGE_NUMBER_RANGE)
+        if (pageSize < 0)
+            return ApiResult.Error(ValidationMessages.PAGE_SIZE_RANGE)
 
-        return tripAssignmentRepository.getAvailableDriversForTrip(tripId)
+        return tripAssignmentRepository.getAvailableDriversForTrip(
+            tripId = tripId,
+            pageNumber = pageNumber,
+            pageSize = pageSize
+        )
     }
 
-    suspend fun getAvailableVehiclesForTrip(tripId: Long): ApiResult<AvailableVehiclesResponse> {
+    suspend fun getAvailablePrimaryVehiclesForTrip(
+        tripId: Long,
+        pageNumber: Int,
+        pageSize: Int
+    )
+    : ApiResult<AvailableVehiclesResponse> {
         if (tripId < 0)
             return ApiResult.Error(ValidationMessages.ID_RANGE)
+        if (pageNumber < 0)
+            return ApiResult.Error(ValidationMessages.PAGE_NUMBER_RANGE)
+        if (pageSize < 0)
+            return ApiResult.Error(ValidationMessages.PAGE_SIZE_RANGE)
 
-        return tripAssignmentRepository.getAvailableVehiclesForTrip(tripId)
+        return tripAssignmentRepository.getAvailablePrimaryVehiclesForTrip(
+            tripId = tripId,
+            pageNumber = pageNumber,
+            pageSize = pageSize
+        )
+    }
+
+    suspend fun getAvailableTrailersForTrip(
+        tripId: Long,
+        pageNumber: Int,
+        pageSize: Int
+    )
+            : ApiResult<AvailableVehiclesResponse> {
+        if (tripId < 0)
+            return ApiResult.Error(ValidationMessages.ID_RANGE)
+        if (pageNumber < 0)
+            return ApiResult.Error(ValidationMessages.PAGE_NUMBER_RANGE)
+        if (pageSize < 0)
+            return ApiResult.Error(ValidationMessages.PAGE_SIZE_RANGE)
+
+        return tripAssignmentRepository.getAvailableTrailersForTrip(
+            tripId = tripId,
+            pageNumber = pageNumber,
+            pageSize = pageSize
+        )
     }
 
     suspend fun assignTrip(

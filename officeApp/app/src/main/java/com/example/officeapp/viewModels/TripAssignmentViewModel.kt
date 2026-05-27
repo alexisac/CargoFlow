@@ -20,24 +20,39 @@ class TripAssignmentViewModel @Inject constructor(
     val uiState: StateFlow<TripAssignmentUiState> = _uiState.asStateFlow()
 
     fun getAvailableDriversForTrip(
-        tripId: Long
+        tripId: Long,
+        pageNumber: Int,
+        pageSize: Int,
+        append: Boolean
     ) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
                 isLoading = true,
                 errorMessage = null,
                 successMessage = null,
-                availableDrivers = emptyList()
             )
 
             when (
-                val result = tripAssignmentService.getAvailableDriversForTrip(tripId)
+                val result = tripAssignmentService.getAvailableDriversForTrip(
+                    tripId = tripId,
+                    pageNumber = pageNumber,
+                    pageSize = pageSize
+                )
             ) {
                 is ApiResult.Success -> {
+                    val currentDrivers = if (append) {
+                        _uiState.value.availableDrivers
+                    } else {
+                        emptyList()
+                    }
+
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
                         errorMessage = null,
-                        availableDrivers = result.data.drivers
+                        availableDrivers = currentDrivers + result.data.drivers,
+                        driversPageNumber = result.data.pageNumber,
+                        driversPageSize = result.data.pageSize,
+                        driversLastPage = result.data.lastPage
                     )
                 }
 
@@ -58,27 +73,55 @@ class TripAssignmentViewModel @Inject constructor(
         }
     }
 
-    fun getAvailableVehiclesForTrip(
-        tripId: Long
+    fun loadNextDriversPage(tripId: Long) {
+        val state = _uiState.value
+
+        if (state.isLoading || state.driversLastPage) {
+            return
+        }
+
+        getAvailableDriversForTrip(
+            tripId = tripId,
+            pageNumber = state.driversPageNumber + 1,
+            pageSize = state.driversPageSize,
+            append = true
+        )
+    }
+
+    fun getAvailablePrimaryVehiclesForTrip(
+        tripId: Long,
+        pageNumber: Int,
+        pageSize: Int,
+        append: Boolean
     ) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
                 isLoading = true,
                 errorMessage = null,
                 successMessage = null,
-                availablePrimaryVehicles = emptyList(),
-                availableTrailers = emptyList()
             )
 
             when (
-                val result = tripAssignmentService.getAvailableVehiclesForTrip(tripId)
+                val result = tripAssignmentService.getAvailablePrimaryVehiclesForTrip(
+                    tripId = tripId,
+                    pageNumber = pageNumber,
+                    pageSize = pageSize
+                )
             ) {
                 is ApiResult.Success -> {
+                    val currentVehicle = if (append) {
+                        _uiState.value.availablePrimaryVehicles
+                    } else {
+                        emptyList()
+                    }
+
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
                         errorMessage = null,
-                        availablePrimaryVehicles = result.data.primaryVehicles,
-                        availableTrailers = result.data.trailers
+                        availablePrimaryVehicles = currentVehicle + result.data.vehicles,
+                        primaryVehiclesPageNumber = result.data.pageNumber,
+                        primaryVehiclesPageSize = result.data.pageSize,
+                        primaryVehiclesLastPage = result.data.lastPage,
                     )
                 }
 
@@ -87,7 +130,6 @@ class TripAssignmentViewModel @Inject constructor(
                         isLoading = false,
                         errorMessage = result.message,
                         availablePrimaryVehicles = emptyList(),
-                        availableTrailers = emptyList()
                     )
                 }
 
@@ -98,6 +140,90 @@ class TripAssignmentViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun loadNextPrimaryVehiclesPage(tripId: Long) {
+        val state = _uiState.value
+
+        if (state.isLoading || state.primaryVehiclesLastPage) {
+            return
+        }
+
+        getAvailablePrimaryVehiclesForTrip(
+            tripId = tripId,
+            pageNumber = state.primaryVehiclesPageNumber + 1,
+            pageSize = state.primaryVehiclesPageSize,
+            append = true
+        )
+    }
+
+    fun getAvailableTrailersForTrip(
+        tripId: Long,
+        pageNumber: Int,
+        pageSize: Int,
+        append: Boolean
+    ) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isLoading = true,
+                errorMessage = null,
+                successMessage = null,
+            )
+
+            when (
+                val result = tripAssignmentService.getAvailableTrailersForTrip(
+                    tripId = tripId,
+                    pageNumber = pageNumber,
+                    pageSize = pageSize
+                )
+            ) {
+                is ApiResult.Success -> {
+                    val currentVehicle = if (append) {
+                        _uiState.value.availableTrailers
+                    } else {
+                        emptyList()
+                    }
+
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = null,
+                        availableTrailers = currentVehicle + result.data.vehicles,
+                        trailersPageNumber = result.data.pageNumber,
+                        trailersPageSize = result.data.pageSize,
+                        trailersLastPage = result.data.lastPage,
+                    )
+                }
+
+                is ApiResult.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = result.message,
+                        availableTrailers = emptyList(),
+                    )
+                }
+
+                ApiResult.Loading -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = true
+                    )
+                }
+            }
+        }
+    }
+
+    fun loadNextTrailersPage(tripId: Long) {
+        val state = _uiState.value
+
+        if (state.isLoading || state.trailersLastPage) {
+            return
+        }
+
+        getAvailableTrailersForTrip(
+            tripId = tripId,
+            pageNumber = state.trailersPageNumber + 1,
+            pageSize = state.trailersPageSize,
+            append = true
+        )
     }
 
     fun assignTrip(
@@ -152,7 +278,27 @@ class TripAssignmentViewModel @Inject constructor(
     fun clearMessage() {
         _uiState.value = _uiState.value.copy(
             successMessage = null,
-            errorMessage = null
+            errorMessage = null,
+
+            availableDrivers = emptyList(),
+            driversPageNumber = 0,
+            driversLastPage = false,
+
+            availablePrimaryVehicles = emptyList(),
+            primaryVehiclesPageNumber = 0,
+            primaryVehiclesLastPage = false,
+
+            availableTrailers = emptyList(),
+            trailersPageNumber = 0,
+            trailersLastPage = false
+        )
+    }
+
+    fun clearTrailers(){
+        _uiState.value = _uiState.value.copy(
+            availableTrailers = emptyList(),
+            trailersPageNumber = 0,
+            trailersLastPage = false
         )
     }
 }

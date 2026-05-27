@@ -2,8 +2,8 @@ package com.example.officeapp.screens.assignDriver
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,7 +22,7 @@ fun AvailableVehicleCard(
 ) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
+            .width(220.dp)
             .clickable(
                 enabled = enabled,
                 onClick = onClick
@@ -39,6 +39,13 @@ fun AvailableVehicleCard(
                 text = vehicle.vehicleType.name,
                 modifier = Modifier.padding(top = 4.dp)
             )
+
+            if (!enabled) {
+                Text(
+                    text = stringResource(R.string.label_disabled),
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
 
             if (selected) {
                 Text(

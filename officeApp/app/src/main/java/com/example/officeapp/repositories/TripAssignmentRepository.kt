@@ -12,9 +12,17 @@ import javax.inject.Inject
 class TripAssignmentRepository @Inject constructor(
     private val tripAssignmentInterfaceAPI: TripAssignmentInterfaceAPI,
 ) {
-    suspend fun getAvailableDriversForTrip(tripId: Long): ApiResult<AvailableDriversResponse> {
+    suspend fun getAvailableDriversForTrip(
+        tripId: Long,
+        pageNumber: Int,
+        pageSize: Int
+    ): ApiResult<AvailableDriversResponse> {
         return try {
-            val response = tripAssignmentInterfaceAPI.getAvailableDriversForTrip(tripId)
+            val response = tripAssignmentInterfaceAPI.getAvailableDriversForTrip(
+                tripId = tripId,
+                pageNumber = pageNumber,
+                pageSize = pageSize
+            )
 
             if (response.isSuccessful) {
                 val body = response.body()
@@ -31,9 +39,44 @@ class TripAssignmentRepository @Inject constructor(
         }
     }
 
-    suspend fun getAvailableVehiclesForTrip(tripId: Long): ApiResult<AvailableVehiclesResponse> {
+    suspend fun getAvailablePrimaryVehiclesForTrip(
+        tripId: Long,
+        pageNumber: Int,
+        pageSize: Int
+    ): ApiResult<AvailableVehiclesResponse> {
         return try {
-            val response = tripAssignmentInterfaceAPI.getAvailableVehiclesForTrip(tripId)
+            val response = tripAssignmentInterfaceAPI.getAvailablePrimaryVehiclesForTrip(
+                tripId = tripId,
+                pageSize = pageSize,
+                pageNumber = pageNumber
+            )
+
+            if (response.isSuccessful) {
+                val body = response.body()
+
+                if (body == null)
+                    ApiResult.Error("Empty response from server.")
+                else
+                    ApiResult.Success(body)
+            } else {
+                parseApiError(response)
+            }
+        } catch (ex: Exception) {
+            ApiResult.Error(ex.message ?: "Unexpected error occurred.")
+        }
+    }
+
+    suspend fun getAvailableTrailersForTrip(
+        tripId: Long,
+        pageNumber: Int,
+        pageSize: Int
+    ): ApiResult<AvailableVehiclesResponse> {
+        return try {
+            val response = tripAssignmentInterfaceAPI.getAvailableTrailersForTrip(
+                tripId = tripId,
+                pageSize = pageSize,
+                pageNumber = pageNumber
+            )
 
             if (response.isSuccessful) {
                 val body = response.body()

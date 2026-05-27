@@ -5,17 +5,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -37,6 +37,8 @@ fun AssignDriverScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
+
     var selectedDriverId by remember { mutableStateOf<Long?>(null) }
     var selectedPrimaryVehicle by remember { mutableStateOf<AvailableVehicle?>(null) }
     var selectedTrailerVehicleId by remember { mutableStateOf<Long?>(null) }
@@ -44,8 +46,18 @@ fun AssignDriverScreen(
     val trailerEnabled = selectedPrimaryVehicle?.vehicleType == VehicleType.TRACTOR_UNIT
 
     LaunchedEffect(tripId) {
-        viewModel.getAvailableDriversForTrip(tripId)
-        viewModel.getAvailableVehiclesForTrip(tripId)
+        viewModel.getAvailableDriversForTrip(
+            tripId = tripId,
+            pageNumber = 0,
+            pageSize = 20,
+            append = false
+        )
+        viewModel.getAvailablePrimaryVehiclesForTrip(
+            tripId = tripId,
+            pageNumber = 0,
+            pageSize = 20,
+            append = false
+        )
     }
 
     Column(
@@ -58,7 +70,10 @@ fun AssignDriverScreen(
         )
 
         OutlinedButton(
-            onClick = onBack,
+            onClick = {
+                viewModel.clearMessage()
+                onBack()
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp)
@@ -73,6 +88,43 @@ fun AssignDriverScreen(
             onMessageShown = { viewModel.clearMessage() }
         )
 
+        TabRow(
+            selectedTabIndex = selectedTabIndex,
+            modifier = Modifier.padding(top = 16.dp)
+        ) {
+            Tab(
+                selected = selectedTabIndex == 0,
+                onClick = { selectedTabIndex = 0 },
+                text = { Text(stringResource(R.string.section_drivers)) }
+            )
+
+            Tab(
+                selected = selectedTabIndex == 1,
+                onClick = { selectedTabIndex = 1 },
+                text = { Text(stringResource(R.string.section_primary_vehicle)) }
+            )
+
+            Tab(
+                selected = selectedTabIndex == 2,
+                enabled = trailerEnabled,
+                onClick = {
+                    if (trailerEnabled) {
+                        selectedTabIndex = 2
+
+                        if (uiState.availableTrailers.isEmpty()) {
+                            viewModel.getAvailableTrailersForTrip(
+                                tripId = tripId,
+                                pageNumber = 0,
+                                pageSize = 20,
+                                append = false
+                            )
+                        }
+                    }
+                },
+                text = { Text(stringResource(R.string.section_trailers)) }
+            )
+        }
+
         if (uiState.isLoading) {
             Column(
                 modifier = Modifier
@@ -84,52 +136,33 @@ fun AssignDriverScreen(
                 CircularProgressIndicator()
             }
         } else {
-            LazyColumn(
-                modifier = Modifier.padding(top = 24.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                item {
-                    Text(text = stringResource(R.string.section_drivers))
-                }
-
-                if (uiState.availableDrivers.isEmpty() && uiState.errorMessage == null) {
-                    item {
-                        Text(
-                            text = stringResource(R.string.label_no_available_drivers_found),
-                            modifier = Modifier.padding(top = 8.dp)
-                        )
-                    }
-                } else {
-                    items(uiState.availableDrivers) { driver ->
+            when (selectedTabIndex) {
+                0 -> {
+                    AssignmentSection(
+                        title = stringResource(R.string.section_drivers),
+                        items = uiState.availableDrivers,
+                        emptyText = stringResource(R.string.label_no_available_drivers_found),
+                        canLoadMore = !uiState.driversLastPage,
+                        isLoading = uiState.isLoading,
+                        onLoadMore = { viewModel.loadNextDriversPage(tripId) }
+                    ) { driver ->
                         AvailableDriverCard(
                             driver = driver,
                             selected = selectedDriverId == driver.id,
-                            onClick = {
-                                selectedDriverId = driver.id
-                            }
+                            onClick = { selectedDriverId = driver.id }
                         )
                     }
                 }
 
-                item {
-                    HorizontalDivider(
-                        modifier = Modifier.padding(vertical = 8.dp)
-                    )
-                }
-
-                item {
-                    Text(text = stringResource(R.string.section_primary_vehicle))
-                }
-
-                if (uiState.availablePrimaryVehicles.isEmpty() && uiState.errorMessage == null) {
-                    item {
-                        Text(
-                            text = stringResource(R.string.label_no_available_primary_vehicle_found),
-                            modifier = Modifier.padding(top = 8.dp)
-                        )
-                    }
-                } else {
-                    items(uiState.availablePrimaryVehicles) { vehicle ->
+                1 -> {
+                    AssignmentSection(
+                        title = stringResource(R.string.section_primary_vehicle),
+                        items = uiState.availablePrimaryVehicles,
+                        emptyText = stringResource(R.string.label_no_available_primary_vehicles_found),
+                        canLoadMore = !uiState.primaryVehiclesLastPage,
+                        isLoading = uiState.isLoading,
+                        onLoadMore = { viewModel.loadNextPrimaryVehiclesPage(tripId) }
+                    ) { vehicle ->
                         AvailableVehicleCard(
                             vehicle = vehicle,
                             selected = selectedPrimaryVehicle?.id == vehicle.id,
@@ -137,85 +170,85 @@ fun AssignDriverScreen(
                             onClick = {
                                 selectedPrimaryVehicle = vehicle
 
-                                if (vehicle.vehicleType != VehicleType.TRACTOR_UNIT) {
+                                if (vehicle.vehicleType == VehicleType.TRACTOR_UNIT) {
                                     selectedTrailerVehicleId = null
-                                }
-                            }
-                        )
-                    }
-                }
 
-                item {
-                    HorizontalDivider(
-                        modifier = Modifier.padding(vertical = 8.dp)
-                    )
-                }
-
-                item {
-                    Text(text = stringResource(R.string.section_trailers))
-                }
-
-                if (!trailerEnabled) {
-                    item {
-                        Text(
-                            text = stringResource(R.string.label_select_tractor_unit_for_trailer),
-                            modifier = Modifier.padding(top = 8.dp)
-                        )
-                    }
-                } else {
-                    if (uiState.availableTrailers.isEmpty() && uiState.errorMessage == null) {
-                        item {
-                            Text(
-                                text = stringResource(R.string.label_no_available_trailer_found),
-                                modifier = Modifier.padding(top = 8.dp)
-                            )
-                        }
-                    } else {
-                        items(uiState.availableTrailers) { trailer ->
-                            AvailableVehicleCard(
-                                vehicle = trailer,
-                                selected = selectedTrailerVehicleId == trailer.id,
-                                enabled = true,
-                                onClick = {
-                                    selectedTrailerVehicleId = trailer.id
-                                }
-                            )
-                        }
-                    }
-                }
-                item {
-                    Button(
-                        onClick = {
-                            val driverId = selectedDriverId
-                            val primaryVehicle = selectedPrimaryVehicle
-                            if (driverId != null && primaryVehicle != null) {
-                                viewModel.assignTrip(
-                                    tripId = tripId,
-                                    driverId = driverId,
-                                    primaryVehicleId = primaryVehicle.id,
-                                    trailerVehicleId = if (primaryVehicle.vehicleType == VehicleType.TRACTOR_UNIT) {
-                                        selectedTrailerVehicleId
-                                    } else {
-                                        null
+                                    if (uiState.availableTrailers.isEmpty()) {
+                                        viewModel.getAvailableTrailersForTrip(
+                                            tripId = tripId,
+                                            pageNumber = 0,
+                                            pageSize = 20,
+                                            append = false
+                                        )
                                     }
-                                )
-                                selectedDriverId = null
-                                selectedPrimaryVehicle = null
-                                selectedTrailerVehicleId = null
-                                onBack()
+                                } else {
+                                    selectedTrailerVehicleId = null
+                                    viewModel.clearTrailers()
+
+                                    if (selectedTabIndex == 2) {
+                                        selectedTabIndex = 1
+                                    }
+                                }
                             }
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 16.dp),
-                        enabled = selectedDriverId != null &&
-                                selectedPrimaryVehicle != null &&
-                                (!trailerEnabled || selectedTrailerVehicleId != null)
-                    ) {
-                        Text(stringResource(R.string.button_assign))
+                        )
+                    }
+                }
+
+                2 -> {
+                    AssignmentSection(
+                        title = stringResource(R.string.section_trailers),
+                        items = uiState.availableTrailers,
+                        emptyText = stringResource(R.string.label_no_available_trailers_found),
+                        canLoadMore = !uiState.trailersLastPage,
+                        enabled = trailerEnabled,
+                        isLoading = uiState.isLoading,
+                        onLoadMore = {
+                            viewModel.loadNextTrailersPage(tripId)
+                        }
+                    ) { trailer ->
+                        AvailableVehicleCard(
+                            vehicle = trailer,
+                            selected = selectedTrailerVehicleId == trailer.id,
+                            enabled = trailerEnabled,
+                            onClick = {
+                                selectedTrailerVehicleId = trailer.id
+                            }
+                        )
                     }
                 }
             }
+        }
+
+        Button(
+            onClick = {
+                val driverId = selectedDriverId
+                val primaryVehicle = selectedPrimaryVehicle
+
+                if (driverId != null && primaryVehicle != null) {
+                    viewModel.assignTrip(
+                        tripId = tripId,
+                        driverId = driverId,
+                        primaryVehicleId = primaryVehicle.id,
+                        trailerVehicleId = if (primaryVehicle.vehicleType == VehicleType.TRACTOR_UNIT) {
+                            selectedTrailerVehicleId
+                        } else {
+                            null
+                        }
+                    )
+                    selectedDriverId = null
+                    selectedPrimaryVehicle = null
+                    selectedTrailerVehicleId = null
+                    onBack()
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            enabled = selectedDriverId != null &&
+                    selectedPrimaryVehicle != null &&
+                    (!trailerEnabled || selectedTrailerVehicleId != null)
+        ) {
+            Text(stringResource(R.string.button_assign))
         }
     }
 }

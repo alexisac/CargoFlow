@@ -59,6 +59,7 @@
     <string name="label_delivery_time_zone">Delivery time zone</string>
     <string name="label_description">Description</string>
     <string name="label_details">Details</string>
+    <string name="label_disabled">Disabled</string>
     <string name="label_email">Email</string>
     <string name="label_first_name">First name</string>
     <string name="label_general">General</string>
@@ -71,8 +72,8 @@
     <string name="label_maximum_weight">Maximum weight</string>
     <string name="label_model">Model</string>
     <string name="label_no_available_drivers_found">No available drivers found.</string>
-    <string name="label_no_available_primary_vehicle_found">No available primary vehicle found.</string>
-    <string name="label_no_available_trailer_found">No available trailer found.</string>
+    <string name="label_no_available_primary_vehicles_found">No available primary vehicles found.</string>
+    <string name="label_no_available_trailers_found">No available trailers found.</string>
     <string name="label_no_completed_trips_found">No completed trips found.</string>
     <string name="label_no_current_trip_found">No current trip found.</string>
     <string name="label_password">Password</string>

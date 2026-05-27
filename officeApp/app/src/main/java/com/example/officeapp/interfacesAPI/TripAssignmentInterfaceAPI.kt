@@ -10,18 +10,31 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface TripAssignmentInterfaceAPI {
     @Headers("Content-Type: application/json")
-    @GET("tripAssignment/{tripId}/available-drivers")
+    @GET("tripAssignment/{tripId}/availableDrivers")
     suspend fun getAvailableDriversForTrip(
-        @Path("tripId") tripId: Long
+        @Path("tripId") tripId: Long,
+        @Query("pageNumber") pageNumber: Int,
+        @Query("pageSize") pageSize: Int
     ): Response<AvailableDriversResponse>
 
     @Headers("Content-Type: application/json")
-    @GET("tripAssignment/{tripId}/available-vehicles")
-    suspend fun getAvailableVehiclesForTrip(
-        @Path("tripId") tripId: Long
+    @GET("tripAssignment/{tripId}/availablePrimaryVehicles")
+    suspend fun getAvailablePrimaryVehiclesForTrip(
+        @Path("tripId") tripId: Long,
+        @Query("pageNumber") pageNumber: Int,
+        @Query("pageSize") pageSize: Int
+    ): Response<AvailableVehiclesResponse>
+
+    @Headers("Content-Type: application/json")
+    @GET("tripAssignment/{tripId}/availableTrailers")
+    suspend fun getAvailableTrailersForTrip(
+        @Path("tripId") tripId: Long,
+        @Query("pageNumber") pageNumber: Int,
+        @Query("pageSize") pageSize: Int
     ): Response<AvailableVehiclesResponse>
 
     @Headers("Content-Type: application/json")
