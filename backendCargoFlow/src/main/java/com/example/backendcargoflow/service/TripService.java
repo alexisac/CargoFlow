@@ -129,6 +129,24 @@ public class TripService {
         return response;
     }
 
+    @PreAuthorize("hasAnyRole('DISPATCHER', 'MANAGER', 'ADMIN')")
+    public GenericApplicationResponseDto cancelTrip(Long tripId) {
+        Trip trip = tripRepository.findById(tripId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.TRIP_NOT_FOUND));
+
+        if (trip.getTripStatus() == TripStatus.COMPLETED) {
+            throw new BadRequestException(ErrorMessage.COMPLETED_TRIP_CANNOT_BE_CANCELED);
+        }
+
+        trip.setTripStatus(TripStatus.CANCELED);
+        tripRepository.save(trip);
+
+        return GenericApplicationResponseFactory.success(
+                "200 - TRIP_CANCELED",
+                "Trip was canceled successfully"
+        );
+    }
+
     private void validateCompletedTripsDays(Integer days) {
         if (days == null || !(days == 30 || days == 60 || days == 90)) {
             throw new BadRequestException(ErrorMessage.INVALID_COMPLETED_TRIPS_PERIOD);

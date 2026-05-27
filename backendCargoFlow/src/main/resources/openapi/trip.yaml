@@ -168,6 +168,46 @@ paths:
               schema:
                 $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
 
+  /trip/{tripId}/cancel:
+    patch:
+      tags:
+        - Trips
+      summary: Cancel trip
+      operationId: cancelTrip
+      parameters:
+        - name: tripId
+          in: path
+          description: Trip's ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Trip was canceled successfully
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '400':
+          description: Trip cannot be canceled
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '404':
+          description: Trip was not found
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+
 components:
   schemas:
     TripStatus:

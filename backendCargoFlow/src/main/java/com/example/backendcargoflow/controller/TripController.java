@@ -84,4 +84,11 @@ public class TripController implements TripsApi {
         log.info(String.format(LogMessage.GET_COMPLETED_TRIPS, days));
         return tripService.getCompletedTrips(days);
     }
+
+    @Override
+    public GenericApplicationResponseDto cancelTrip(@PathVariable Long tripId) {
+        log.info(String.format(LogMessage.CANCEL_TRIP, tripId));
+
+        return tripService.cancelTrip(tripId);
+    }
 }
