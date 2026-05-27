@@ -2,11 +2,14 @@ package com.example.backendcargoflow.domain.user.mapper;
 
 import com.example.backendcargoflow.controller.user.models.AddNewUserRequestDto;
 import com.example.backendcargoflow.controller.user.models.UserRoleDto;
+import com.example.backendcargoflow.controller.user.models.UserSummaryDto;
 import com.example.backendcargoflow.domain.user.entity.User;
 import com.example.backendcargoflow.domain.user.entity.UserRole;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
+
+import java.util.List;
 
 @Mapper(
         componentModel = "spring",
@@ -19,6 +22,10 @@ public interface UserMapper {
     @Mapping(target = "createdDate", ignore = true)
     @Mapping(target = "active", expression = "java(Boolean.TRUE)")
     User mapAddNewUserRequestDtoToUser(AddNewUserRequestDto addNewUserRequestDto);
+
+    UserSummaryDto mapUserToUserSummaryDto(User user);
+
+    List<UserSummaryDto> mapUsersToUserSummaryDtos(List<User> users);
 
     default UserRole map(UserRoleDto roleDto) {
         return roleDto == null ? null : UserRole.valueOf(roleDto.name());

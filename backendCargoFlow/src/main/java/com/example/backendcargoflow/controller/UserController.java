@@ -2,13 +2,12 @@ package com.example.backendcargoflow.controller;
 
 import com.example.backendcargoflow.common.LogMessage;
 import com.example.backendcargoflow.controller.user.api.UsersApi;
-import com.example.backendcargoflow.controller.user.models.AddNewUserRequestDto;
+import com.example.backendcargoflow.controller.user.models.*;
 import com.example.backendcargoflow.controller.common.models.GenericApplicationResponseDto;
-import com.example.backendcargoflow.controller.user.models.LoginUserRequestDto;
-import com.example.backendcargoflow.controller.user.models.LoginUserResponseDto;
 import com.example.backendcargoflow.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,5 +35,28 @@ public class UserController implements UsersApi {
                 loginUserRequestDto.getHashedPassword()
         ));
         return userService.loginUser(loginUserRequestDto);
+    }
+
+    @Override
+    public GetAllUsersResponseDto getAllUsers(
+            Integer pageNumber,
+            Integer pageSize
+    ) {
+        log.info(LogMessage.GET_ALL_USERS);
+        return userService.getAllUsers(pageNumber, pageSize);
+    }
+
+    @Override
+    public GenericApplicationResponseDto changeUserStatus(
+            @PathVariable Long userId,
+            @RequestBody ChangeUserStatusRequestDto changeUserStatusRequestDto
+    ) {
+        log.info(String.format(
+                LogMessage.CHANGE_USER_STATUS,
+                userId,
+                changeUserStatusRequestDto.getActive()
+        ));
+
+        return userService.changeUserStatus(userId, changeUserStatusRequestDto);
     }
 }

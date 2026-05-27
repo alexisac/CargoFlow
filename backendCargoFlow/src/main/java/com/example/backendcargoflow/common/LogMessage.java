@@ -9,7 +9,10 @@ public class LogMessage {
     public static final String LOGIN_USER = "LOGIN_USER operation was invoked with: \n" +
             " email = %s, \n" +
             " password = %s";
-
+    public static final String GET_ALL_USERS = "GET_ALL_USERS operation was invoked";
+    public static final String CHANGE_USER_STATUS = "CHANGE_USER_STATUS operation was invoked with:\n" +
+            "userId: %s, \n" +
+            "active: %s";
 
     public static final String ADD_NEW_VEHICLE = "ADD_NEW_VEHICLE operation was invoked with: \n" +
             " licencePlate = %s, \n" +

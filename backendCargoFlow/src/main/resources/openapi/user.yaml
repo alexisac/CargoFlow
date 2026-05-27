@@ -42,11 +42,12 @@ paths:
             application/json:
               schema:
                 $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+
   /users/login:
     post:
       tags:
         - Users
-      summary: Login
+      summary: Login only if user is active
       operationId: loginUser
       requestBody:
         description: Login credentials
@@ -70,6 +71,97 @@ paths:
                 $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
         '401':
           description: Invalid email or password
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+
+  /users/getAll:
+    get:
+      tags:
+        - Users
+      summary: Get all users
+      operationId: getAllUsers
+      parameters:
+        - name: pageNumber
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: pageSize
+          in: query
+          description: Page size
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 20
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllUsersResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+
+  /users/{userId}/changeStatus:
+    patch:
+      tags:
+        - Users
+      summary: Change user active status
+      operationId: changeUserStatus
+      parameters:
+        - name: userId
+          in: path
+          description: User's ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: User active status
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeUserStatusRequest'
+        required: true
+      responses:
+        '200':
+          description: User status was changed successfully
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '404':
+          description: User was not found
           content:
             application/json:
               schema:
@@ -143,3 +235,63 @@ components:
         tokenType:
           type: string
           example: Bearer
+    UserSummary:
+      type: object
+      required:
+        - id
+        - firstName
+        - lastName
+        - email
+        - role
+        - active
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 15
+        firstName:
+          type: string
+          minLength: 3
+          example: Ion
+        lastName:
+          type: string
+          minLength: 3
+          example: Popescu
+        email:
+          type: string
+          minLength: 5
+          example: ion.popescu@cargoflow.test
+        role:
+          $ref: '#/components/schemas/UserRole'
+        active:
+          type: boolean
+          example: true
+    GetAllUsersResponse:
+      type: object
+      required:
+        - users
+        - pageNumber
+        - pageSize
+        - lastPage
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserSummary'
+        pageNumber:
+          type: integer
+          example: 0
+        pageSize:
+          type: integer
+          example: 20
+        lastPage:
+          type: boolean
+          example: false
+    ChangeUserStatusRequest:
+      type: object
+      required:
+        - active
+      properties:
+        active:
+          type: boolean
+          example: false

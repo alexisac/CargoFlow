@@ -44,4 +44,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             @Param("newTripEndInstant") Instant newTripEndInstant,
             Pageable pageable
     );
+
+    Page<User> findAllByOrderByCreatedDateDesc(Pageable pageable);
 }
