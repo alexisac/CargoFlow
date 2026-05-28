@@ -1,22 +1,31 @@
 package com.example.officeapp.screens.addVehicle
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuAnchorType
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.DirectionsCar
+import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.LocalShipping
+import androidx.compose.material.icons.outlined.Numbers
+import androidx.compose.material.icons.outlined.Scale
+import androidx.compose.material.icons.outlined.Security
+import androidx.compose.material.icons.outlined.Badge
+import androidx.compose.material.icons.outlined.Autorenew
+import androidx.compose.material.icons.outlined.Inventory2
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -28,18 +37,33 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.officeapp.R
-import com.example.officeapp.viewModels.VehicleViewModel
-import com.example.officeapp.screens.reusableComponents.OldFormMessages
-import com.example.officeapp.screens.reusableComponents.LoadingButton
 import com.example.officeapp.models.vehicle.VehicleCapacityRequirement
 import com.example.officeapp.models.vehicle.VehicleStatus
 import com.example.officeapp.models.vehicle.VehicleType
 import com.example.officeapp.models.vehicle.capacityRequirement
+import com.example.officeapp.screens.reusableComponents.FormMessages
+import com.example.officeapp.screens.reusableComponents.FormScreenHeader
+import com.example.officeapp.screens.reusableComponents.LoadingButton
+import com.example.officeapp.screens.reusableComponents.OfficeFormDropdownField
+import com.example.officeapp.screens.reusableComponents.OfficeFormTextField
+import com.example.officeapp.ui.theme.BorderDark
+import com.example.officeapp.ui.theme.BorderLight
+import com.example.officeapp.ui.theme.DarkBackground
+import com.example.officeapp.ui.theme.DarkCard
+import com.example.officeapp.ui.theme.LightBackground
+import com.example.officeapp.ui.theme.LightSurface
+import com.example.officeapp.ui.theme.PrimaryBlueDark
+import com.example.officeapp.ui.theme.PrimaryBlueLight
+import com.example.officeapp.ui.theme.TextPrimaryDark
+import com.example.officeapp.ui.theme.TextPrimaryLight
+import com.example.officeapp.ui.theme.TextSecondaryDark
+import com.example.officeapp.ui.theme.TextSecondaryLight
+import com.example.officeapp.viewModels.VehicleViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddNewVehicleScreen (
+fun AddNewVehicleScreen(
     viewModel: VehicleViewModel,
+    isDarkTheme: Boolean,
     onBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -49,19 +73,32 @@ fun AddNewVehicleScreen (
     var brand by remember { mutableStateOf("") }
     var model by remember { mutableStateOf("") }
     var manufactureYear by remember { mutableStateOf("") }
-    var vehicleType by remember { mutableStateOf(VehicleType.TRACTOR_UNIT) }
+    var vehicleType by remember { mutableStateOf<VehicleType?>(null) }
+    var vehicleStatus by remember { mutableStateOf<VehicleStatus?>(null) }
     var maxWeight by remember { mutableStateOf("") }
     var maxVolume by remember { mutableStateOf("") }
-    var vehicleStatus by remember { mutableStateOf(VehicleStatus.AVAILABLE) }
     var additionalInfo by remember { mutableStateOf("") }
 
-    var expendedVehicleType by remember { mutableStateOf(false) }
-    var expendedVehicleStatus by remember { mutableStateOf(false) }
+    val selectedType = vehicleType ?: VehicleType.TRACTOR_UNIT
+    val capacityRequirement = selectedType.capacityRequirement()
 
-    val capacityRequirement = vehicleType.capacityRequirement()
     val maxWeightEnabled = capacityRequirement == VehicleCapacityRequirement.WEIGHT_AND_VOLUME
     val maxVolumeEnabled = capacityRequirement == VehicleCapacityRequirement.WEIGHT_AND_VOLUME ||
                            capacityRequirement == VehicleCapacityRequirement.ONLY_VOLUME
+
+    val backgroundColor = if (isDarkTheme) DarkBackground else LightBackground
+    val fieldContainerColor = if (isDarkTheme) DarkCard else LightSurface
+    val textColor = if (isDarkTheme) TextPrimaryDark else TextPrimaryLight
+    val secondaryTextColor = if (isDarkTheme) TextSecondaryDark else TextSecondaryLight
+    val borderColor = if (isDarkTheme) PrimaryBlueDark.copy(alpha = 0.85f) else PrimaryBlueLight.copy(alpha = 0.75f)
+    val subtleBorderColor = if (isDarkTheme) BorderDark else BorderLight
+    val primaryColor = if (isDarkTheme) PrimaryBlueDark else PrimaryBlueLight
+
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.clearMessage()
+        }
+    }
 
     LaunchedEffect(uiState.successMessage) {
         if (uiState.successMessage != null) {
@@ -71,252 +108,216 @@ fun AddNewVehicleScreen (
     }
 
     LaunchedEffect(vehicleType) {
-        if (!maxWeightEnabled)
+        if (!maxWeightEnabled) {
             maxWeight = ""
+        }
 
-        if (!maxVolumeEnabled)
+        if (!maxVolumeEnabled) {
             maxVolume = ""
+        }
     }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Top
+            .background(backgroundColor)
     ) {
-        Text (
-            text = stringResource(R.string.add_new_vehicle_title),
+        Column(
             modifier = Modifier
-                .padding(bottom = 24.dp)
-        )
-
-        OutlinedTextField(
-            value = licencePlate,
-            onValueChange = { licencePlate = it.uppercase() },
-            label = { Text(stringResource(R.string.label_licence_plate)) },
-            supportingText = { Text(stringResource(R.string.description_licence_plate)) },
-            modifier = Modifier
-                .fillMaxWidth(),
-            singleLine = true
-        )
-
-        OutlinedTextField(
-            value = vin,
-            onValueChange = { vin = it },
-            label = { Text(stringResource(R.string.label_vin)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp),
-            singleLine = true
-        )
-
-        OutlinedTextField(
-            value = brand,
-            onValueChange = { brand = it },
-            label = { Text(stringResource(R.string.label_brand)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp),
-            singleLine = true
-        )
-
-        OutlinedTextField(
-            value = model,
-            onValueChange = { model = it },
-            label = { Text(stringResource(R.string.label_model)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp),
-            singleLine = true
-        )
-
-        OutlinedTextField(
-            value = manufactureYear,
-            onValueChange = { manufactureYear = it },
-            label = { Text(stringResource(R.string.label_manufacture_year)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number
-            )
-        )
-
-        ExposedDropdownMenuBox(
-            expanded = expendedVehicleType,
-            onExpandedChange = { expendedVehicleType = !expendedVehicleType },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp)
+                .fillMaxSize()
+                .navigationBarsPadding()
+                .imePadding()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 24.dp)
+                .padding(top = 48.dp, bottom = 32.dp)
         ) {
-            OutlinedTextField(
-                value = vehicleType.name,
-                onValueChange = {},
-                readOnly = true,
-                label = { Text(stringResource(R.string.label_vehicle_type)) },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expendedVehicleType) },
-                modifier = Modifier
-                    .menuAnchor(
-                        type = ExposedDropdownMenuAnchorType.PrimaryNotEditable,
-                        enabled = true
-                    )
-                    .fillMaxWidth()
+            FormScreenHeader(
+                title = stringResource(R.string.add_new_vehicle_title),
+                subtitle = stringResource(R.string.add_new_vehicle_subtitle),
+                textColor = textColor,
+                subtitleColor = secondaryTextColor,
+                borderColor = subtleBorderColor,
+                iconColor = textColor,
+                onBack = {
+                    viewModel.clearMessage()
+                    onBack()
+                },
+                modifier = Modifier.fillMaxWidth()
             )
 
-            ExposedDropdownMenu(
-                expanded = expendedVehicleType,
-                onDismissRequest = { expendedVehicleType = false }
+            Spacer(modifier = Modifier.height(26.dp))
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                VehicleType.entries.forEach { type ->
-                    DropdownMenuItem(
-                        text = { Text(type.name) },
-                        onClick = {
-                            vehicleType = type
-                            expendedVehicleType = false
-                        }
-                    )
-                }
+                OfficeFormTextField(
+                    value = licencePlate,
+                    onValueChange = { licencePlate = it.uppercase() },
+                    label = stringResource(R.string.label_licence_plate),
+                    placeholder = stringResource(R.string.description_licence_plate),
+                    icon = Icons.Outlined.Badge,
+                    iconColor = primaryColor,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = borderColor
+                )
+
+                OfficeFormTextField(
+                    value = vin,
+                    onValueChange = { vin = it.uppercase() },
+                    label = stringResource(R.string.label_vin),
+                    icon = Icons.Outlined.Numbers,
+                    iconColor = primaryColor,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = borderColor
+                )
+
+                OfficeFormTextField(
+                    value = brand,
+                    onValueChange = { brand = it },
+                    label = stringResource(R.string.label_brand),
+                    icon = Icons.Outlined.Security,
+                    iconColor = primaryColor,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = borderColor
+                )
+
+                OfficeFormTextField(
+                    value = model,
+                    onValueChange = { model = it },
+                    label = stringResource(R.string.label_model),
+                    icon = Icons.Outlined.DirectionsCar,
+                    iconColor = primaryColor,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = borderColor
+                )
+
+                OfficeFormTextField(
+                    value = manufactureYear,
+                    onValueChange = { manufactureYear = it.filter(Char::isDigit).take(4) },
+                    label = stringResource(R.string.label_manufacture_year),
+                    icon = Icons.Outlined.CalendarMonth,
+                    keyboardType = KeyboardType.Number,
+                    iconColor = primaryColor,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = borderColor
+                )
+
+                OfficeFormDropdownField(
+                    selectedValue = vehicleType,
+                    values = VehicleType.entries,
+                    label = stringResource(R.string.label_vehicle_type),
+                    icon = Icons.Outlined.LocalShipping,
+                    itemText = { it.name },
+                    onValueSelected = { vehicleType = it },
+                    iconColor = primaryColor,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = borderColor
+                )
+
+                OfficeFormDropdownField(
+                    selectedValue = vehicleStatus,
+                    values = VehicleStatus.entries,
+                    label = stringResource(R.string.label_vehicle_status),
+                    icon = Icons.Outlined.Autorenew,
+                    itemText = { it.name },
+                    onValueSelected = { vehicleStatus = it },
+                    iconColor = primaryColor,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = borderColor
+                )
+
+                OfficeFormTextField(
+                    value = maxWeight,
+                    onValueChange = { maxWeight = it.filter { char -> char.isDigit() || char == '.' } },
+                    label = stringResource(R.string.label_maximum_weight),
+                    icon = Icons.Outlined.Scale,
+                    enabled = maxWeightEnabled,
+                    keyboardType = KeyboardType.Number,
+                    iconColor = primaryColor,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = borderColor
+                )
+
+                OfficeFormTextField(
+                    value = maxVolume,
+                    onValueChange = { maxVolume = it.filter { char -> char.isDigit() || char == '.' } },
+                    label = stringResource(R.string.label_maximum_volume),
+                    icon = Icons.Outlined.Inventory2,
+                    enabled = maxVolumeEnabled,
+                    keyboardType = KeyboardType.Number,
+                    iconColor = primaryColor,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = borderColor
+                )
+
+                OfficeFormTextField(
+                    value = additionalInfo,
+                    onValueChange = { additionalInfo = it },
+                    label = stringResource(R.string.label_additional_info),
+                    placeholder = stringResource(R.string.description_additional_info),
+                    icon = Icons.Outlined.Description,
+                    singleLine = false,
+                    minLines = 1,
+                    maxLines = 4,
+                    iconColor = primaryColor,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = borderColor
+                )
             }
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+            LoadingButton(
+                text = stringResource(R.string.button_create_vehicle),
+                isLoading = uiState.isLoading,
+                onClick = {
+                    viewModel.addNewVehicle(
+                        licencePlate = licencePlate,
+                        vin = vin,
+                        brand = brand,
+                        model = model,
+                        manufactureYear = manufactureYear,
+                        vehicleType = vehicleType ?: VehicleType.TRACTOR_UNIT,
+                        maxWeight = maxWeight,
+                        maxVolume = maxVolume,
+                        vehicleStatus = vehicleStatus ?: VehicleStatus.AVAILABLE,
+                        additionalInfo = additionalInfo
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp),
+                enabled = !uiState.isLoading
+            )
         }
 
-        OutlinedTextField(
-            value = maxWeight,
-            onValueChange = { maxWeight = it },
-            label = { Text(stringResource(R.string.label_maximum_weight)) },
-            supportingText = {
-                Text(
-                    if (maxWeightEnabled)
-                        stringResource(R.string.description_max_weight_enabled)
-                    else
-                        stringResource(R.string.description_max_weight_disabled)
-                )
-            },
-            enabled = maxWeightEnabled,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number
-            )
-        )
-
-        OutlinedTextField(
-            value = maxVolume,
-            onValueChange = { maxVolume = it },
-            label = { Text(stringResource(R.string.label_maximum_volume)) },
-            supportingText = {
-                Text(
-                    if (maxVolumeEnabled)
-                        stringResource(R.string.description_max_volume_enabled)
-                    else
-                        stringResource(R.string.description_max_volume_disabled)
-                )
-            },
-            enabled = maxVolumeEnabled,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number
-            )
-        )
-
-        ExposedDropdownMenuBox(
-            expanded = expendedVehicleStatus,
-            onExpandedChange = { expendedVehicleStatus = !expendedVehicleStatus },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp)
-        ) {
-            OutlinedTextField(
-                value = vehicleStatus.name,
-                onValueChange = {},
-                readOnly = true,
-                label = { Text(stringResource(R.string.label_vehicle_status)) },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expendedVehicleStatus) },
-                modifier = Modifier
-                    .menuAnchor(
-                        type = ExposedDropdownMenuAnchorType.PrimaryNotEditable,
-                        enabled = true
-                    )
-                    .fillMaxWidth()
-            )
-
-            ExposedDropdownMenu(
-                expanded = expendedVehicleStatus,
-                onDismissRequest = { expendedVehicleStatus = false }
-            ) {
-                VehicleStatus.entries.forEach { status ->
-                    DropdownMenuItem(
-                        text = { Text(status.name) },
-                        onClick = {
-                            vehicleStatus = status
-                            expendedVehicleStatus = false
-                        }
-                    )
-                }
-            }
-        }
-
-        OutlinedTextField(
-            value = additionalInfo,
-            onValueChange = { additionalInfo = it },
-            label = { Text(stringResource(R.string.label_additional_info)) },
-            supportingText = { Text(stringResource(R.string.description_additional_info)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp),
-            minLines = 3,
-            maxLines = 5,
-            singleLine = false
-        )
-
-        OldFormMessages(
+        FormMessages(
             errorMessage = uiState.errorMessage,
             successMessage = uiState.successMessage,
-            modifier = Modifier
-                .padding(top = 16.dp),
-            onMessageShown = { viewModel.clearMessage() }
-        )
-
-        LoadingButton(
-            text = stringResource(R.string.button_create_vehicle),
-            isLoading = uiState.isLoading,
-            onClick = {
-                viewModel.addNewVehicle(
-                    licencePlate = licencePlate,
-                    vin = vin,
-                    brand = brand,
-                    model = model,
-                    manufactureYear = manufactureYear,
-                    vehicleType = vehicleType,
-                    maxWeight = maxWeight,
-                    maxVolume = maxVolume,
-                    vehicleStatus = vehicleStatus,
-                    additionalInfo = additionalInfo
-                )
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 24.dp),
-            enabled = !uiState.isLoading
-        )
-
-        OutlinedButton(
-            onClick = {
+            isDarkTheme = isDarkTheme,
+            onMessageShown = {
                 viewModel.clearMessage()
-                onBack()
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp)
-        ) {
-            Text(stringResource(R.string.button_back))
-        }
+            }
+        )
     }
-
 }

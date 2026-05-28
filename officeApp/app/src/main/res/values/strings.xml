@@ -18,6 +18,7 @@
     <string name="add_new_user_subtitle">Create a new user account</string>
     <string name="login_screen_subtitle">Sign in to continue</string>
     <string name="view_and_manage_system_users_subtitle">View and manage system users</string>
+    <string name="add_new_vehicle_subtitle">Fill in the vehicle details</string>
 
     <string name="button_add_field">Add field</string>
     <string name="button_add_status_filter">Add status filter</string>
