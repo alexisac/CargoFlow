@@ -109,4 +109,23 @@ class TripRepository @Inject constructor(
             ApiResult.Error(ex.message ?: "Unexpected error occurred.")
         }
     }
+
+    suspend fun cancelTrip(tripId: Long): ApiResult<GenericApplicationResponse> {
+        return try {
+            val response = tripInterfaceAPI.cancelTrip(tripId)
+
+            if (response.isSuccessful) {
+                val body = response.body()
+
+                if (body == null)
+                    ApiResult.Error("Empty response from server.")
+                else
+                    ApiResult.Success(body)
+            } else {
+                parseApiError(response)
+            }
+        } catch (ex: Exception) {
+            ApiResult.Error(ex.message ?: "Unexpected error occurred.")
+        }
+    }
 }

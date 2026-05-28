@@ -155,7 +155,8 @@ fun TripSearchScreen (
                 TripSummaryCard(
                     trip = trip,
                     onClick = { onTripClick(trip.id) },
-                    onAssignDriver = { onAssignDriver(trip.id) }
+                    onAssignDriver = { onAssignDriver(trip.id) },
+                    onCancelTrip = { viewModel.cancelTrip(trip.id) }
                 )
             }
 

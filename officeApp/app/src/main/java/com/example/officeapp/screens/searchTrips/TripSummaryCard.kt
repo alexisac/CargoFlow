@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -22,7 +23,8 @@ import com.example.officeapp.models.trip.TripSummary
 fun TripSummaryCard(
     trip: TripSummary,
     onClick: () -> Unit,
-    onAssignDriver: () -> Unit
+    onAssignDriver: () -> Unit,
+    onCancelTrip: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -82,6 +84,20 @@ fun TripSummaryCard(
                         .padding(top = 16.dp)
                 ) {
                     Text(stringResource(R.string.button_assign_driver_for_trip))
+                }
+            }
+
+            if (
+                trip.tripStatus == TripStatus.PLANNED ||
+                trip.tripStatus == TripStatus.ASSIGNED
+            ) {
+                OutlinedButton(
+                    onClick = onCancelTrip,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
+                ) {
+                    Text(stringResource(R.string.button_cancel_trip))
                 }
             }
         }

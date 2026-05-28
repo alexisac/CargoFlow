@@ -32,6 +32,7 @@ public class TripService {
     private final TripMapper tripMapper;
     private final CurrentUserService currentUserService;
     private final UserLookupService userLookupService;
+    private final TripAssignmentCleanupService tripAssignmentCleanupService;
 
     @PreAuthorize("hasAnyRole('DISPATCHER', 'MANAGER', 'ADMIN')")
     public GenericApplicationResponseDto addNewTrip(AddNewTripRequestDto addNewTripRequestDto) {
@@ -134,8 +135,13 @@ public class TripService {
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.TRIP_NOT_FOUND));
 
-        if (trip.getTripStatus() == TripStatus.COMPLETED) {
-            throw new BadRequestException(ErrorMessage.COMPLETED_TRIP_CANNOT_BE_CANCELED);
+        if (trip.getTripStatus() != TripStatus.PLANNED &&
+                trip.getTripStatus() != TripStatus.ASSIGNED) {
+            throw new BadRequestException(ErrorMessage.TRIP_CANNOT_BE_CANCELED);
+        }
+
+        if (trip.getTripStatus() == TripStatus.ASSIGNED) {
+            tripAssignmentCleanupService.deleteAssignmentsForTrip(tripId);
         }
 
         trip.setTripStatus(TripStatus.CANCELED);

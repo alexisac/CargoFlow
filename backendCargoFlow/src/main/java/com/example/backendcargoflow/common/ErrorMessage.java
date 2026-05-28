@@ -18,5 +18,5 @@ public class ErrorMessage {
     public static final String TRIP_IS_NOT_PLANNED = "Only planned trips can be assigned to a driver";
     public static final String CURRENT_TRIP_NOT_FOUND = "Current trip was not found";
     public static final String INVALID_COMPLETED_TRIPS_PERIOD = "Completed trips period must be 30, 60 or 90 days";
-    public static final String COMPLETED_TRIP_CANNOT_BE_CANCELED = "Completed trip cannot be canceled";
+    public static final String TRIP_CANNOT_BE_CANCELED = "Only planned or assigned trips can be canceled";
 }

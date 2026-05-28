@@ -25,6 +25,7 @@
     <string name="button_assign_driver_for_trip">Assign driver for trip</string>
     <string name="button_back">Back</string>
     <string name="button_cancel">Cancel</string>
+    <string name="button_cancel_trip">Cancel trip</string>
     <string name="button_completed_trips_history">Completed trips history</string>
     <string name="button_create_trip">Create trip</string>
     <string name="button_create_user">Create user</string>

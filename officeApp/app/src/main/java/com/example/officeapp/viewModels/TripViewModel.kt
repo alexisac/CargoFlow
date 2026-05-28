@@ -320,6 +320,49 @@ class TripViewModel @Inject constructor(
         }
     }
 
+    fun cancelTrip(tripId: Long) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isLoading = true,
+                errorMessage = null,
+                successMessage = null
+            )
+
+            when (val result = tripService.cancelTrip(tripId)) {
+                is ApiResult.Success -> {
+                    val updatedTrips = _uiState.value.trips.map { trip ->
+                        if (trip.id == tripId) {
+                            trip.copy(tripStatus = TripStatus.CANCELED)
+                        } else {
+                            trip
+                        }
+                    }
+
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        trips = updatedTrips,
+                        successMessage = result.data.message,
+                        errorMessage = null
+                    )
+                }
+
+                is ApiResult.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = result.message,
+                        successMessage = null
+                    )
+                }
+
+                ApiResult.Loading -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = true
+                    )
+                }
+            }
+        }
+    }
+
     fun clearMessage() {
         _uiState.value = _uiState.value.copy(
             successMessage = null,

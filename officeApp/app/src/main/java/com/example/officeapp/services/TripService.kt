@@ -224,6 +224,13 @@ class TripService @Inject constructor(
         return tripRepository.getCompletedTrips(days)
     }
 
+    suspend fun cancelTrip(tripId: Long): ApiResult<GenericApplicationResponse> {
+        if (tripId < 0)
+            return ApiResult.Error(ValidationMessages.ID_RANGE)
+
+        return tripRepository.cancelTrip(tripId)
+    }
+
     private fun buildAddress(
         country: String,
         administrativeArea: String,
