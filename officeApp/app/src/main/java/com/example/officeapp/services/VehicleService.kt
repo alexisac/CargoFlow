@@ -2,6 +2,8 @@ package com.example.officeapp.services
 
 import com.example.officeapp.models.GenericApplicationResponse
 import com.example.officeapp.models.vehicle.AddNewVehicleRequest
+import com.example.officeapp.models.vehicle.ChangeVehicleStatusRequest
+import com.example.officeapp.models.vehicle.GetAllVehiclesResponse
 import com.example.officeapp.models.vehicle.VehicleCapacityRequirement
 import com.example.officeapp.models.vehicle.VehicleStatus
 import com.example.officeapp.models.vehicle.VehicleType
@@ -107,5 +109,36 @@ class VehicleService @Inject constructor(
         )
 
         return vehicleRepository.addNewVehicle(request)
+    }
+
+    suspend fun getAllVehicles(
+        pageNumber: Int,
+        pageSize: Int
+    ): ApiResult<GetAllVehiclesResponse> {
+        if (pageNumber < 0)
+            return ApiResult.Error(ValidationMessages.PAGE_NUMBER_RANGE)
+
+        if (pageSize < 0)
+            return ApiResult.Error(ValidationMessages.PAGE_SIZE_RANGE)
+
+        return vehicleRepository.getAllVehicles(
+            pageNumber = pageNumber,
+            pageSize = pageSize
+        )
+    }
+
+    suspend fun changeVehicleStatus(
+        vehicleId: Long,
+        vehicleStatus: VehicleStatus
+    ): ApiResult<GenericApplicationResponse> {
+        if (vehicleId < 0)
+            return ApiResult.Error(ValidationMessages.ID_RANGE)
+
+        val request = ChangeVehicleStatusRequest(vehicleStatus)
+
+        return vehicleRepository.changeVehicleStatus(
+            vehicleId = vehicleId,
+            changeVehicleStatusRequest = request
+        )
     }
 }

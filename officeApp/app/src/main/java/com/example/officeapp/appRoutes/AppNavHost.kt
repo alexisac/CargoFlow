@@ -19,6 +19,7 @@ import com.example.officeapp.screens.assignDriver.AssignDriverScreen
 import com.example.officeapp.screens.authentication.LoginScreen
 import com.example.officeapp.screens.currentDriverTrip.DriverCompletedTripsScreen
 import com.example.officeapp.screens.manageUsers.ManageUsersScreen
+import com.example.officeapp.screens.manageVehicles.ManageVehiclesScreen
 import com.example.officeapp.screens.searchTrips.TripDetailsScreen
 import com.example.officeapp.screens.searchTrips.TripSearchScreen
 import com.example.officeapp.viewModels.TripAssignmentViewModel
@@ -110,6 +111,9 @@ fun AppNavHost(
                 },
                 onGoToManageUsers = {
                     navController.navigate(AppRoutes.MANAGE_USERS_ROUTE)
+                },
+                onGoToManageVehicles = {
+                    navController.navigate(AppRoutes.MANAGE_VEHICLES_ROUTE)
                 }
             )
         }
@@ -208,6 +212,15 @@ fun AppNavHost(
         composable(AppRoutes.MANAGE_USERS_ROUTE) {
             ManageUsersScreen(
                 viewModel = authenticationViewModel,
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(AppRoutes.MANAGE_VEHICLES_ROUTE) {
+            ManageVehiclesScreen(
+                viewModel = vehicleViewModel,
                 onBack = {
                     navController.popBackStack()
                 }

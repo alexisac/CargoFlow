@@ -8,6 +8,7 @@
     <string name="current_trip_title">Current trip</string>
     <string name="login_screen_title">Welcome back!</string>
     <string name="manage_users_title">Manage users</string>
+    <string name="manage_vehicles_title">Manage vehicles</string>
     <string name="search_and_associate_trips_title">Search and associate trips</string>
     <string name="something_went_wrong_title">Something went wrong</string>
     <string name="success_title">Success</string>
@@ -80,6 +81,7 @@
     <string name="label_no_completed_trips_found">No completed trips found.</string>
     <string name="label_no_current_trip_found">No current trip found.</string>
     <string name="label_no_users_found">No users found.</string>
+    <string name="label_no_vehicles_found">No vehicle found.</string>
     <string name="label_password">Password</string>
     <string name="label_pickup">Pickup</string>
     <string name="label_pickup_city">Pickup city</string>

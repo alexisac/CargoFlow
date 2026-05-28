@@ -78,6 +78,130 @@ class VehicleViewModel @Inject constructor(
         }
     }
 
+    fun getAllVehicles(
+        pageNumber: Int = 0,
+        pageSize: Int = 20,
+        append: Boolean = false
+    ) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isLoading = true,
+                errorMessage = null,
+                successMessage = null
+            )
+
+            when (
+                val result = vehicleService.getAllVehicles(
+                    pageNumber = pageNumber,
+                    pageSize = pageSize
+                )
+            ) {
+                is ApiResult.Success -> {
+                    val currentVehicles = if (append) {
+                        _uiState.value.vehicles
+                    } else {
+                        emptyList()
+                    }
+
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        vehicles = currentVehicles + result.data.vehicles,
+                        pageNumber = result.data.pageNumber,
+                        pageSize = result.data.pageSize,
+                        lastPage = result.data.lastPage,
+                        errorMessage = null
+                    )
+                }
+
+                is ApiResult.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = result.message
+                    )
+                }
+
+                ApiResult.Loading -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = true
+                    )
+                }
+            }
+        }
+    }
+
+    fun loadNextVehiclesPage() {
+        val state = _uiState.value
+
+        if (state.isLoading || state.lastPage) {
+            return
+        }
+
+        getAllVehicles(
+            pageNumber = state.pageNumber + 1,
+            pageSize = state.pageSize,
+            append = true
+        )
+    }
+
+    fun changeVehicleStatus(
+        vehicleId: Long,
+        vehicleStatus: VehicleStatus
+    ) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isLoading = true,
+                errorMessage = null,
+                successMessage = null
+            )
+
+            when (
+                val result = vehicleService.changeVehicleStatus(
+                    vehicleId = vehicleId,
+                    vehicleStatus = vehicleStatus
+                )
+            ) {
+                is ApiResult.Success -> {
+                    val updatedVehicles = _uiState.value.vehicles.map { vehicle ->
+                        if (vehicle.id == vehicleId) {
+                            vehicle.copy(vehicleStatus = vehicleStatus)
+                        } else {
+                            vehicle
+                        }
+                    }
+
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        vehicles = updatedVehicles,
+                        successMessage = result.data.message
+                    )
+                }
+
+                is ApiResult.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = result.message,
+                        successMessage = null
+                    )
+                }
+
+                ApiResult.Loading -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = true
+                    )
+                }
+            }
+        }
+    }
+
+    fun clearVehicles() {
+        _uiState.value = _uiState.value.copy(
+            vehicles = emptyList(),
+            pageNumber = 0,
+            pageSize = 20,
+            lastPage = false
+        )
+    }
+
     fun clearMessage() {
         _uiState.value = _uiState.value.copy(
             successMessage = null,

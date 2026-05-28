@@ -20,6 +20,7 @@ fun OfficeHomeMenu(
     onGoToAddTrip: () -> Unit,
     onGoToSearchTrips: () -> Unit,
     onGoToManageUsers: () -> Unit,
+    onGoToManageVehicles: () -> Unit,
     onLogout: () -> Unit
 ) {
     if (userRole == UserRole.ADMIN.name) {
@@ -73,6 +74,15 @@ fun OfficeHomeMenu(
                 .padding(top = 12.dp)
         ) {
             Text(stringResource(R.string.search_and_associate_trips_title))
+        }
+
+        Button(
+            onClick = onGoToManageVehicles,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp)
+        ) {
+            Text(stringResource(R.string.manage_vehicles_title))
         }
     }
 
