@@ -19,6 +19,7 @@ fun OfficeHomeMenu(
     onGoToAddVehicle: () -> Unit,
     onGoToAddTrip: () -> Unit,
     onGoToSearchTrips: () -> Unit,
+    onGoToManageUsers: () -> Unit,
     onLogout: () -> Unit
 ) {
     if (userRole == UserRole.ADMIN.name) {
@@ -29,6 +30,15 @@ fun OfficeHomeMenu(
                 .padding(top = 32.dp)
         ) {
             Text(stringResource(R.string.add_new_user_title))
+        }
+
+        Button(
+            onClick = onGoToManageUsers,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp)
+        ) {
+            Text(stringResource(R.string.manage_users_title))
         }
     }
 

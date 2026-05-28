@@ -2,6 +2,8 @@ package com.example.officeapp.services
 
 import com.example.officeapp.models.GenericApplicationResponse
 import com.example.officeapp.models.user.AddNewUserRequest
+import com.example.officeapp.models.user.ChangeUserStatusRequest
+import com.example.officeapp.models.user.GetAllUsersResponse
 import com.example.officeapp.models.user.LoginUserResponse
 import com.example.officeapp.models.user.UserRole
 import com.example.officeapp.repositories.AuthenticationRepository
@@ -65,6 +67,39 @@ class AuthenticationService @Inject constructor(
         )
 
         return authenticationRepository.addNewUser(request)
+    }
+
+    suspend fun getAllUsers(
+        pageNumber: Int,
+        pageSize: Int
+    ): ApiResult<GetAllUsersResponse> {
+        if (pageNumber < 0)
+            return ApiResult.Error(ValidationMessages.PAGE_NUMBER_RANGE)
+
+        if (pageSize < 0)
+            return ApiResult.Error(ValidationMessages.PAGE_SIZE_RANGE)
+
+        return authenticationRepository.getAllUsers(
+            pageNumber = pageNumber,
+            pageSize = pageSize
+        )
+    }
+
+    suspend fun changeUserStatus(
+        userId: Long,
+        active: Boolean
+    ): ApiResult<GenericApplicationResponse> {
+        if (userId < 0)
+            return ApiResult.Error(ValidationMessages.ID_RANGE)
+
+        val request = ChangeUserStatusRequest(
+            active = active
+        )
+
+        return authenticationRepository.changeUserStatus(
+            userId = userId,
+            changeUserStatusRequest = request
+        )
     }
 
     suspend fun isUserSessionValid(): Boolean {

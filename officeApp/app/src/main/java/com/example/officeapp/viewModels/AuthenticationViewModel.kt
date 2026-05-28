@@ -124,6 +124,121 @@ class AuthenticationViewModel @Inject constructor(
         }
     }
 
+    fun getAllUsers(
+        pageNumber: Int = 0,
+        pageSize: Int = 20,
+        append: Boolean = false
+    ) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isLoading = true,
+                errorMessage = null,
+                successMessage = null
+            )
+
+            when (
+                val result = authenticationService.getAllUsers(
+                    pageNumber = pageNumber,
+                    pageSize = pageSize
+                )
+            ) {
+                is ApiResult.Success -> {
+                    val currentUsers = if (append) {
+                        _uiState.value.users
+                    } else {
+                        emptyList()
+                    }
+
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        users = currentUsers + result.data.users,
+                        pageNumber = result.data.pageNumber,
+                        pageSize = result.data.pageSize,
+                        lastPage = result.data.lastPage,
+                        errorMessage = null
+                    )
+                }
+
+                is ApiResult.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = result.message
+                    )
+                }
+
+                ApiResult.Loading -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = true
+                    )
+                }
+            }
+        }
+    }
+
+    fun loadNextUsersPage() {
+        val state = _uiState.value
+
+        if (state.isLoading || state.lastPage) {
+            return
+        }
+
+        getAllUsers(
+            pageNumber = state.pageNumber + 1,
+            pageSize = state.pageSize,
+            append = true
+        )
+    }
+
+    fun changeUserStatus(
+        userId: Long,
+        active: Boolean
+    ) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isLoading = true,
+                errorMessage = null,
+                successMessage = null
+            )
+
+            when (
+                val result = authenticationService.changeUserStatus(
+                    userId = userId,
+                    active = active
+                )
+            ) {
+                is ApiResult.Success -> {
+                    val updatedUsers = _uiState.value.users.map { user ->
+                        if (user.id == userId) {
+                            user.copy(active = active)
+                        } else {
+                            user
+                        }
+                    }
+
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        users = updatedUsers,
+                        successMessage = result.data.message,
+                        errorMessage = null
+                    )
+                }
+
+                is ApiResult.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = result.message
+                    )
+                }
+
+                ApiResult.Loading -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = true
+                    )
+                }
+            }
+        }
+    }
+
     fun logout() {
         viewModelScope.launch {
             authenticationService.logout()
@@ -145,6 +260,15 @@ class AuthenticationViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(
             successMessage = null,
             errorMessage = null
+        )
+    }
+
+    fun clearUsers() {
+        _uiState.value = _uiState.value.copy(
+            users = emptyList(),
+            pageNumber = 0,
+            pageSize = 20,
+            lastPage = false
         )
     }
 

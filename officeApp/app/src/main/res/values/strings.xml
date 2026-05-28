@@ -7,6 +7,7 @@
     <string name="completed_trips_history_title">Completed trips history</string>
     <string name="current_trip_title">Current trip</string>
     <string name="login_screen_title">Welcome back!</string>
+    <string name="manage_users_title">Manage users</string>
     <string name="search_and_associate_trips_title">Search and associate trips</string>
     <string name="something_went_wrong_title">Something went wrong</string>
     <string name="success_title">Success</string>
@@ -67,6 +68,8 @@
     <string name="label_kilograms">kg</string>
     <string name="label_last_name">Last name</string>
     <string name="label_licence_plate">Licence plate</string>
+    <string name="label_make_active">Make active</string>
+    <string name="label_make_inactive">Make inactive</string>
     <string name="label_manufacture_year">Manufacture year</string>
     <string name="label_maximum_volume">Maximum volume</string>
     <string name="label_maximum_weight">Maximum weight</string>
@@ -76,6 +79,7 @@
     <string name="label_no_available_trailers_found">No available trailers found.</string>
     <string name="label_no_completed_trips_found">No completed trips found.</string>
     <string name="label_no_current_trip_found">No current trip found.</string>
+    <string name="label_no_users_found">No users found.</string>
     <string name="label_password">Password</string>
     <string name="label_pickup">Pickup</string>
     <string name="label_pickup_city">Pickup city</string>
@@ -95,6 +99,8 @@
     <string name="label_select_tractor_unit_for_trailer">Select a tractor unit to enable trailers.</string>
     <string name="label_selected">Selected</string>
     <string name="label_status">Status</string>
+    <string name="label_status_active">Status: active</string>
+    <string name="label_status_inactive">Status: inactive</string>
     <string name="label_street_name">Street name</string>
     <string name="label_street_number">Street number</string>
     <string name="label_theme_toggle">ThemeToggleOffset</string>

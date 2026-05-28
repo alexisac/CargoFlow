@@ -3,6 +3,8 @@ package com.example.officeapp.repositories
 import com.example.officeapp.interfacesAPI.AuthenticationInterfaceAPI
 import com.example.officeapp.models.GenericApplicationResponse
 import com.example.officeapp.models.user.AddNewUserRequest
+import com.example.officeapp.models.user.ChangeUserStatusRequest
+import com.example.officeapp.models.user.GetAllUsersResponse
 import com.example.officeapp.models.user.LoginUserRequest
 import com.example.officeapp.models.user.LoginUserResponse
 import com.example.officeapp.utils.ApiResult
@@ -75,6 +77,56 @@ class AuthenticationRepository @Inject constructor(
             }
         } catch (ex: Exception) {
             ApiResult.Error(message = ex.message ?: "Unknown error at AddNewUser.")
+        }
+    }
+
+    suspend fun getAllUsers(
+        pageNumber: Int,
+        pageSize: Int
+    ): ApiResult<GetAllUsersResponse> {
+        return try {
+            val response = authenticationInterfaceAPI.getAllUsers(
+                pageNumber = pageNumber,
+                pageSize = pageSize
+            )
+
+            if (response.isSuccessful) {
+                val body = response.body()
+
+                if (body == null)
+                    ApiResult.Error("Empty response from server.")
+                else
+                    ApiResult.Success(body)
+            } else {
+                parseApiError(response)
+            }
+        } catch (ex: Exception) {
+            ApiResult.Error(ex.message ?: "Unexpected error occurred.")
+        }
+    }
+
+    suspend fun changeUserStatus(
+        userId: Long,
+        changeUserStatusRequest: ChangeUserStatusRequest
+    ): ApiResult<GenericApplicationResponse> {
+        return try {
+            val response = authenticationInterfaceAPI.changeUserStatus(
+                userId = userId,
+                request = changeUserStatusRequest
+            )
+
+            if (response.isSuccessful) {
+                val body = response.body()
+
+                if (body == null)
+                    ApiResult.Error("Empty response from server.")
+                else
+                    ApiResult.Success(body)
+            } else {
+                parseApiError(response)
+            }
+        } catch (ex: Exception) {
+            ApiResult.Error(ex.message ?: "Unexpected error occurred.")
         }
     }
 
