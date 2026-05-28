@@ -17,6 +17,7 @@
 
     <string name="add_new_user_subtitle">Create a new user account</string>
     <string name="login_screen_subtitle">Sign in to continue</string>
+    <string name="view_and_manage_system_users_subtitle">View and manage system users</string>
 
     <string name="button_add_field">Add field</string>
     <string name="button_add_status_filter">Add status filter</string>
@@ -36,7 +37,9 @@
     <string name="button_logout">Logout</string>
     <string name="button_menu">Menu</string>
     <string name="button_ok">Ok</string>
+    <string name="button_refresh">Refresh</string>
 
+    <string name="label_active">Active</string>
     <string name="label_additional_details">Additional details</string>
     <string name="label_additional_info">Additional info</string>
     <string name="label_administrative_area">Administrative Area</string>
@@ -67,6 +70,7 @@
     <string name="label_first_name">First name</string>
     <string name="label_general">General</string>
     <string name="label_id">Id</string>
+    <string name="label_inactive">Inactive</string>
     <string name="label_kilograms">kg</string>
     <string name="label_last_name">Last name</string>
     <string name="label_licence_plate">Licence plate</string>

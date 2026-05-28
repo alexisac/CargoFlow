@@ -212,6 +212,7 @@ fun AppNavHost(
         composable(AppRoutes.MANAGE_USERS_ROUTE) {
             ManageUsersScreen(
                 viewModel = authenticationViewModel,
+                isDarkTheme = isDarkTheme,
                 onBack = {
                     navController.popBackStack()
                 }
