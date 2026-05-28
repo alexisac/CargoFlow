@@ -199,9 +199,9 @@ private fun StatusBadge(
     val color = if (active) SuccessGreen else ErrorRed
 
     val text = if (active) {
-        stringResource(R.string.label_status_active)
+        stringResource(R.string.label_active)
     } else {
-        stringResource(R.string.label_status_inactive)
+        stringResource(R.string.label_inactive)
     }
 
     val backgroundAlpha = if (isDarkTheme) 0.18f else 0.12f
