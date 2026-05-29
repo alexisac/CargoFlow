@@ -4,66 +4,53 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.AdminPanelSettings
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuAnchorType
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.officeapp.R
-import com.example.officeapp.viewModels.AuthenticationViewModel
-import com.example.officeapp.screens.reusableComponents.LoadingButton
-import com.example.officeapp.screens.reusableComponents.PasswordField
 import com.example.officeapp.models.user.UserRole
 import com.example.officeapp.screens.reusableComponents.FormMessages
+import com.example.officeapp.screens.reusableComponents.FormScreenHeader
+import com.example.officeapp.screens.reusableComponents.LoadingButton
+import com.example.officeapp.screens.reusableComponents.OfficeFormDropdownField
+import com.example.officeapp.screens.reusableComponents.OfficeFormTextField
+import com.example.officeapp.screens.reusableComponents.PasswordField
 import com.example.officeapp.ui.theme.BorderDark
 import com.example.officeapp.ui.theme.BorderLight
 import com.example.officeapp.ui.theme.DarkBackground
+import com.example.officeapp.ui.theme.DarkCard
 import com.example.officeapp.ui.theme.LightBackground
+import com.example.officeapp.ui.theme.LightSurface
 import com.example.officeapp.ui.theme.PrimaryBlueDark
 import com.example.officeapp.ui.theme.PrimaryBlueLight
-import com.example.officeapp.ui.theme.SoftBlueDark
-import com.example.officeapp.ui.theme.SoftBlueLight
 import com.example.officeapp.ui.theme.TextPrimaryDark
 import com.example.officeapp.ui.theme.TextPrimaryLight
 import com.example.officeapp.ui.theme.TextSecondaryDark
 import com.example.officeapp.ui.theme.TextSecondaryLight
+import com.example.officeapp.viewModels.AuthenticationViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddNewUserScreen(
     viewModel: AuthenticationViewModel,
@@ -77,23 +64,24 @@ fun AddNewUserScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmedPassword by remember { mutableStateOf("") }
-
-    var expanded by remember { mutableStateOf(false) }
-    var selectedRole by remember { mutableStateOf(UserRole.DRIVER) }
+    var selectedRole by remember { mutableStateOf<UserRole?>(null) }
 
     val backgroundColor = if (isDarkTheme) DarkBackground else LightBackground
+    val fieldContainerColor = if (isDarkTheme) DarkCard else LightSurface
     val textColor = if (isDarkTheme) TextPrimaryDark else TextPrimaryLight
     val secondaryTextColor = if (isDarkTheme) TextSecondaryDark else TextSecondaryLight
-    val borderColor = if (isDarkTheme) BorderDark else BorderLight
+    val subtleBorderColor = if (isDarkTheme) BorderDark else BorderLight
     val primaryColor = if (isDarkTheme) PrimaryBlueDark else PrimaryBlueLight
-    val iconBackgroundColor = if (isDarkTheme) {
-        SoftBlueDark.copy(alpha = 0.16f)
+    val fieldBorderColor = if (isDarkTheme) {
+        PrimaryBlueDark.copy(alpha = 0.85f)
     } else {
-        SoftBlueLight
+        PrimaryBlueLight.copy(alpha = 0.75f)
     }
 
-    LaunchedEffect(Unit) {
-        viewModel.clearMessages()
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.clearMessages()
+        }
     }
 
     LaunchedEffect(uiState.successMessage) {
@@ -108,184 +96,111 @@ fun AddNewUserScreen(
             .fillMaxSize()
             .background(backgroundColor)
     ) {
-        IconButton(
-            onClick = {
-                viewModel.clearMessages()
-                onBack()
-            },
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(top = 36.dp, start = 18.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.ArrowBack,
-                contentDescription = stringResource(R.string.button_back),
-                tint = textColor
-            )
-        }
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 24.dp),
-            verticalArrangement = Arrangement.Center
+                .navigationBarsPadding()
+                .imePadding()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 24.dp)
+                .padding(top = 48.dp, bottom = 32.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 30.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(58.dp)
-                        .background(
-                            color = iconBackgroundColor,
-                            shape = CircleShape
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Person,
-                        contentDescription = null,
-                        tint = primaryColor,
-                        modifier = Modifier.size(30.dp)
-                    )
-                }
-
-                Column(
-                    modifier = Modifier.padding(start = 16.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.add_new_user_title),
-                        color = textColor,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-
-                    Text(
-                        text = stringResource(R.string.add_new_user_subtitle),
-                        color = secondaryTextColor,
-                        fontSize = 15.sp
-                    )
-                }
-            }
-
-            AddUserTextField(
-                value = firstName,
-                onValueChange = { firstName = it },
-                placeholder = stringResource(R.string.label_first_name),
-                borderColor = borderColor,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Person,
-                        contentDescription = null
-                    )
-                }
-            )
-
-            Spacer(modifier = Modifier.height(14.dp))
-
-            AddUserTextField(
-                value = lastName,
-                onValueChange = { lastName = it },
-                placeholder = stringResource(R.string.label_last_name),
-                borderColor = borderColor,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Person,
-                        contentDescription = null
-                    )
-                }
-            )
-
-            Spacer(modifier = Modifier.height(14.dp))
-
-            AddUserTextField(
-                value = email,
-                onValueChange = { email = it },
-                placeholder = stringResource(R.string.label_email),
-                borderColor = borderColor,
-                keyboardType = KeyboardType.Email,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Email,
-                        contentDescription = null
-                    )
-                }
-            )
-
-            Spacer(modifier = Modifier.height(14.dp))
-
-            PasswordField(
-                value = password,
-                onValueChange = { password = it },
-                label = null,
-                placeholder = stringResource(R.string.label_password),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(64.dp)
-            )
-
-            Spacer(modifier = Modifier.height(14.dp))
-
-            PasswordField(
-                value = confirmedPassword,
-                onValueChange = { confirmedPassword = it },
-                label = null,
-                placeholder = stringResource(R.string.label_confirm_password),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(64.dp)
-            )
-
-            Spacer(modifier = Modifier.height(14.dp))
-
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = { expanded = !expanded },
+            FormScreenHeader(
+                title = stringResource(R.string.add_new_user_title),
+                subtitle = stringResource(R.string.add_new_user_subtitle),
+                textColor = textColor,
+                subtitleColor = secondaryTextColor,
+                borderColor = subtleBorderColor,
+                iconColor = textColor,
+                onBack = {
+                    viewModel.clearMessages()
+                    onBack()
+                },
                 modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(26.dp))
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                OutlinedTextField(
-                    value = selectedRole.name,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = {
-                        Text(stringResource(R.string.label_role))
-                    },
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                    },
-                    modifier = Modifier
-                        .menuAnchor(
-                            type = ExposedDropdownMenuAnchorType.PrimaryNotEditable,
-                            enabled = true
-                        )
-                        .fillMaxWidth()
-                        .height(66.dp),
-                    singleLine = true,
-                    shape = RoundedCornerShape(8.dp),
-                    colors = addUserTextFieldColors(borderColor)
+                OfficeFormTextField(
+                    value = firstName,
+                    onValueChange = { firstName = it },
+                    label = stringResource(R.string.label_first_name),
+                    icon = Icons.Outlined.Person,
+                    iconColor = primaryColor,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = fieldBorderColor
                 )
 
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    UserRole.entries.forEach { role ->
-                        DropdownMenuItem(
-                            text = { Text(role.name) },
-                            onClick = {
-                                selectedRole = role
-                                expanded = false
-                            }
-                        )
-                    }
-                }
+                OfficeFormTextField(
+                    value = lastName,
+                    onValueChange = { lastName = it },
+                    label = stringResource(R.string.label_last_name),
+                    icon = Icons.Outlined.Person,
+                    iconColor = primaryColor,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = fieldBorderColor
+                )
+
+                OfficeFormTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = stringResource(R.string.label_email),
+                    icon = Icons.Outlined.Email,
+                    keyboardType = KeyboardType.Email,
+                    iconColor = primaryColor,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = fieldBorderColor
+                )
+
+                PasswordField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = stringResource(R.string.label_password),
+                    modifier = Modifier.fillMaxWidth(),
+                    iconColor = primaryColor,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = fieldBorderColor
+                )
+
+                PasswordField(
+                    value = confirmedPassword,
+                    onValueChange = { confirmedPassword = it },
+                    label = stringResource(R.string.label_confirm_password),
+                    modifier = Modifier.fillMaxWidth(),
+                    iconColor = primaryColor,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = fieldBorderColor
+                )
+
+                OfficeFormDropdownField(
+                    selectedValue = selectedRole,
+                    values = UserRole.entries,
+                    label = stringResource(R.string.label_role),
+                    icon = Icons.Outlined.AdminPanelSettings,
+                    itemText = { it.name },
+                    onValueSelected = { selectedRole = it },
+                    iconColor = primaryColor,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = fieldBorderColor
+                )
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
             LoadingButton(
                 text = stringResource(R.string.button_create_user),
@@ -297,12 +212,12 @@ fun AddNewUserScreen(
                         email = email,
                         password = password,
                         confirmedPassword = confirmedPassword,
-                        role = selectedRole
+                        role = selectedRole ?: UserRole.DRIVER
                     )
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(58.dp),
+                    .height(64.dp),
                 enabled = !uiState.isLoading
             )
         }
@@ -317,49 +232,3 @@ fun AddNewUserScreen(
         )
     }
 }
-
-@Composable
-private fun AddUserTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    placeholder: String,
-    borderColor: Color,
-    leadingIcon: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
-    keyboardType: KeyboardType = KeyboardType.Text
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        placeholder = {
-            Text(text = placeholder)
-        },
-        leadingIcon = leadingIcon,
-        modifier = modifier
-            .fillMaxWidth()
-            .height(64.dp),
-        singleLine = true,
-        shape = RoundedCornerShape(8.dp),
-        keyboardOptions = KeyboardOptions(
-            keyboardType = keyboardType
-        ),
-        colors = addUserTextFieldColors(borderColor)
-    )
-}
-
-@Composable
-private fun addUserTextFieldColors(
-    borderColor: Color
-) = OutlinedTextFieldDefaults.colors(
-    focusedTextColor = MaterialTheme.colorScheme.onSurface,
-    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-    focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-    unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-    focusedLeadingIconColor = MaterialTheme.colorScheme.onSurface,
-    unfocusedLeadingIconColor = MaterialTheme.colorScheme.onSurface,
-    focusedBorderColor = borderColor,
-    unfocusedBorderColor = borderColor,
-    cursorColor = MaterialTheme.colorScheme.primary,
-    focusedContainerColor = Color.Transparent,
-    unfocusedContainerColor = Color.Transparent
-)

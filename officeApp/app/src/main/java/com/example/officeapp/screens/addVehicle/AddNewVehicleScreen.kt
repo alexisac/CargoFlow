@@ -243,7 +243,7 @@ fun AddNewVehicleScreen(
                 OfficeFormTextField(
                     value = maxWeight,
                     onValueChange = { maxWeight = it.filter { char -> char.isDigit() || char == '.' } },
-                    label = stringResource(R.string.label_maximum_weight),
+                    label = stringResource(R.string.label_maximum_weight) + " " + stringResource(R.string.label_kilograms),
                     icon = Icons.Outlined.Scale,
                     enabled = maxWeightEnabled,
                     keyboardType = KeyboardType.Number,
@@ -257,7 +257,7 @@ fun AddNewVehicleScreen(
                 OfficeFormTextField(
                     value = maxVolume,
                     onValueChange = { maxVolume = it.filter { char -> char.isDigit() || char == '.' } },
-                    label = stringResource(R.string.label_maximum_volume),
+                    label = stringResource(R.string.label_maximum_volume) + " " + stringResource(R.string.label_cubic_meters),
                     icon = Icons.Outlined.Inventory2,
                     enabled = maxVolumeEnabled,
                     keyboardType = KeyboardType.Number,

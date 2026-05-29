@@ -55,7 +55,7 @@
     <string name="label_copy">Copy</string>
     <string name="label_country">Country</string>
     <string name="label_created_by">Created by</string>
-    <string name="label_cubic_meters">m³</string>
+    <string name="label_cubic_meters">(m³)</string>
     <string name="label_currency">Currency</string>
     <string name="label_delivery">Delivery</string>
     <string name="label_delivery_city">Delivery city</string>
@@ -72,7 +72,7 @@
     <string name="label_general">General</string>
     <string name="label_id">Id</string>
     <string name="label_inactive">Inactive</string>
-    <string name="label_kilograms">kg</string>
+    <string name="label_kilograms">(kg)</string>
     <string name="label_last_name">Last name</string>
     <string name="label_licence_plate">Licence plate</string>
     <string name="label_make_active">Make active</string>
