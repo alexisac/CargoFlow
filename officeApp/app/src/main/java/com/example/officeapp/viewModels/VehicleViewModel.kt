@@ -30,7 +30,6 @@ class VehicleViewModel @Inject constructor(
         vehicleType: VehicleType,
         maxWeight: String,
         maxVolume: String,
-        vehicleStatus: VehicleStatus,
         additionalInfo: String?
     ) {
         viewModelScope.launch {
@@ -50,7 +49,6 @@ class VehicleViewModel @Inject constructor(
                     vehicleType = vehicleType,
                     maxWeight = maxWeight,
                     maxVolume = maxVolume,
-                    vehicleStatus = vehicleStatus,
                     additionalInfo = additionalInfo
                 )
             ) {

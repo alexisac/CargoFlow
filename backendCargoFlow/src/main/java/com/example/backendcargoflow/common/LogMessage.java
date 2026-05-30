@@ -23,7 +23,6 @@ public class LogMessage {
             " type = %s, \n" +
             " maxWeight = %s, \n" +
             " maxVolume = %s, \n" +
-            " status = %s, \n" +
             " additionalInfo = %s";
 
 

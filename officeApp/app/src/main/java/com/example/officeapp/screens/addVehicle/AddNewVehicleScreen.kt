@@ -73,14 +73,12 @@ fun AddNewVehicleScreen(
     var brand by remember { mutableStateOf("") }
     var model by remember { mutableStateOf("") }
     var manufactureYear by remember { mutableStateOf("") }
-    var vehicleType by remember { mutableStateOf<VehicleType?>(null) }
-    var vehicleStatus by remember { mutableStateOf<VehicleStatus?>(null) }
+    var vehicleType by remember { mutableStateOf(VehicleType.TRACTOR_UNIT) }
     var maxWeight by remember { mutableStateOf("") }
     var maxVolume by remember { mutableStateOf("") }
     var additionalInfo by remember { mutableStateOf("") }
-
-    val selectedType = vehicleType ?: VehicleType.TRACTOR_UNIT
-    val capacityRequirement = selectedType.capacityRequirement()
+    
+    val capacityRequirement = vehicleType.capacityRequirement()
 
     val maxWeightEnabled = capacityRequirement == VehicleCapacityRequirement.WEIGHT_AND_VOLUME
     val maxVolumeEnabled = capacityRequirement == VehicleCapacityRequirement.WEIGHT_AND_VOLUME ||
@@ -226,20 +224,6 @@ fun AddNewVehicleScreen(
                     borderColor = borderColor
                 )
 
-                OfficeFormDropdownField(
-                    selectedValue = vehicleStatus,
-                    values = VehicleStatus.entries,
-                    label = stringResource(R.string.label_vehicle_status),
-                    icon = Icons.Outlined.Autorenew,
-                    itemText = { it.name },
-                    onValueSelected = { vehicleStatus = it },
-                    iconColor = primaryColor,
-                    textColor = textColor,
-                    secondaryTextColor = secondaryTextColor,
-                    containerColor = fieldContainerColor,
-                    borderColor = borderColor
-                )
-
                 OfficeFormTextField(
                     value = maxWeight,
                     onValueChange = { maxWeight = it.filter { char -> char.isDigit() || char == '.' } },
@@ -297,10 +281,9 @@ fun AddNewVehicleScreen(
                         brand = brand,
                         model = model,
                         manufactureYear = manufactureYear,
-                        vehicleType = vehicleType ?: VehicleType.TRACTOR_UNIT,
+                        vehicleType = vehicleType,
                         maxWeight = maxWeight,
                         maxVolume = maxVolume,
-                        vehicleStatus = vehicleStatus ?: VehicleStatus.AVAILABLE,
                         additionalInfo = additionalInfo
                     )
                 },

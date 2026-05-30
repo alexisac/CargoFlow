@@ -43,6 +43,7 @@ public class VehicleService {
         validateVehicleCapacity(addNewVehicleRequestDto);
 
         Vehicle newVehicle = vehicleMapper.mapAddNewVehicleRequestDtoToVehicle(addNewVehicleRequestDto);
+        newVehicle.setVehicleStatus(VehicleStatus.AVAILABLE);
         vehicleRepository.save(newVehicle);
         return GenericApplicationResponseFactory.success(
                 "201 - VEHICLE_CREATED",

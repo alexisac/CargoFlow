@@ -25,7 +25,6 @@ class VehicleService @Inject constructor(
         vehicleType: VehicleType,
         maxWeight: String,
         maxVolume: String,
-        vehicleStatus: VehicleStatus,
         additionalInfo: String?
     ): ApiResult<GenericApplicationResponse> {
         val normalizedLicencePlate = licencePlate.trim().uppercase()
@@ -104,7 +103,6 @@ class VehicleService @Inject constructor(
             vehicleType = vehicleType,
             maxWeight = maxWeightInt,
             maxVolume = maxVolumeInt,
-            vehicleStatus = vehicleStatus,
             additionalInfo = trimmedAdditionalInfo
         )
 

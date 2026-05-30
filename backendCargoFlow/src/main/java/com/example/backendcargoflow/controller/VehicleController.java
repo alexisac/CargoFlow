@@ -30,7 +30,6 @@ public class VehicleController implements VehiclesApi {
                 addNewVehicleRequestDto.getVehicleType(),
                 addNewVehicleRequestDto.getMaxWeight(),
                 addNewVehicleRequestDto.getMaxVolume(),
-                addNewVehicleRequestDto.getVehicleStatus(),
                 addNewVehicleRequestDto.getAdditionalInfo()
         ));
         return vehicleService.addNewVehicle(addNewVehicleRequestDto);

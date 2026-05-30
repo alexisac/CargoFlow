@@ -21,6 +21,7 @@ import java.util.List;
 public interface VehicleMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createDate", ignore = true)
+    @Mapping(target = "vehicleStatus", ignore = true)
     Vehicle mapAddNewVehicleRequestDtoToVehicle(AddNewVehicleRequestDto addNewVehicleRequestDto);
 
     VehicleSummaryDto mapVehicleToVehicleSummaryDto(Vehicle vehicle);

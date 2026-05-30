@@ -165,7 +165,6 @@ components:
         - model
         - manufactureYear
         - vehicleType
-        - vehicleStatus
       properties:
         licencePlate:
           type: string
@@ -207,8 +206,6 @@ components:
           nullable: true
           description: Required for all cargo vehicles and trailers except TRACTOR_UNIT. Must be empty for TRACTOR_UNIT
           example: 65
-        vehicleStatus:
-          $ref: '#/components/schemas/VehicleStatus'
         additionalInfo:
           type: string
           maxLength: 250
