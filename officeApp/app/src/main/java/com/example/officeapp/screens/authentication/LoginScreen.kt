@@ -10,14 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -40,10 +34,15 @@ import com.example.officeapp.R
 import com.example.officeapp.screens.reusableComponents.FormMessages
 import com.example.officeapp.viewModels.AuthenticationViewModel
 import com.example.officeapp.screens.reusableComponents.LoadingButton
+import com.example.officeapp.screens.reusableComponents.OfficeFormTextField
 import com.example.officeapp.screens.reusableComponents.PasswordField
 import com.example.officeapp.screens.reusableComponents.ThemeToggle
 import com.example.officeapp.ui.theme.DarkBackground
+import com.example.officeapp.ui.theme.DarkCard
 import com.example.officeapp.ui.theme.LightBackground
+import com.example.officeapp.ui.theme.LightSurface
+import com.example.officeapp.ui.theme.PrimaryBlueDark
+import com.example.officeapp.ui.theme.PrimaryBlueLight
 
 @Composable
 fun LoginScreen(
@@ -62,6 +61,13 @@ fun LoginScreen(
     val backgroundColor = if (isDark) DarkBackground else LightBackground
     val textColor = MaterialTheme.colorScheme.onBackground
     val secondaryTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+    val fieldContainerColor = if (isDark) DarkCard else LightSurface
+    val primaryColor = if (isDark) PrimaryBlueDark else PrimaryBlueLight
+    val fieldBorderColor = if (isDark) {
+        PrimaryBlueDark.copy(alpha = 0.85f)
+    } else {
+        PrimaryBlueLight.copy(alpha = 0.75f)
+    }
 
     LaunchedEffect(Unit) {
         viewModel.clearMessages()
@@ -113,37 +119,18 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(52.dp))
 
-            OutlinedTextField(
+            OfficeFormTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text(stringResource(R.string.label_email)) },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Outlined.Email,
-                        contentDescription = stringResource(R.string.description_email_icon)
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(72.dp),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Email
-                ),
-                shape = RoundedCornerShape(8.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
-                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-                    focusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    focusedLeadingIconColor = MaterialTheme.colorScheme.onSurface,
-                    unfocusedLeadingIconColor = MaterialTheme.colorScheme.onSurface,
-                    focusedBorderColor = MaterialTheme.colorScheme.outline,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                    cursorColor = MaterialTheme.colorScheme.primary,
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent
-                )
+                label = stringResource(R.string.label_email),
+                icon = Icons.Outlined.Email,
+                keyboardType = KeyboardType.Email,
+                iconColor = primaryColor,
+                textColor = MaterialTheme.colorScheme.onSurface,
+                secondaryTextColor = secondaryTextColor,
+                containerColor = fieldContainerColor,
+                borderColor = fieldBorderColor,
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -152,9 +139,12 @@ fun LoginScreen(
                 value = password,
                 onValueChange = { password = it },
                 label = stringResource(R.string.label_password),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(72.dp)
+                iconColor = primaryColor,
+                textColor = MaterialTheme.colorScheme.onSurface,
+                secondaryTextColor = secondaryTextColor,
+                containerColor = fieldContainerColor,
+                borderColor = fieldBorderColor,
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(44.dp))
