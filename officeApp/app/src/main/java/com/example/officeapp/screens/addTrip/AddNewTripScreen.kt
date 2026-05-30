@@ -23,7 +23,6 @@ import androidx.compose.material.icons.outlined.MyLocation
 import androidx.compose.material.icons.outlined.Payments
 import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material.icons.outlined.Scale
-import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Signpost
 import androidx.compose.material.icons.outlined.Warehouse
 import androidx.compose.runtime.Composable
@@ -42,27 +41,28 @@ import androidx.compose.ui.unit.dp
 import com.example.officeapp.R
 import com.example.officeapp.models.trip.CargoType
 import com.example.officeapp.models.trip.Currency
+import com.example.officeapp.screens.reusableComponents.DatePickerField
 import com.example.officeapp.screens.reusableComponents.FormMessages
 import com.example.officeapp.screens.reusableComponents.FormScreenHeader
 import com.example.officeapp.screens.reusableComponents.LoadingButton
 import com.example.officeapp.screens.reusableComponents.OfficeFormDropdownField
 import com.example.officeapp.screens.reusableComponents.OfficeFormTextField
+import com.example.officeapp.screens.reusableComponents.TimePickerField
+import com.example.officeapp.screens.reusableComponents.TimeZoneDropdownField
+import com.example.officeapp.ui.theme.AccentBlue
+import com.example.officeapp.ui.theme.AccentCyan
+import com.example.officeapp.ui.theme.AccentPink
+import com.example.officeapp.ui.theme.AccentViolet
 import com.example.officeapp.ui.theme.BorderDark
 import com.example.officeapp.ui.theme.BorderLight
 import com.example.officeapp.ui.theme.DarkBackground
 import com.example.officeapp.ui.theme.DarkCard
-import com.example.officeapp.ui.theme.ErrorRed
-import com.example.officeapp.ui.theme.InfoBlue
 import com.example.officeapp.ui.theme.LightBackground
 import com.example.officeapp.ui.theme.LightSurface
-import com.example.officeapp.ui.theme.PrimaryBlueDark
-import com.example.officeapp.ui.theme.PrimaryBlueLight
-import com.example.officeapp.ui.theme.SuccessGreen
 import com.example.officeapp.ui.theme.TextPrimaryDark
 import com.example.officeapp.ui.theme.TextPrimaryLight
 import com.example.officeapp.ui.theme.TextSecondaryDark
 import com.example.officeapp.ui.theme.TextSecondaryLight
-import com.example.officeapp.ui.theme.WarningOrange
 import com.example.officeapp.viewModels.TripViewModel
 import java.time.ZoneId
 
@@ -116,6 +116,11 @@ fun AddNewTripScreen(
     val textColor = if (isDarkTheme) TextPrimaryDark else TextPrimaryLight
     val secondaryTextColor = if (isDarkTheme) TextSecondaryDark else TextSecondaryLight
     val subtleBorderColor = if (isDarkTheme) BorderDark else BorderLight
+
+    val pickupAddressSectionColor = AccentBlue
+    val deliveryAddressSectionColor = AccentCyan
+    val timeSectionColor = AccentViolet
+    val cargoAndPaymentSectionColor = AccentPink
 
     DisposableEffect(Unit) {
         onDispose {
@@ -209,7 +214,7 @@ fun AddNewTripScreen(
                 title = stringResource(R.string.section_pickup_address),
                 subtitle = stringResource(R.string.trip_pickup_address_subtitle),
                 icon = Icons.Outlined.LocationOn,
-                accentColor = InfoBlue,
+                accentColor = pickupAddressSectionColor,
                 containerColor = sectionContainerColor,
                 textColor = textColor,
                 secondaryTextColor = secondaryTextColor,
@@ -233,7 +238,7 @@ fun AddNewTripScreen(
                     onPostalCodeChange = { pickupPostalCode = it },
                     additionalDetails = pickupAdditionalDetails,
                     onAdditionalDetailsChange = { pickupAdditionalDetails = it },
-                    accentColor = InfoBlue,
+                    accentColor = pickupAddressSectionColor,
                     textColor = textColor,
                     secondaryTextColor = secondaryTextColor,
                     fieldContainerColor = fieldContainerColor
@@ -244,7 +249,7 @@ fun AddNewTripScreen(
                 title = stringResource(R.string.section_delivery_address),
                 subtitle = stringResource(R.string.trip_delivery_address_subtitle),
                 icon = Icons.Outlined.Map,
-                accentColor = SuccessGreen,
+                accentColor = deliveryAddressSectionColor,
                 containerColor = sectionContainerColor,
                 textColor = textColor,
                 secondaryTextColor = secondaryTextColor,
@@ -268,7 +273,7 @@ fun AddNewTripScreen(
                     onPostalCodeChange = { deliveryPostalCode = it },
                     additionalDetails = deliveryAdditionalDetails,
                     onAdditionalDetailsChange = { deliveryAdditionalDetails = it },
-                    accentColor = SuccessGreen,
+                    accentColor = deliveryAddressSectionColor,
                     textColor = textColor,
                     secondaryTextColor = secondaryTextColor,
                     fieldContainerColor = fieldContainerColor
@@ -279,7 +284,7 @@ fun AddNewTripScreen(
                 title = stringResource(R.string.section_time),
                 subtitle = stringResource(R.string.trip_time_subtitle),
                 icon = Icons.Outlined.CalendarMonth,
-                accentColor = WarningOrange,
+                accentColor = timeSectionColor,
                 containerColor = sectionContainerColor,
                 textColor = textColor,
                 secondaryTextColor = secondaryTextColor,
@@ -288,86 +293,80 @@ fun AddNewTripScreen(
                     timeExpanded = !timeExpanded
                 }
             ) {
-                OfficeFormTextField(
+                DatePickerField(
                     value = pickupDate,
-                    onValueChange = { pickupDate = it },
+                    onDateSelected = { pickupDate = it },
                     label = stringResource(R.string.label_pickup_date),
-                    placeholder = "YYYY-MM-DD",
-                    icon = Icons.Outlined.CalendarMonth,
+                    placeholder = "DD-MM-YYYY",
                     required = true,
-                    iconColor = WarningOrange,
+                    iconColor = timeSectionColor,
                     textColor = textColor,
                     secondaryTextColor = secondaryTextColor,
                     containerColor = fieldContainerColor,
-                    borderColor = WarningOrange
+                    borderColor = timeSectionColor
                 )
 
-                OfficeFormTextField(
+                TimePickerField(
                     value = pickupTime,
-                    onValueChange = { pickupTime = it },
+                    onTimeSelected = { pickupTime = it },
                     label = stringResource(R.string.label_pickup_time),
                     placeholder = "HH:mm",
-                    icon = Icons.Outlined.Schedule,
                     required = true,
-                    iconColor = WarningOrange,
+                    iconColor = timeSectionColor,
                     textColor = textColor,
                     secondaryTextColor = secondaryTextColor,
                     containerColor = fieldContainerColor,
-                    borderColor = WarningOrange
+                    borderColor = timeSectionColor
                 )
 
-                OfficeFormTextField(
-                    value = pickupTimeZone,
-                    onValueChange = { pickupTimeZone = it },
+                TimeZoneDropdownField(
+                    selectedTimeZone = pickupTimeZone,
+                    onTimeZoneSelected = { pickupTimeZone = it },
                     label = stringResource(R.string.label_pickup_time_zone),
-                    icon = Icons.Outlined.MyLocation,
                     required = true,
-                    iconColor = WarningOrange,
+                    iconColor = timeSectionColor,
                     textColor = textColor,
                     secondaryTextColor = secondaryTextColor,
                     containerColor = fieldContainerColor,
-                    borderColor = WarningOrange
+                    borderColor = timeSectionColor
                 )
 
-                OfficeFormTextField(
+                DatePickerField(
                     value = deliveryDate,
-                    onValueChange = { deliveryDate = it },
+                    onDateSelected = { deliveryDate = it },
                     label = stringResource(R.string.label_delivery_date),
-                    placeholder = "YYYY-MM-DD",
-                    icon = Icons.Outlined.CalendarMonth,
+                    placeholder = "DD-MM-YYYY",
                     required = true,
-                    iconColor = WarningOrange,
+                    iconColor = timeSectionColor,
                     textColor = textColor,
                     secondaryTextColor = secondaryTextColor,
                     containerColor = fieldContainerColor,
-                    borderColor = WarningOrange
+                    borderColor = timeSectionColor
                 )
 
-                OfficeFormTextField(
+                TimePickerField(
                     value = deliveryTime,
-                    onValueChange = { deliveryTime = it },
+                    onTimeSelected = { deliveryTime = it },
                     label = stringResource(R.string.label_delivery_time),
                     placeholder = "HH:mm",
-                    icon = Icons.Outlined.Schedule,
                     required = true,
-                    iconColor = WarningOrange,
+                    iconColor = timeSectionColor,
                     textColor = textColor,
                     secondaryTextColor = secondaryTextColor,
                     containerColor = fieldContainerColor,
-                    borderColor = WarningOrange
+                    borderColor = timeSectionColor
                 )
 
-                OfficeFormTextField(
-                    value = deliveryTimeZone,
-                    onValueChange = { deliveryTimeZone = it },
+                TimeZoneDropdownField(
+                    selectedTimeZone = deliveryTimeZone,
+                    onTimeZoneSelected = { deliveryTimeZone = it },
                     label = stringResource(R.string.label_delivery_time_zone),
-                    icon = Icons.Outlined.MyLocation,
                     required = true,
-                    iconColor = WarningOrange,
+                    iconColor = timeSectionColor,
                     textColor = textColor,
                     secondaryTextColor = secondaryTextColor,
                     containerColor = fieldContainerColor,
-                    borderColor = WarningOrange
+                    borderColor = timeSectionColor
                 )
             }
 
@@ -375,7 +374,7 @@ fun AddNewTripScreen(
                 title = stringResource(R.string.section_cargo_and_payment),
                 subtitle = stringResource(R.string.trip_cargo_payment_subtitle),
                 icon = Icons.Outlined.Inventory2,
-                accentColor = ErrorRed,
+                accentColor = cargoAndPaymentSectionColor,
                 containerColor = sectionContainerColor,
                 textColor = textColor,
                 secondaryTextColor = secondaryTextColor,
@@ -393,11 +392,11 @@ fun AddNewTripScreen(
                     singleLine = false,
                     minLines = 1,
                     maxLines = 4,
-                    iconColor = ErrorRed,
+                    iconColor = cargoAndPaymentSectionColor,
                     textColor = textColor,
                     secondaryTextColor = secondaryTextColor,
                     containerColor = fieldContainerColor,
-                    borderColor = ErrorRed
+                    borderColor = cargoAndPaymentSectionColor
                 )
 
                 OfficeFormTextField(
@@ -407,11 +406,11 @@ fun AddNewTripScreen(
                     placeholder = "e.g. 1200",
                     icon = Icons.Outlined.Scale,
                     keyboardType = KeyboardType.Number,
-                    iconColor = ErrorRed,
+                    iconColor = cargoAndPaymentSectionColor,
                     textColor = textColor,
                     secondaryTextColor = secondaryTextColor,
                     containerColor = fieldContainerColor,
-                    borderColor = ErrorRed
+                    borderColor = cargoAndPaymentSectionColor
                 )
 
                 OfficeFormTextField(
@@ -421,11 +420,11 @@ fun AddNewTripScreen(
                     placeholder = "e.g. 12.5",
                     icon = Icons.Outlined.Warehouse,
                     keyboardType = KeyboardType.Number,
-                    iconColor = ErrorRed,
+                    iconColor = cargoAndPaymentSectionColor,
                     textColor = textColor,
                     secondaryTextColor = secondaryTextColor,
                     containerColor = fieldContainerColor,
-                    borderColor = ErrorRed
+                    borderColor = cargoAndPaymentSectionColor
                 )
 
                 OfficeFormDropdownField(
@@ -436,11 +435,11 @@ fun AddNewTripScreen(
                     itemText = { it.name },
                     onValueSelected = { cargoType = it },
                     required = true,
-                    iconColor = ErrorRed,
+                    iconColor = cargoAndPaymentSectionColor,
                     textColor = textColor,
                     secondaryTextColor = secondaryTextColor,
                     containerColor = fieldContainerColor,
-                    borderColor = ErrorRed
+                    borderColor = cargoAndPaymentSectionColor
                 )
 
                 OfficeFormTextField(
@@ -451,11 +450,11 @@ fun AddNewTripScreen(
                     icon = Icons.Outlined.Payments,
                     required = true,
                     keyboardType = KeyboardType.Number,
-                    iconColor = ErrorRed,
+                    iconColor = cargoAndPaymentSectionColor,
                     textColor = textColor,
                     secondaryTextColor = secondaryTextColor,
                     containerColor = fieldContainerColor,
-                    borderColor = ErrorRed
+                    borderColor = cargoAndPaymentSectionColor
                 )
 
                 OfficeFormDropdownField(
@@ -466,11 +465,11 @@ fun AddNewTripScreen(
                     itemText = { it.name },
                     onValueSelected = { currency = it },
                     required = true,
-                    iconColor = ErrorRed,
+                    iconColor = cargoAndPaymentSectionColor,
                     textColor = textColor,
                     secondaryTextColor = secondaryTextColor,
                     containerColor = fieldContainerColor,
-                    borderColor = ErrorRed
+                    borderColor = cargoAndPaymentSectionColor
                 )
 
                 OfficeFormTextField(
@@ -481,11 +480,11 @@ fun AddNewTripScreen(
                     singleLine = false,
                     minLines = 1,
                     maxLines = 4,
-                    iconColor = ErrorRed,
+                    iconColor = cargoAndPaymentSectionColor,
                     textColor = textColor,
                     secondaryTextColor = secondaryTextColor,
                     containerColor = fieldContainerColor,
-                    borderColor = ErrorRed
+                    borderColor = cargoAndPaymentSectionColor
                 )
             }
 
