@@ -15,10 +15,15 @@
     <string name="trip_completed_title">Trip #</string>
     <string name="trip_details_title">Trip details</string>
 
+    <string name="add_new_trip_subtitle">Fill in the trip details to create a new trip</string>
     <string name="add_new_user_subtitle">Create a new user account</string>
-    <string name="login_screen_subtitle">Sign in to continue</string>
-    <string name="view_and_manage_system_users_subtitle">View and manage system users</string>
     <string name="add_new_vehicle_subtitle">Fill in the vehicle details</string>
+    <string name="login_screen_subtitle">Sign in to continue</string>
+    <string name="trip_cargo_payment_subtitle">Cargo details and payment information</string>
+    <string name="trip_delivery_address_subtitle">Where the cargo will be delivered</string>
+    <string name="trip_pickup_address_subtitle">Where the cargo will be picked up</string>
+    <string name="trip_time_subtitle">Set pickup and delivery date &amp; time</string>
+    <string name="view_and_manage_system_users_subtitle">View and manage system users</string>
 
     <string name="button_add_field">Add field</string>
     <string name="button_add_status_filter">Add status filter</string>
@@ -68,6 +73,9 @@
     <string name="label_details">Details</string>
     <string name="label_disabled">Disabled</string>
     <string name="label_email">Email</string>
+    <string name="label_enter_street_name">Enter street name</string>
+    <string name="label_enter_street_number">Enter street number</string>
+    <string name="label_enter_postal_code">Enter postal code</string>
     <string name="label_first_name">First name</string>
     <string name="label_general">General</string>
     <string name="label_id">Id</string>
@@ -104,6 +112,9 @@
     <string name="label_price">Price</string>
     <string name="label_required_field">*</string>
     <string name="label_role">Role</string>
+    <string name="label_select_administrative_area">Select administrative area</string>
+    <string name="label_select_city">Select city</string>
+    <string name="label_select_country">Select country</string>
     <string name="label_select_tractor_unit_for_trailer">Select a tractor unit to enable trailers.</string>
     <string name="label_selected">Selected</string>
     <string name="label_status">Status</string>

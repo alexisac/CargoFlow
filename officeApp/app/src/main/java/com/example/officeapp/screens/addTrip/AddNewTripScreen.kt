@@ -1,21 +1,33 @@
 package com.example.officeapp.screens.addTrip
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuAnchorType
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.Euro
+import androidx.compose.material.icons.outlined.Inventory2
+import androidx.compose.material.icons.outlined.LocationOn
+import androidx.compose.material.icons.outlined.Map
+import androidx.compose.material.icons.outlined.MyLocation
+import androidx.compose.material.icons.outlined.Payments
+import androidx.compose.material.icons.outlined.Place
+import androidx.compose.material.icons.outlined.Scale
+import androidx.compose.material.icons.outlined.Schedule
+import androidx.compose.material.icons.outlined.Signpost
+import androidx.compose.material.icons.outlined.Warehouse
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -25,22 +37,39 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.officeapp.R
-import com.example.officeapp.viewModels.TripViewModel
-import com.example.officeapp.screens.reusableComponents.DatePickerField
-import com.example.officeapp.screens.reusableComponents.OldFormMessages
-import com.example.officeapp.screens.reusableComponents.LoadingButton
-import com.example.officeapp.screens.reusableComponents.TimePickerField
-import com.example.officeapp.screens.reusableComponents.TimeZoneDropdownField
 import com.example.officeapp.models.trip.CargoType
 import com.example.officeapp.models.trip.Currency
+import com.example.officeapp.screens.reusableComponents.FormMessages
+import com.example.officeapp.screens.reusableComponents.FormScreenHeader
+import com.example.officeapp.screens.reusableComponents.LoadingButton
+import com.example.officeapp.screens.reusableComponents.OfficeFormDropdownField
+import com.example.officeapp.screens.reusableComponents.OfficeFormTextField
+import com.example.officeapp.ui.theme.BorderDark
+import com.example.officeapp.ui.theme.BorderLight
+import com.example.officeapp.ui.theme.DarkBackground
+import com.example.officeapp.ui.theme.DarkCard
+import com.example.officeapp.ui.theme.ErrorRed
+import com.example.officeapp.ui.theme.InfoBlue
+import com.example.officeapp.ui.theme.LightBackground
+import com.example.officeapp.ui.theme.LightSurface
+import com.example.officeapp.ui.theme.PrimaryBlueDark
+import com.example.officeapp.ui.theme.PrimaryBlueLight
+import com.example.officeapp.ui.theme.SuccessGreen
+import com.example.officeapp.ui.theme.TextPrimaryDark
+import com.example.officeapp.ui.theme.TextPrimaryLight
+import com.example.officeapp.ui.theme.TextSecondaryDark
+import com.example.officeapp.ui.theme.TextSecondaryLight
+import com.example.officeapp.ui.theme.WarningOrange
+import com.example.officeapp.viewModels.TripViewModel
 import java.time.ZoneId
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddNewTripScreen(
     viewModel: TripViewModel,
+    isDarkTheme: Boolean,
     onBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -79,10 +108,20 @@ fun AddNewTripScreen(
     var pickupAddressExpanded by remember { mutableStateOf(false) }
     var deliveryAddressExpanded by remember { mutableStateOf(false) }
     var timeExpanded by remember { mutableStateOf(false) }
-    var cargoAndPaymentExpanede by remember { mutableStateOf(false) }
+    var cargoAndPaymentExpanded by remember { mutableStateOf(false) }
 
-    var cargoTypeExpanded by remember { mutableStateOf(false) }
-    var currencyExpanded by remember { mutableStateOf(false) }
+    val backgroundColor = if (isDarkTheme) DarkBackground else LightBackground
+    val sectionContainerColor = if (isDarkTheme) DarkCard else LightSurface
+    val fieldContainerColor = if (isDarkTheme) DarkCard else LightSurface
+    val textColor = if (isDarkTheme) TextPrimaryDark else TextPrimaryLight
+    val secondaryTextColor = if (isDarkTheme) TextSecondaryDark else TextSecondaryLight
+    val subtleBorderColor = if (isDarkTheme) BorderDark else BorderLight
+
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.clearMessage()
+        }
+    }
 
     LaunchedEffect(uiState.successMessage) {
         if (uiState.successMessage != null) {
@@ -91,556 +130,508 @@ fun AddNewTripScreen(
         }
     }
 
-    Column(
+    fun submitTrip() {
+        val pickupDateTime = if (pickupDate.isNotBlank() && pickupTime.isNotBlank()) {
+            "${pickupDate}T${pickupTime}:00"
+        } else {
+            ""
+        }
+
+        val deliveryDateTime = if (deliveryDate.isNotBlank() && deliveryTime.isNotBlank()) {
+            "${deliveryDate}T${deliveryTime}:00"
+        } else {
+            ""
+        }
+
+        viewModel.addNewTrip(
+            pickupCountry = pickupCountry,
+            pickupAdministrativeArea = pickupAdministrativeArea,
+            pickupCity = pickupCity,
+            pickupStreetName = pickupStreetName,
+            pickupStreetNumber = pickupStreetNumber,
+            pickupPostalCode = pickupPostalCode,
+            pickupAdditionalDetails = pickupAdditionalDetails,
+
+            deliveryCountry = deliveryCountry,
+            deliveryAdministrativeArea = deliveryAdministrativeArea,
+            deliveryCity = deliveryCity,
+            deliveryStreetName = deliveryStreetName,
+            deliveryStreetNumber = deliveryStreetNumber,
+            deliveryPostalCode = deliveryPostalCode,
+            deliveryAdditionalDetails = deliveryAdditionalDetails,
+
+            pickupDateTime = pickupDateTime,
+            pickupTimeZone = pickupTimeZone,
+            deliveryDateTime = deliveryDateTime,
+            deliveryTimeZone = deliveryTimeZone,
+
+            cargoDescription = cargoDescription,
+            cargoWeight = cargoWeight,
+            cargoVolume = cargoVolume,
+            cargoType = cargoType,
+            price = price,
+            currency = currency,
+            additionalInfo = additionalInfo
+        )
+    }
+
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Top
+            .background(backgroundColor)
     ) {
-        Text(
-            text = stringResource(R.string.add_new_trip_title),
+        Column(
             modifier = Modifier
-                .padding(bottom = 24.dp)
-        )
-
-        TripSection(
-            title = stringResource(R.string.section_pickup_address),
-            expanded = pickupAddressExpanded,
-            onClick = { pickupAddressExpanded = !pickupAddressExpanded }
+                .fillMaxSize()
+                .navigationBarsPadding()
+                .imePadding()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp)
+                .padding(top = 36.dp, bottom = 28.dp)
         ) {
-            OutlinedTextField(
-                value = pickupCountry,
-                onValueChange = { pickupCountry = it },
-                label = { Text(stringResource(R.string.label_country)) },
-                supportingText = {
-                    Text(
-                        text = stringResource(R.string.label_required_field),
-                        color = Color.Red
-                    )
+            FormScreenHeader(
+                title = stringResource(R.string.add_new_trip_title),
+                subtitle = stringResource(R.string.add_new_trip_subtitle),
+                textColor = textColor,
+                subtitleColor = secondaryTextColor,
+                borderColor = subtleBorderColor,
+                iconColor = textColor,
+                onBack = {
+                    viewModel.clearMessage()
+                    onBack()
                 },
-                modifier = Modifier
-                    .fillMaxWidth(),
-                singleLine = true
+                modifier = Modifier.fillMaxWidth()
             )
 
-            OutlinedTextField(
-                value = pickupAdministrativeArea,
-                onValueChange = { pickupAdministrativeArea = it },
-                label = { Text(stringResource(R.string.label_administrative_area)) },
-                supportingText = {
-                    Text(
-                        text = stringResource(R.string.label_required_field),
-                        color = Color.Red
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                singleLine = true
-            )
+            Spacer(modifier = Modifier.height(26.dp))
 
-            OutlinedTextField(
-                value = pickupCity,
-                onValueChange = { pickupCity = it },
-                label = { Text(stringResource(R.string.label_city)) },
-                supportingText = {
-                    Text(
-                        text = stringResource(R.string.label_required_field),
-                        color = Color.Red
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                singleLine = true
-            )
-
-            OutlinedTextField(
-                value = pickupStreetName,
-                onValueChange = { pickupStreetName = it },
-                label = { Text(stringResource(R.string.label_street_name)) },
-                supportingText = {
-                    Text(
-                        text = stringResource(R.string.label_required_field),
-                        color = Color.Red
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                singleLine = true
-            )
-
-            OutlinedTextField(
-                value = pickupStreetNumber,
-                onValueChange = { pickupStreetNumber = it },
-                label = { Text(stringResource(R.string.label_street_number)) },
-                supportingText = {
-                    Text(
-                        text = stringResource(R.string.label_required_field),
-                        color = Color.Red
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                singleLine = true
-            )
-
-            OutlinedTextField(
-                value = pickupPostalCode,
-                onValueChange = { pickupPostalCode = it },
-                label = { Text(stringResource(R.string.label_postal_code)) },
-                supportingText = {
-                    Text(
-                        text = stringResource(R.string.label_required_field),
-                        color = Color.Red
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                singleLine = true
-            )
-
-            OutlinedTextField(
-                value = pickupAdditionalDetails,
-                onValueChange = { pickupAdditionalDetails = it },
-                label = { Text(stringResource(R.string.label_additional_details)) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                minLines = 3,
-                maxLines = 5,
-                singleLine = false
-            )
-        }
-
-        TripSection(
-            title = stringResource(R.string.section_delivery_address),
-            expanded = deliveryAddressExpanded,
-            onClick = { deliveryAddressExpanded = !deliveryAddressExpanded }
-        ) {
-            OutlinedTextField(
-                value = deliveryCountry,
-                onValueChange = { deliveryCountry = it },
-                label = { Text(stringResource(R.string.label_country)) },
-                supportingText = {
-                    Text(
-                        text = stringResource(R.string.label_required_field),
-                        color = Color.Red
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth(),
-                singleLine = true
-            )
-
-            OutlinedTextField(
-                value = deliveryAdministrativeArea,
-                onValueChange = { deliveryAdministrativeArea = it },
-                label = { Text(stringResource(R.string.label_administrative_area)) },
-                supportingText = {
-                    Text(
-                        text = stringResource(R.string.label_required_field),
-                        color = Color.Red
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                singleLine = true
-            )
-
-            OutlinedTextField(
-                value = deliveryCity,
-                onValueChange = { deliveryCity = it },
-                label = { Text(stringResource(R.string.label_city)) },
-                supportingText = {
-                    Text(
-                        text = stringResource(R.string.label_required_field),
-                        color = Color.Red
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                singleLine = true
-            )
-
-            OutlinedTextField(
-                value = deliveryStreetName,
-                onValueChange = { deliveryStreetName = it },
-                label = { Text(stringResource(R.string.label_street_name)) },
-                supportingText = {
-                    Text(
-                        text = stringResource(R.string.label_required_field),
-                        color = Color.Red
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                singleLine = true
-            )
-
-            OutlinedTextField(
-                value = deliveryStreetNumber,
-                onValueChange = { deliveryStreetNumber = it },
-                label = { Text(stringResource(R.string.label_street_number)) },
-                supportingText = {
-                    Text(
-                        text = stringResource(R.string.label_required_field),
-                        color = Color.Red
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                singleLine = true
-            )
-
-            OutlinedTextField(
-                value = deliveryPostalCode,
-                onValueChange = { deliveryPostalCode = it },
-                label = { Text(stringResource(R.string.label_postal_code)) },
-                supportingText = {
-                    Text(
-                        text = stringResource(R.string.label_required_field),
-                        color = Color.Red
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                singleLine = true
-            )
-
-            OutlinedTextField(
-                value = deliveryAdditionalDetails,
-                onValueChange = { deliveryAdditionalDetails = it },
-                label = { Text(stringResource(R.string.label_additional_details)) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                minLines = 3,
-                maxLines = 5,
-                singleLine = false
-            )
-        }
-
-        TripSection(
-            title = stringResource(R.string.section_time),
-            expanded = timeExpanded,
-            onClick = { timeExpanded = !timeExpanded }
-        ) {
-            DatePickerField(
-                label = stringResource(R.string.label_pickup_date),
-                value = pickupDate,
-                onDateSelected = { pickupDate = it },
-                modifier = Modifier.padding(top = 12.dp),
-                supportingText = {
-                    Text(
-                        text = stringResource(R.string.label_required_field),
-                        color = Color.Red
-                    )
+            TripSection(
+                title = stringResource(R.string.section_pickup_address),
+                subtitle = stringResource(R.string.trip_pickup_address_subtitle),
+                icon = Icons.Outlined.LocationOn,
+                accentColor = InfoBlue,
+                containerColor = sectionContainerColor,
+                textColor = textColor,
+                secondaryTextColor = secondaryTextColor,
+                expanded = pickupAddressExpanded,
+                onClick = {
+                    pickupAddressExpanded = !pickupAddressExpanded
                 }
-            )
-
-            TimePickerField(
-                label = stringResource(R.string.label_pickup_time),
-                value = pickupTime,
-                onTimeSelected = { pickupTime = it },
-                modifier = Modifier.padding(top = 12.dp),
-                supportingText = {
-                    Text(
-                        text = stringResource(R.string.label_required_field),
-                        color = Color.Red
-                    )
-                }
-            )
-
-            TimeZoneDropdownField(
-                label = stringResource(R.string.label_pickup_time_zone),
-                selectedTimeZone = pickupTimeZone,
-                onTimeZoneSelected = { pickupTimeZone = it },
-                modifier = Modifier.padding(top = 12.dp),
-                supportingText = {
-                    Text(
-                        text = stringResource(R.string.label_required_field),
-                        color = Color.Red
-                    )
-                }
-            )
-
-            DatePickerField(
-                label = stringResource(R.string.label_delivery_date),
-                value = deliveryDate,
-                onDateSelected = { deliveryDate = it },
-                modifier = Modifier.padding(top = 12.dp),
-                supportingText = {
-                    Text(
-                        text = stringResource(R.string.label_required_field),
-                        color = Color.Red
-                    )
-                }
-            )
-
-            TimePickerField(
-                label = stringResource(R.string.label_delivery_time),
-                value = deliveryTime,
-                onTimeSelected = { deliveryTime = it },
-                modifier = Modifier.padding(top = 12.dp),
-                supportingText = {
-                    Text(
-                        text = stringResource(R.string.label_required_field),
-                        color = Color.Red
-                    )
-                }
-            )
-
-            TimeZoneDropdownField(
-                label = stringResource(R.string.label_delivery_time_zone),
-                selectedTimeZone = deliveryTimeZone,
-                onTimeZoneSelected = { deliveryTimeZone = it },
-                modifier = Modifier.padding(top = 12.dp),
-                supportingText = {
-                    Text(
-                        text = stringResource(R.string.label_required_field),
-                        color = Color.Red
-                    )
-                }
-            )
-        }
-
-        TripSection(
-            title = stringResource(R.string.section_cargo_and_payment),
-            expanded = cargoAndPaymentExpanede,
-            onClick = { cargoAndPaymentExpanede = !cargoAndPaymentExpanede }
-        ) {
-            OutlinedTextField(
-                value = cargoDescription,
-                onValueChange = { cargoDescription = it },
-                label = { Text(stringResource(R.string.label_cargo_description)) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                minLines = 3,
-                maxLines = 5,
-                singleLine = false
-            )
-
-            OutlinedTextField(
-                value = cargoWeight,
-                onValueChange = { cargoWeight = it },
-                label = { Text(stringResource(R.string.label_cargo_weight)) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                singleLine = true
-            )
-
-            OutlinedTextField(
-                value = cargoVolume,
-                onValueChange = { cargoVolume = it },
-                label = { Text(stringResource(R.string.label_cargo_volume)) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                singleLine = true
-            )
-
-            ExposedDropdownMenuBox(
-                expanded = cargoTypeExpanded,
-                onExpandedChange = { cargoTypeExpanded = !cargoTypeExpanded },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp)
             ) {
-                OutlinedTextField(
-                    value = cargoType.name,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text(stringResource(R.string.label_cargo_type)) },
-                    supportingText = {
-                        Text(
-                            text = stringResource(R.string.label_required_field),
-                            color = Color.Red
-                        )
-                    },
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(cargoTypeExpanded)
-                    },
-                    modifier = Modifier
-                        .menuAnchor(
-                            type = ExposedDropdownMenuAnchorType.PrimaryNotEditable,
-                            enabled = true
-                        )
-                        .fillMaxWidth()
+                AddressFields(
+                    country = pickupCountry,
+                    onCountryChange = { pickupCountry = it },
+                    administrativeArea = pickupAdministrativeArea,
+                    onAdministrativeAreaChange = { pickupAdministrativeArea = it },
+                    city = pickupCity,
+                    onCityChange = { pickupCity = it },
+                    streetName = pickupStreetName,
+                    onStreetNameChange = { pickupStreetName = it },
+                    streetNumber = pickupStreetNumber,
+                    onStreetNumberChange = { pickupStreetNumber = it },
+                    postalCode = pickupPostalCode,
+                    onPostalCodeChange = { pickupPostalCode = it },
+                    additionalDetails = pickupAdditionalDetails,
+                    onAdditionalDetailsChange = { pickupAdditionalDetails = it },
+                    accentColor = InfoBlue,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    fieldContainerColor = fieldContainerColor
                 )
-
-                ExposedDropdownMenu(
-                    expanded = cargoTypeExpanded,
-                    onDismissRequest = { cargoTypeExpanded = false }
-                ) {
-                    CargoType.entries.forEach { type ->
-                        DropdownMenuItem(
-                            text = { Text(type.name) },
-                            onClick = {
-                                cargoType = type
-                                cargoTypeExpanded = false
-                            }
-                        )
-                    }
-                }
             }
 
-            OutlinedTextField(
-                value = price,
-                onValueChange = { price = it },
-                label = { Text(stringResource(R.string.label_price)) },
-                supportingText = {
-                    Text(
-                        text = stringResource(R.string.label_required_field),
-                        color = Color.Red
-                    )
+            TripSection(
+                title = stringResource(R.string.section_delivery_address),
+                subtitle = stringResource(R.string.trip_delivery_address_subtitle),
+                icon = Icons.Outlined.Map,
+                accentColor = SuccessGreen,
+                containerColor = sectionContainerColor,
+                textColor = textColor,
+                secondaryTextColor = secondaryTextColor,
+                expanded = deliveryAddressExpanded,
+                onClick = {
+                    deliveryAddressExpanded = !deliveryAddressExpanded
+                }
+            ) {
+                AddressFields(
+                    country = deliveryCountry,
+                    onCountryChange = { deliveryCountry = it },
+                    administrativeArea = deliveryAdministrativeArea,
+                    onAdministrativeAreaChange = { deliveryAdministrativeArea = it },
+                    city = deliveryCity,
+                    onCityChange = { deliveryCity = it },
+                    streetName = deliveryStreetName,
+                    onStreetNameChange = { deliveryStreetName = it },
+                    streetNumber = deliveryStreetNumber,
+                    onStreetNumberChange = { deliveryStreetNumber = it },
+                    postalCode = deliveryPostalCode,
+                    onPostalCodeChange = { deliveryPostalCode = it },
+                    additionalDetails = deliveryAdditionalDetails,
+                    onAdditionalDetailsChange = { deliveryAdditionalDetails = it },
+                    accentColor = SuccessGreen,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    fieldContainerColor = fieldContainerColor
+                )
+            }
+
+            TripSection(
+                title = stringResource(R.string.section_time),
+                subtitle = stringResource(R.string.trip_time_subtitle),
+                icon = Icons.Outlined.CalendarMonth,
+                accentColor = WarningOrange,
+                containerColor = sectionContainerColor,
+                textColor = textColor,
+                secondaryTextColor = secondaryTextColor,
+                expanded = timeExpanded,
+                onClick = {
+                    timeExpanded = !timeExpanded
+                }
+            ) {
+                OfficeFormTextField(
+                    value = pickupDate,
+                    onValueChange = { pickupDate = it },
+                    label = stringResource(R.string.label_pickup_date),
+                    placeholder = "YYYY-MM-DD",
+                    icon = Icons.Outlined.CalendarMonth,
+                    required = true,
+                    iconColor = WarningOrange,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = WarningOrange
+                )
+
+                OfficeFormTextField(
+                    value = pickupTime,
+                    onValueChange = { pickupTime = it },
+                    label = stringResource(R.string.label_pickup_time),
+                    placeholder = "HH:mm",
+                    icon = Icons.Outlined.Schedule,
+                    required = true,
+                    iconColor = WarningOrange,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = WarningOrange
+                )
+
+                OfficeFormTextField(
+                    value = pickupTimeZone,
+                    onValueChange = { pickupTimeZone = it },
+                    label = stringResource(R.string.label_pickup_time_zone),
+                    icon = Icons.Outlined.MyLocation,
+                    required = true,
+                    iconColor = WarningOrange,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = WarningOrange
+                )
+
+                OfficeFormTextField(
+                    value = deliveryDate,
+                    onValueChange = { deliveryDate = it },
+                    label = stringResource(R.string.label_delivery_date),
+                    placeholder = "YYYY-MM-DD",
+                    icon = Icons.Outlined.CalendarMonth,
+                    required = true,
+                    iconColor = WarningOrange,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = WarningOrange
+                )
+
+                OfficeFormTextField(
+                    value = deliveryTime,
+                    onValueChange = { deliveryTime = it },
+                    label = stringResource(R.string.label_delivery_time),
+                    placeholder = "HH:mm",
+                    icon = Icons.Outlined.Schedule,
+                    required = true,
+                    iconColor = WarningOrange,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = WarningOrange
+                )
+
+                OfficeFormTextField(
+                    value = deliveryTimeZone,
+                    onValueChange = { deliveryTimeZone = it },
+                    label = stringResource(R.string.label_delivery_time_zone),
+                    icon = Icons.Outlined.MyLocation,
+                    required = true,
+                    iconColor = WarningOrange,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = WarningOrange
+                )
+            }
+
+            TripSection(
+                title = stringResource(R.string.section_cargo_and_payment),
+                subtitle = stringResource(R.string.trip_cargo_payment_subtitle),
+                icon = Icons.Outlined.Inventory2,
+                accentColor = ErrorRed,
+                containerColor = sectionContainerColor,
+                textColor = textColor,
+                secondaryTextColor = secondaryTextColor,
+                expanded = cargoAndPaymentExpanded,
+                onClick = {
+                    cargoAndPaymentExpanded = !cargoAndPaymentExpanded
+                }
+            ) {
+                OfficeFormTextField(
+                    value = cargoDescription,
+                    onValueChange = { cargoDescription = it },
+                    label = stringResource(R.string.label_cargo_description),
+                    icon = Icons.Outlined.Description,
+                    required = true,
+                    singleLine = false,
+                    minLines = 1,
+                    maxLines = 4,
+                    iconColor = ErrorRed,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = ErrorRed
+                )
+
+                OfficeFormTextField(
+                    value = cargoWeight,
+                    onValueChange = { cargoWeight = it.filter { char -> char.isDigit() || char == '.' } },
+                    label = stringResource(R.string.label_cargo_weight) + " " + stringResource(R.string.label_kilograms),
+                    placeholder = "e.g. 1200",
+                    icon = Icons.Outlined.Scale,
+                    keyboardType = KeyboardType.Number,
+                    iconColor = ErrorRed,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = ErrorRed
+                )
+
+                OfficeFormTextField(
+                    value = cargoVolume,
+                    onValueChange = { cargoVolume = it.filter { char -> char.isDigit() || char == '.' } },
+                    label = stringResource(R.string.label_cargo_volume) + " " + stringResource(R.string.label_cubic_meters),
+                    placeholder = "e.g. 12.5",
+                    icon = Icons.Outlined.Warehouse,
+                    keyboardType = KeyboardType.Number,
+                    iconColor = ErrorRed,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = ErrorRed
+                )
+
+                OfficeFormDropdownField(
+                    selectedValue = cargoType,
+                    values = CargoType.entries,
+                    label = stringResource(R.string.label_cargo_type),
+                    icon = Icons.Outlined.Inventory2,
+                    itemText = { it.name },
+                    onValueSelected = { cargoType = it },
+                    required = true,
+                    iconColor = ErrorRed,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = ErrorRed
+                )
+
+                OfficeFormTextField(
+                    value = price,
+                    onValueChange = { price = it.filter { char -> char.isDigit() || char == '.' } },
+                    label = stringResource(R.string.label_price),
+                    placeholder = "e.g. 3500.00",
+                    icon = Icons.Outlined.Payments,
+                    required = true,
+                    keyboardType = KeyboardType.Number,
+                    iconColor = ErrorRed,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = ErrorRed
+                )
+
+                OfficeFormDropdownField(
+                    selectedValue = currency,
+                    values = Currency.entries,
+                    label = stringResource(R.string.label_currency),
+                    icon = Icons.Outlined.Euro,
+                    itemText = { it.name },
+                    onValueSelected = { currency = it },
+                    required = true,
+                    iconColor = ErrorRed,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = ErrorRed
+                )
+
+                OfficeFormTextField(
+                    value = additionalInfo,
+                    onValueChange = { additionalInfo = it },
+                    label = stringResource(R.string.label_additional_details),
+                    icon = Icons.Outlined.Description,
+                    singleLine = false,
+                    minLines = 1,
+                    maxLines = 4,
+                    iconColor = ErrorRed,
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor,
+                    containerColor = fieldContainerColor,
+                    borderColor = ErrorRed
+                )
+            }
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+            LoadingButton(
+                text = stringResource(R.string.button_create_trip),
+                isLoading = uiState.isLoading,
+                onClick = {
+                    submitTrip()
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 12.dp),
-                singleLine = true
-            )
-
-            ExposedDropdownMenuBox(
-                expanded = currencyExpanded,
-                onExpandedChange = { currencyExpanded = !currencyExpanded },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp)
-            ) {
-                OutlinedTextField(
-                    value = currency.name,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text(stringResource(R.string.label_currency)) },
-                    supportingText = {
-                        Text(
-                            text = stringResource(R.string.label_required_field),
-                            color = Color.Red
-                        )
-                    },
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(currencyExpanded)
-                    },
-                    modifier = Modifier
-                        .menuAnchor(
-                            type = ExposedDropdownMenuAnchorType.PrimaryNotEditable,
-                            enabled = true
-                        )
-                        .fillMaxWidth()
-                )
-
-                ExposedDropdownMenu(
-                    expanded = currencyExpanded,
-                    onDismissRequest = { currencyExpanded = false }
-                ) {
-                    Currency.entries.forEach { selectedCurrency ->
-                        DropdownMenuItem(
-                            text = { Text(selectedCurrency.name) },
-                            onClick = {
-                                currency = selectedCurrency
-                                currencyExpanded = false
-                            }
-                        )
-                    }
-                }
-            }
-
-            OutlinedTextField(
-                value = additionalInfo,
-                onValueChange = { additionalInfo = it },
-                label = { Text(stringResource(R.string.label_additional_details)) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                minLines = 3,
-                maxLines = 5,
-                singleLine = false
+                    .height(58.dp),
+                enabled = !uiState.isLoading
             )
         }
 
-        OldFormMessages(
+        FormMessages(
             errorMessage = uiState.errorMessage,
             successMessage = uiState.successMessage,
-            modifier = Modifier
-                .padding(top = 16.dp),
-            onMessageShown = { viewModel.clearMessage() }
-        )
-
-        LoadingButton(
-            text = stringResource(R.string.button_create_trip),
-            isLoading = uiState.isLoading,
-            onClick = {
-                val pickupDateTime = if (pickupDate.isNotBlank() && pickupTime.isNotBlank()) {
-                    "${pickupDate}T${pickupTime}:00"
-                } else {
-                    ""
-                }
-
-                val deliveryDateTime = if (deliveryDate.isNotBlank() && deliveryTime.isNotBlank()) {
-                    "${deliveryDate}T${deliveryTime}:00"
-                } else {
-                    ""
-                }
-
-                viewModel.addNewTrip(
-                    pickupCountry = pickupCountry,
-                    pickupAdministrativeArea = pickupAdministrativeArea,
-                    pickupCity = pickupCity,
-                    pickupStreetName = pickupStreetName,
-                    pickupStreetNumber = pickupStreetNumber,
-                    pickupPostalCode = pickupPostalCode,
-                    pickupAdditionalDetails = pickupAdditionalDetails,
-
-                    deliveryCountry = deliveryCountry,
-                    deliveryAdministrativeArea = deliveryAdministrativeArea,
-                    deliveryCity = deliveryCity,
-                    deliveryStreetName = deliveryStreetName,
-                    deliveryStreetNumber = deliveryStreetNumber,
-                    deliveryPostalCode = deliveryPostalCode,
-                    deliveryAdditionalDetails = deliveryAdditionalDetails,
-
-                    pickupDateTime = pickupDateTime,
-                    pickupTimeZone = pickupTimeZone,
-                    deliveryDateTime = deliveryDateTime,
-                    deliveryTimeZone = deliveryTimeZone,
-
-                    cargoDescription = cargoDescription,
-                    cargoWeight = cargoWeight,
-                    cargoVolume = cargoVolume,
-                    cargoType = cargoType,
-                    price = price,
-                    currency = currency,
-                    additionalInfo = additionalInfo
-                )
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 24.dp),
-            enabled = !uiState.isLoading
-        )
-
-        OutlinedButton(
-            onClick = {
+            isDarkTheme = isDarkTheme,
+            onMessageShown = {
                 viewModel.clearMessage()
-                onBack()
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp)
-        ) {
-            Text(stringResource(R.string.button_back))
-        }
+            }
+        )
     }
+}
+
+@Composable
+private fun AddressFields(
+    country: String,
+    onCountryChange: (String) -> Unit,
+    administrativeArea: String,
+    onAdministrativeAreaChange: (String) -> Unit,
+    city: String,
+    onCityChange: (String) -> Unit,
+    streetName: String,
+    onStreetNameChange: (String) -> Unit,
+    streetNumber: String,
+    onStreetNumberChange: (String) -> Unit,
+    postalCode: String,
+    onPostalCodeChange: (String) -> Unit,
+    additionalDetails: String,
+    onAdditionalDetailsChange: (String) -> Unit,
+    accentColor: Color,
+    textColor: Color,
+    secondaryTextColor: Color,
+    fieldContainerColor: Color
+) {
+    OfficeFormTextField(
+        value = country,
+        onValueChange = onCountryChange,
+        label = stringResource(R.string.label_country),
+        placeholder = stringResource(R.string.label_select_country),
+        icon = Icons.Outlined.Place,
+        required = true,
+        iconColor = accentColor,
+        textColor = textColor,
+        secondaryTextColor = secondaryTextColor,
+        containerColor = fieldContainerColor,
+        borderColor = accentColor
+    )
+
+    OfficeFormTextField(
+        value = administrativeArea,
+        onValueChange = onAdministrativeAreaChange,
+        label = stringResource(R.string.label_administrative_area),
+        placeholder = stringResource(R.string.label_select_administrative_area),
+        icon = Icons.Outlined.Map,
+        required = true,
+        iconColor = accentColor,
+        textColor = textColor,
+        secondaryTextColor = secondaryTextColor,
+        containerColor = fieldContainerColor,
+        borderColor = accentColor
+    )
+
+    OfficeFormTextField(
+        value = city,
+        onValueChange = onCityChange,
+        label = stringResource(R.string.label_city),
+        placeholder = stringResource(R.string.label_select_city),
+        icon = Icons.Outlined.LocationOn,
+        required = true,
+        iconColor = accentColor,
+        textColor = textColor,
+        secondaryTextColor = secondaryTextColor,
+        containerColor = fieldContainerColor,
+        borderColor = accentColor
+    )
+
+    OfficeFormTextField(
+        value = streetName,
+        onValueChange = onStreetNameChange,
+        label = stringResource(R.string.label_street_name),
+        placeholder = stringResource(R.string.label_enter_street_name),
+        icon = Icons.Outlined.Signpost,
+        required = true,
+        iconColor = accentColor,
+        textColor = textColor,
+        secondaryTextColor = secondaryTextColor,
+        containerColor = fieldContainerColor,
+        borderColor = accentColor
+    )
+
+    OfficeFormTextField(
+        value = streetNumber,
+        onValueChange = onStreetNumberChange,
+        label = stringResource(R.string.label_street_number),
+        placeholder = stringResource(R.string.label_enter_street_number),
+        icon = Icons.Outlined.Signpost,
+        required = true,
+        iconColor = accentColor,
+        textColor = textColor,
+        secondaryTextColor = secondaryTextColor,
+        containerColor = fieldContainerColor,
+        borderColor = accentColor
+    )
+
+    OfficeFormTextField(
+        value = postalCode,
+        onValueChange = onPostalCodeChange,
+        label = stringResource(R.string.label_postal_code),
+        placeholder = stringResource(R.string.label_enter_postal_code),
+        icon = Icons.Outlined.MyLocation,
+        required = true,
+        iconColor = accentColor,
+        textColor = textColor,
+        secondaryTextColor = secondaryTextColor,
+        containerColor = fieldContainerColor,
+        borderColor = accentColor
+    )
+
+    OfficeFormTextField(
+        value = additionalDetails,
+        onValueChange = onAdditionalDetailsChange,
+        label = stringResource(R.string.label_additional_details),
+        icon = Icons.Outlined.Description,
+        singleLine = false,
+        minLines = 1,
+        maxLines = 4,
+        iconColor = accentColor,
+        textColor = textColor,
+        secondaryTextColor = secondaryTextColor,
+        containerColor = fieldContainerColor,
+        borderColor = accentColor
+    )
 }

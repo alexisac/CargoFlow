@@ -141,6 +141,7 @@ fun AppNavHost(
         composable(AppRoutes.ADD_TRIP_ROUTE) {
             AddNewTripScreen(
                 viewModel = tripViewModel,
+                isDarkTheme = isDarkTheme,
                 onBack = {
                     navController.popBackStack()
                 }
