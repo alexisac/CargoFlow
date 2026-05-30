@@ -77,7 +77,7 @@ fun AddNewVehicleScreen(
     var maxWeight by remember { mutableStateOf("") }
     var maxVolume by remember { mutableStateOf("") }
     var additionalInfo by remember { mutableStateOf("") }
-    
+
     val capacityRequirement = vehicleType.capacityRequirement()
 
     val maxWeightEnabled = capacityRequirement == VehicleCapacityRequirement.WEIGHT_AND_VOLUME
@@ -154,6 +154,7 @@ fun AddNewVehicleScreen(
                     label = stringResource(R.string.label_licence_plate),
                     placeholder = stringResource(R.string.description_licence_plate),
                     icon = Icons.Outlined.Badge,
+                    required = true,
                     iconColor = primaryColor,
                     textColor = textColor,
                     secondaryTextColor = secondaryTextColor,
@@ -166,6 +167,7 @@ fun AddNewVehicleScreen(
                     onValueChange = { vin = it.uppercase() },
                     label = stringResource(R.string.label_vin),
                     icon = Icons.Outlined.Numbers,
+                    required = true,
                     iconColor = primaryColor,
                     textColor = textColor,
                     secondaryTextColor = secondaryTextColor,
@@ -178,6 +180,7 @@ fun AddNewVehicleScreen(
                     onValueChange = { brand = it },
                     label = stringResource(R.string.label_brand),
                     icon = Icons.Outlined.Security,
+                    required = true,
                     iconColor = primaryColor,
                     textColor = textColor,
                     secondaryTextColor = secondaryTextColor,
@@ -190,6 +193,7 @@ fun AddNewVehicleScreen(
                     onValueChange = { model = it },
                     label = stringResource(R.string.label_model),
                     icon = Icons.Outlined.DirectionsCar,
+                    required = true,
                     iconColor = primaryColor,
                     textColor = textColor,
                     secondaryTextColor = secondaryTextColor,
@@ -202,6 +206,7 @@ fun AddNewVehicleScreen(
                     onValueChange = { manufactureYear = it.filter(Char::isDigit).take(4) },
                     label = stringResource(R.string.label_manufacture_year),
                     icon = Icons.Outlined.CalendarMonth,
+                    required = true,
                     keyboardType = KeyboardType.Number,
                     iconColor = primaryColor,
                     textColor = textColor,
@@ -215,6 +220,7 @@ fun AddNewVehicleScreen(
                     values = VehicleType.entries,
                     label = stringResource(R.string.label_vehicle_type),
                     icon = Icons.Outlined.LocalShipping,
+                    required = true,
                     itemText = { it.name },
                     onValueSelected = { vehicleType = it },
                     iconColor = primaryColor,
@@ -231,6 +237,7 @@ fun AddNewVehicleScreen(
                     icon = Icons.Outlined.Scale,
                     enabled = maxWeightEnabled,
                     keyboardType = KeyboardType.Number,
+                    required = maxWeightEnabled,
                     iconColor = primaryColor,
                     textColor = textColor,
                     secondaryTextColor = secondaryTextColor,
@@ -245,6 +252,7 @@ fun AddNewVehicleScreen(
                     icon = Icons.Outlined.Inventory2,
                     enabled = maxVolumeEnabled,
                     keyboardType = KeyboardType.Number,
+                    required = maxVolumeEnabled,
                     iconColor = primaryColor,
                     textColor = textColor,
                     secondaryTextColor = secondaryTextColor,

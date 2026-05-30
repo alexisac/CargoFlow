@@ -33,6 +33,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.officeapp.R
 import com.example.officeapp.models.user.UserSummary
+import com.example.officeapp.ui.theme.AccentBlue
+import com.example.officeapp.ui.theme.AccentCyan
+import com.example.officeapp.ui.theme.AccentPink
+import com.example.officeapp.ui.theme.AccentViolet
 import com.example.officeapp.ui.theme.DarkCard
 import com.example.officeapp.ui.theme.ErrorRed
 import com.example.officeapp.ui.theme.InfoBlue
@@ -52,10 +56,10 @@ fun UserManagementCard(
     onChangeStatusClick: () -> Unit
 ) {
     val accentColor = when (colorIndex) {
-        0 -> InfoBlue
-        1 -> SuccessGreen
-        2 -> WarningOrange
-        else -> ErrorRed
+        0 -> AccentBlue
+        1 -> AccentCyan
+        2 -> AccentViolet
+        else -> AccentPink
     }
 
     val containerColor = if (isDarkTheme) DarkCard else LightSurface
