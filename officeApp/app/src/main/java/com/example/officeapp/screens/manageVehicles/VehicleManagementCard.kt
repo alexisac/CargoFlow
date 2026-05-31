@@ -1,135 +1,241 @@
 package com.example.officeapp.screens.manageVehicles
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.DirectionsCar
+import androidx.compose.material.icons.outlined.Inventory2
+import androidx.compose.material.icons.outlined.LocalShipping
+import androidx.compose.material.icons.outlined.Numbers
+import androidx.compose.material.icons.outlined.Scale
+import androidx.compose.material.icons.outlined.Speed
 import androidx.compose.material3.Card
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.officeapp.R
 import com.example.officeapp.models.vehicle.VehicleStatus
 import com.example.officeapp.models.vehicle.VehicleSummary
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VehicleManagementCard(
     vehicle: VehicleSummary,
+    accentColor: Color,
+    isDarkTheme: Boolean,
+    containerColor: Color,
+    textColor: Color,
+    secondaryTextColor: Color,
     onChangeStatusClick: (VehicleStatus) -> Unit
 ) {
-    var expanded by remember { mutableStateOf(false) }
-
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(18.dp),
+        border = BorderStroke(
+            width = 1.dp,
+            color = accentColor.copy(alpha = if (isDarkTheme) 0.9f else 0.8f)
+        ),
+        colors = CardDefaults.cardColors(containerColor = containerColor),
+        elevation = CardDefaults.cardElevation(defaultElevation = if (isDarkTheme) 0.dp else 3.dp)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(22.dp)
         ) {
-            Text(text = vehicle.licencePlate)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.Top
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(58.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(accentColor.copy(alpha = if (isDarkTheme) 0.18f else 0.12f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.LocalShipping,
+                        contentDescription = null,
+                        tint = accentColor,
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
 
-            Text(
-                text = "${vehicle.brand} ${vehicle.model}",
-                modifier = Modifier.padding(top = 4.dp)
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = vehicle.licencePlate,
+                        color = textColor,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Text(
+                        text = "${vehicle.brand} ${vehicle.model}",
+                        color = textColor,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            VehicleInfoRow(
+                icon = Icons.Outlined.DirectionsCar,
+                label = stringResource(R.string.label_vin),
+                value = vehicle.vin,
+                textColor = textColor,
+                secondaryTextColor = secondaryTextColor
             )
 
-            Text(
-                text = stringResource(R.string.label_vin) + ": " + vehicle.vin,
-                modifier = Modifier.padding(top = 4.dp)
+            VehicleInfoRow(
+                icon = Icons.Outlined.Numbers,
+                label = stringResource(R.string.label_type),
+                value = vehicle.vehicleType.name,
+                textColor = textColor,
+                secondaryTextColor = secondaryTextColor
             )
 
-            Text(
-                text = stringResource(R.string.label_type) + ": " + vehicle.vehicleType.name,
-                modifier = Modifier.padding(top = 4.dp)
+            VehicleStatusInfoRow(
+                status = vehicle.vehicleStatus,
+                secondaryTextColor = secondaryTextColor
             )
 
-            Text(
-                text = stringResource(R.string.label_status) + ": " + vehicle.vehicleStatus.name,
-                modifier = Modifier.padding(top = 4.dp)
-            )
-
-            Text(
-                text = stringResource(R.string.label_manufacture_year) + ": " + vehicle.manufactureYear,
-                modifier = Modifier.padding(top = 4.dp)
+            VehicleInfoRow(
+                icon = Icons.Outlined.CalendarMonth,
+                label = stringResource(R.string.label_manufacture_year),
+                value = vehicle.manufactureYear.toString(),
+                textColor = textColor,
+                secondaryTextColor = secondaryTextColor
             )
 
             vehicle.maxWeight?.let {
-                Text(
-                    text = stringResource(R.string.label_maximum_weight) + ": $it",
-                    modifier = Modifier.padding(top = 4.dp)
+                VehicleInfoRow(
+                    icon = Icons.Outlined.Scale,
+                    label = stringResource(R.string.label_maximum_weight),
+                    value = it.toString(),
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor
                 )
             }
 
             vehicle.maxVolume?.let {
-                Text(
-                    text = stringResource(R.string.label_maximum_volume) + ": $it",
-                    modifier = Modifier.padding(top = 4.dp)
+                VehicleInfoRow(
+                    icon = Icons.Outlined.Inventory2,
+                    label = stringResource(R.string.label_maximum_volume),
+                    value = it.toString(),
+                    textColor = textColor,
+                    secondaryTextColor = secondaryTextColor
                 )
             }
 
-            vehicle.additionalInfo?.let {
-                Text(
-                    text = it,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-            }
+            Spacer(modifier = Modifier.height(18.dp))
 
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = {
-                    expanded = !expanded
-                },
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 12.dp)
-            ) {
-                OutlinedTextField(
-                    value = vehicle.vehicleStatus.name,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = {
-                        Text(stringResource(R.string.label_status))
-                    },
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                    },
-                    modifier = Modifier
-                        .menuAnchor()
-                        .fillMaxWidth()
-                )
+                    .height(1.dp)
+                    .background(secondaryTextColor.copy(alpha = 0.18f))
+            )
 
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = {
-                        expanded = false
-                    }
-                ) {
-                    VehicleStatus.entries.forEach { status ->
-                        DropdownMenuItem(
-                            text = {
-                                Text(status.name)
-                            },
-                            onClick = {
-                                expanded = false
+            Spacer(modifier = Modifier.height(18.dp))
 
-                                if (status != vehicle.vehicleStatus) {
-                                    onChangeStatusClick(status)
-                                }
-                            }
-                        )
+            VehicleStatusDropdown(
+                selectedStatus = vehicle.vehicleStatus,
+                accentColor = accentColor,
+                isDarkTheme = isDarkTheme,
+                textColor = textColor,
+                secondaryTextColor = secondaryTextColor,
+                onStatusSelected = { status ->
+                    if (status != vehicle.vehicleStatus) {
+                        onChangeStatusClick(status)
                     }
                 }
-            }
+            )
+        }
+    }
+}
+
+@Composable
+private fun VehicleStatusInfoRow(
+    status: VehicleStatus,
+    secondaryTextColor: Color
+) {
+    val statusColor = vehicleStatusColor(status)
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 11.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.Speed,
+            contentDescription = null,
+            tint = secondaryTextColor,
+            modifier = Modifier.size(18.dp)
+        )
+
+        Spacer(modifier = Modifier.width(14.dp))
+
+        Text(
+            text = stringResource(R.string.label_status),
+            color = secondaryTextColor,
+            fontSize = 15.sp,
+            modifier = Modifier.weight(1f)
+        )
+
+        Row(
+            modifier = Modifier.weight(1.6f),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(9.dp)
+                    .clip(RoundedCornerShape(50))
+                    .background(statusColor)
+            )
+
+            Spacer(modifier = Modifier.width(10.dp))
+
+            Text(
+                text = status.name,
+                color = secondaryTextColor,
+                fontSize = 15.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }

@@ -23,6 +23,7 @@ import com.example.officeapp.R
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,6 +43,7 @@ fun DatePickerField(
     borderColor: Color = MaterialTheme.colorScheme.outline
 ) {
     var showDialog by remember { mutableStateOf(false) }
+    val dateFormatter = remember { DateTimeFormatter.ofPattern("dd-MM-yyyy") }
 
     val todayMillis = remember {
         LocalDate.now()
@@ -92,7 +94,7 @@ fun DatePickerField(
                                 .atZone(ZoneOffset.UTC)
                                 .toLocalDate()
 
-                            onDateSelected(selectedDate.toString())
+                            onDateSelected(selectedDate.format(dateFormatter))
                         }
 
                         showDialog = false

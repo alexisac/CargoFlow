@@ -27,7 +27,7 @@ import com.example.officeapp.R
 @Composable
 fun FormScreenHeader(
     title: String,
-    subtitle: String,
+    subtitle: String? = null,
     textColor: Color,
     subtitleColor: Color,
     borderColor: Color,
@@ -62,12 +62,13 @@ fun FormScreenHeader(
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold
             )
-
-            Text(
-                text = subtitle,
-                color = subtitleColor,
-                fontSize = 15.sp
-            )
+            subtitle?.let {
+                Text(
+                    text = subtitle,
+                    color = subtitleColor,
+                    fontSize = 15.sp
+                )
+            }
         }
 
         IconButton(

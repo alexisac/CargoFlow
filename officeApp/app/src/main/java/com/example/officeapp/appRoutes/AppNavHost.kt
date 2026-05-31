@@ -224,6 +224,7 @@ fun AppNavHost(
         composable(AppRoutes.MANAGE_VEHICLES_ROUTE) {
             ManageVehiclesScreen(
                 viewModel = vehicleViewModel,
+                isDarkTheme = isDarkTheme,
                 onBack = {
                     navController.popBackStack()
                 }
