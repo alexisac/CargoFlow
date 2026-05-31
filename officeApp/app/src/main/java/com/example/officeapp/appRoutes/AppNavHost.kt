@@ -154,8 +154,12 @@ fun AppNavHost(
                 onTripClick = { tripId ->
                     navController.navigate("${AppRoutes.TRIP_DETAILS_BASE_ROUTE}/$tripId")
                 },
+                isDarkTheme = isDarkTheme,
                 onAssignDriver = { tripId ->
                     navController.navigate("${AppRoutes.ASSIGN_DRIVER_BASE_ROUTE}/$tripId")
+                },
+                onBack = {
+                    navController.popBackStack()
                 }
             )
         }
@@ -174,6 +178,7 @@ fun AppNavHost(
                 TripDetailsScreen(
                     viewModel = tripViewModel,
                     tripId = tripId,
+                    isDarkTheme = isDarkTheme,
                     onBack = {
                         navController.popBackStack()
                     }

@@ -43,7 +43,6 @@ fun DatePickerField(
     borderColor: Color = MaterialTheme.colorScheme.outline
 ) {
     var showDialog by remember { mutableStateOf(false) }
-    val dateFormatter = remember { DateTimeFormatter.ofPattern("dd-MM-yyyy") }
 
     val todayMillis = remember {
         LocalDate.now()
@@ -94,7 +93,7 @@ fun DatePickerField(
                                 .atZone(ZoneOffset.UTC)
                                 .toLocalDate()
 
-                            onDateSelected(selectedDate.format(dateFormatter))
+                            onDateSelected(selectedDate.toString())
                         }
 
                         showDialog = false

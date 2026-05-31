@@ -47,7 +47,8 @@ fun OfficeFormTextField(
     singleLine: Boolean = true,
     keyboardType: KeyboardType = KeyboardType.Text,
     minLines: Int = 1,
-    maxLines: Int = 1
+    maxLines: Int = 1,
+    trailingIcon: (@Composable () -> Unit)? = null
 ) {
     val effectiveSecondaryColor = if (enabled) secondaryTextColor else secondaryTextColor.copy(alpha = 0.45f)
     val effectiveTextColor = if (enabled) textColor else textColor.copy(alpha = 0.45f)
@@ -126,6 +127,11 @@ fun OfficeFormTextField(
                         .fillMaxWidth()
                         .padding(top = 3.dp)
                 )
+            }
+
+            if (trailingIcon != null) {
+                Spacer(modifier = Modifier.width(8.dp))
+                trailingIcon()
             }
         }
     }

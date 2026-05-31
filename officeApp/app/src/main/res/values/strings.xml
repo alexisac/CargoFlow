@@ -14,10 +14,12 @@
     <string name="success_title">Success</string>
     <string name="trip_completed_title">Trip #</string>
     <string name="trip_details_title">Trip details</string>
+    <string name="trips_title">Trips</string>
 
     <string name="add_new_trip_subtitle">Fill in the trip details to create a new trip</string>
     <string name="add_new_user_subtitle">Create a new user account</string>
     <string name="add_new_vehicle_subtitle">Fill in the vehicle details</string>
+    <string name="all_trips_subtitle">All trips</string>
     <string name="login_screen_subtitle">Sign in to continue</string>
     <string name="trip_cargo_payment_subtitle">Cargo details and payment information</string>
     <string name="trip_delivery_address_subtitle">Where the cargo will be delivered</string>
@@ -44,14 +46,18 @@
     <string name="button_menu">Menu</string>
     <string name="button_ok">Ok</string>
     <string name="button_refresh">Refresh</string>
+    <string name="button_reset">Reset</string>
 
     <string name="label_active">Active</string>
     <string name="label_additional_details">Additional details</string>
+    <string name="label_additional_details_multiline">Additional\ndetails</string>
     <string name="label_additional_info">Additional info</string>
-    <string name="label_administrative_area">Administrative Area</string>
+    <string name="label_administrative_area">Administrative area</string>
+    <string name="label_administrative_area_multiline">Administrative\narea</string>
     <string name="label_brand">Brand</string>
     <string name="label_cargo">Cargo</string>
     <string name="label_cargo_description">Cargo description</string>
+    <string name="label_cargo_description_multiline">Cargo\ndescription</string>
     <string name="label_cargo_type">Cargo type</string>
     <string name="label_cargo_volume">Cargo volume</string>
     <string name="label_cargo_weight">Cargo weight</string>
@@ -62,13 +68,22 @@
     <string name="label_created_by">Created by</string>
     <string name="label_cubic_meters">(m³)</string>
     <string name="label_currency">Currency</string>
+    <string name="label_date">Date</string>
     <string name="label_delivery">Delivery</string>
     <string name="label_delivery_city">Delivery city</string>
     <string name="label_delivery_country">Delivery country</string>
     <string name="label_delivery_date">Delivery date</string>
     <string name="label_delivery_date_time">Delivery date time</string>
+    <string name="label_delivery_date_time_multiline">Delivery date\ntime</string>
+    <string name="label_delivery_from">Delivery from</string>
+    <string name="label_delivery_from_date">Delivery from date</string>
+    <string name="label_delivery_from_time">Delivery from time</string>
+    <string name="label_delivery_to">Delivery to</string>
+    <string name="label_delivery_to_date">Delivery to date</string>
+    <string name="label_delivery_to_time">Delivery to time</string>
     <string name="label_delivery_time">Delivery time</string>
     <string name="label_delivery_time_zone">Delivery time zone</string>
+    <string name="label_delivery_time_zone_multiline">Delivery time\nzone</string>
     <string name="label_description">Description</string>
     <string name="label_details">Details</string>
     <string name="label_disabled">Disabled</string>
@@ -83,6 +98,7 @@
     <string name="label_kilograms">(kg)</string>
     <string name="label_last_name">Last name</string>
     <string name="label_licence_plate">Licence plate</string>
+    <string name="label_locations">Locations</string>
     <string name="label_make_active">Make active</string>
     <string name="label_make_inactive">Make inactive</string>
     <string name="label_manufacture_year">Manufacture year</string>
@@ -102,10 +118,14 @@
     <string name="label_pickup_country">Pickup country</string>
     <string name="label_pickup_date">Pickup date</string>
     <string name="label_pickup_date_time">Pickup date time</string>
+    <string name="label_pickup_date_time_multiline">Pickup date\ntime</string>
+    <string name="label_pickup_from">Pickup from</string>
     <string name="label_pickup_from_date">Pickup from date</string>
     <string name="label_pickup_from_time">Pickup from time</string>
     <string name="label_pickup_time">Pickup time</string>
     <string name="label_pickup_time_zone">Pickup time zone</string>
+    <string name="label_pickup_time_zone_multiline">Pickup time\nzone</string>
+    <string name="label_pickup_to">Pickup to</string>
     <string name="label_pickup_to_date">Pickup to date</string>
     <string name="label_pickup_to_time">Pickup to time</string>
     <string name="label_postal_code">Postal code</string>
@@ -123,6 +143,7 @@
     <string name="label_street_name">Street name</string>
     <string name="label_street_number">Street number</string>
     <string name="label_theme_toggle">ThemeToggleOffset</string>
+    <string name="label_time">Time</string>
     <string name="label_trip_status">Trip status</string>
     <string name="label_type">Type</string>
     <string name="label_vehicle_status">Vehicle status</string>

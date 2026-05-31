@@ -115,7 +115,6 @@ fun VehicleManagementCard(
                 icon = Icons.Outlined.DirectionsCar,
                 label = stringResource(R.string.label_vin),
                 value = vehicle.vin,
-                textColor = textColor,
                 secondaryTextColor = secondaryTextColor
             )
 
@@ -123,7 +122,6 @@ fun VehicleManagementCard(
                 icon = Icons.Outlined.Numbers,
                 label = stringResource(R.string.label_type),
                 value = vehicle.vehicleType.name,
-                textColor = textColor,
                 secondaryTextColor = secondaryTextColor
             )
 
@@ -136,7 +134,6 @@ fun VehicleManagementCard(
                 icon = Icons.Outlined.CalendarMonth,
                 label = stringResource(R.string.label_manufacture_year),
                 value = vehicle.manufactureYear.toString(),
-                textColor = textColor,
                 secondaryTextColor = secondaryTextColor
             )
 
@@ -145,7 +142,6 @@ fun VehicleManagementCard(
                     icon = Icons.Outlined.Scale,
                     label = stringResource(R.string.label_maximum_weight),
                     value = it.toString(),
-                    textColor = textColor,
                     secondaryTextColor = secondaryTextColor
                 )
             }
@@ -155,7 +151,6 @@ fun VehicleManagementCard(
                     icon = Icons.Outlined.Inventory2,
                     label = stringResource(R.string.label_maximum_volume),
                     value = it.toString(),
-                    textColor = textColor,
                     secondaryTextColor = secondaryTextColor
                 )
             }
