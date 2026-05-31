@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -15,8 +14,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun <T> AssignmentSection(
@@ -25,6 +28,8 @@ fun <T> AssignmentSection(
     emptyText: String,
     canLoadMore: Boolean,
     isLoading: Boolean,
+    textColor: Color,
+    secondaryTextColor: Color,
     enabled: Boolean = true,
     onLoadMore: () -> Unit,
     itemContent: @Composable (T) -> Unit
@@ -51,16 +56,20 @@ fun <T> AssignmentSection(
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 24.dp)
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Text(text = title)
+        Text(
+            text = title,
+            color = textColor,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold
+        )
 
         if (items.isEmpty() && !isLoading) {
             Text(
                 text = emptyText,
-                modifier = Modifier.padding(top = 8.dp)
+                color = secondaryTextColor,
+                fontSize = 14.sp
             )
             return
         }
@@ -69,9 +78,8 @@ fun <T> AssignmentSection(
             state = listState,
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(max = 420.dp)
-                .padding(top = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+                .heightIn(max = 520.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             items(items) { item ->
                 itemContent(item)
@@ -79,9 +87,12 @@ fun <T> AssignmentSection(
 
             if (isLoading && items.isNotEmpty()) {
                 item {
-                    CircularProgressIndicator(
-                        modifier = Modifier.padding(16.dp)
-                    )
+                    androidx.compose.foundation.layout.Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
                 }
             }
         }

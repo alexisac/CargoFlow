@@ -200,6 +200,7 @@ fun AppNavHost(
                 AssignDriverScreen(
                     tripId = tripId,
                     viewModel = tripAssignmentViewModel,
+                    isDarkTheme = isDarkTheme,
                     onBack = {
                         navController.popBackStack()
                     }
