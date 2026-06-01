@@ -211,6 +211,7 @@ fun AppNavHost(
         composable(AppRoutes.DRIVER_COMPLETED_TRIPS_ROUTE) {
             DriverCompletedTripsScreen(
                 viewModel = tripViewModel,
+                isDarkTheme = isDarkTheme,
                 onBack = {
                     navController.popBackStack()
                 }
