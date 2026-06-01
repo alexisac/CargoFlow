@@ -39,10 +39,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.officeapp.R
+import com.example.officeapp.screens.reusableComponents.formatDate
+import com.example.officeapp.screens.reusableComponents.formatHourMinuteSecond
 import com.example.officeapp.ui.theme.BorderDark
 import com.example.officeapp.ui.theme.BorderLight
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
@@ -71,45 +72,6 @@ fun buildFilterDateTime(
     }
 
     return resolvedDate.format(apiDateFormatter) + "T" + resolvedTime.format(apiTimeFormatter)
-}
-
-fun formatDate(dateTime: String): String {
-    return try {
-        val parsed = LocalDateTime.parse(dateTime)
-        parsed.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-    } catch (_: Exception) {
-        if (dateTime.length >= 10) {
-            val rawDate = dateTime.substring(0, 10) // yyyy-MM-dd
-            val parts = rawDate.split("-")
-            if (parts.size == 3)
-                "${parts[2]}-${parts[1]}-${parts[0]}"
-            else
-                rawDate
-        } else {
-            dateTime
-        }
-    }
-}
-
-fun formatTime(dateTime: String): String {
-    return try {
-        val parsed = LocalDateTime.parse(dateTime)
-        parsed.format(DateTimeFormatter.ofPattern("HH:mm:ss"))
-    } catch (_: Exception) {
-        if (dateTime.contains("T") && dateTime.length >= 16)
-            dateTime.substring(11, 16)
-        else
-            ""
-    }
-}
-
-fun formatDateTime(value: String): String {
-    return try {
-        val dateTime = LocalDateTime.parse(value)
-        dateTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"))
-    } catch (_: Exception) {
-        value.replace("T", " ")
-    }
 }
 
 @Composable
@@ -145,7 +107,7 @@ fun TripLocationBlock(
     modifier: Modifier = Modifier
 ) {
     val displayDate = formatDate(dateTime)
-    val displayTime = formatTime(dateTime)
+    val displayTime = formatHourMinuteSecond(dateTime)
 
     Row(
         modifier = modifier,

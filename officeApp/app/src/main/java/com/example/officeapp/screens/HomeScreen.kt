@@ -39,6 +39,9 @@ fun HomeScreen(
     val tripUiState by tripViewModel.uiState.collectAsState()
 
     val isDriver = uiState.userRole == UserRole.DRIVER.name
+    val firstName = uiState.userFirstName.orEmpty()
+    val lastName = uiState.userLastName.orEmpty()
+    val role = uiState.userRole.orEmpty()
 
     LaunchedEffect(Unit) {
         viewModel.clearMessages()
@@ -48,6 +51,34 @@ fun HomeScreen(
         if (isDriver) {
             tripViewModel.getCurrentTrip()
         }
+    }
+
+    if (isDriver) {
+        DriverHomeContent(
+            isDarkTheme = isDarkTheme,
+            onThemeChange = onThemeChange,
+            firstName = firstName,
+            lastName = lastName,
+            role = role,
+            isLoading = tripUiState.isLoading,
+            errorMessage = tripUiState.errorMessage,
+            hasCurrentTrip = tripUiState.currentDriverTrip != null,
+            currentTripContent = {
+                tripUiState.currentDriverTrip?.let { currentTrip ->
+                    CurrentDriverTripCard(
+                        trip = currentTrip,
+                        isDarkTheme = isDarkTheme
+                    )
+                }
+            },
+            onRefresh = {
+                tripViewModel.getCurrentTrip()
+            },
+            onGoToDriverCompletedTrips = onGoToDriverCompletedTrips,
+            onLogout = onLogout
+        )
+
+        return
     }
 
     Box {
@@ -61,6 +92,7 @@ fun HomeScreen(
                     end = 24.dp
                 )
         )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -73,38 +105,20 @@ fun HomeScreen(
             OldFormMessages(
                 errorMessage = uiState.errorMessage,
                 successMessage = uiState.successMessage,
-                modifier = Modifier
-                    .padding(top = 16.dp),
+                modifier = Modifier.padding(top = 16.dp),
                 onMessageShown = { viewModel.clearMessages() }
             )
 
-            if (isDriver) {
-                DriverHomeContent(
-                    isLoading = tripUiState.isLoading,
-                    errorMessage = tripUiState.errorMessage,
-                    hasCurrentTrip = tripUiState.currentDriverTrip != null,
-                    currentTripContent = {
-                        tripUiState.currentDriverTrip?.let { currentTrip ->
-                            CurrentDriverTripCard(
-                                trip = currentTrip
-                            )
-                        }
-                    },
-                    onGoToDriverCompletedTrips = onGoToDriverCompletedTrips,
-                    onLogout = onLogout
-                )
-            } else {
-                OfficeHomeMenu(
-                    userRole = uiState.userRole,
-                    onGoToAddUser = onGoToAddUser,
-                    onGoToAddVehicle = onGoToAddVehicle,
-                    onGoToAddTrip = onGoToAddTrip,
-                    onGoToSearchTrips = onGoToSearchTrips,
-                    onGoToManageUsers = onGoToManageUsers,
-                    onGoToManageVehicles = onGoToManageVehicles,
-                    onLogout = onLogout
-                )
-            }
+            OfficeHomeMenu(
+                userRole = uiState.userRole,
+                onGoToAddUser = onGoToAddUser,
+                onGoToAddVehicle = onGoToAddVehicle,
+                onGoToAddTrip = onGoToAddTrip,
+                onGoToSearchTrips = onGoToSearchTrips,
+                onGoToManageUsers = onGoToManageUsers,
+                onGoToManageVehicles = onGoToManageVehicles,
+                onLogout = onLogout
+            )
         }
     }
 }
