@@ -91,6 +91,34 @@ fun TripSearchScreen(
 
     val listState = rememberLazyListState()
 
+    fun refreshDefaultTrips() {
+        selectedStatusList.clear()
+        pickupCountries.clear()
+        pickupCities.clear()
+        deliveryCountries.clear()
+        deliveryCities.clear()
+
+        pickupDateTimeFrom = ""
+        pickupDateTimeTo = ""
+        deliveryDateTimeFrom = ""
+        deliveryDateTimeTo = ""
+
+        viewModel.searchTrips(
+            tripStatusList = emptyList(),
+            pickupCountries = emptyList(),
+            pickupCities = emptyList(),
+            deliveryCountries = emptyList(),
+            deliveryCities = emptyList(),
+            pickupDateTimeFrom = "",
+            pickupDateTimeTo = "",
+            deliveryDateTimeFrom = "",
+            deliveryDateTimeTo = "",
+            pageNumber = 0,
+            pageSize = 20,
+            append = false
+        )
+    }
+
     fun searchFirstPage() {
         viewModel.searchTrips(
             tripStatusList = selectedStatusList.toList(),
@@ -182,6 +210,7 @@ fun TripSearchScreen(
                     viewModel.clearMessage()
                     onBack()
                 },
+                onRefresh = { refreshDefaultTrips() },
                 modifier = Modifier.fillMaxWidth()
             )
 

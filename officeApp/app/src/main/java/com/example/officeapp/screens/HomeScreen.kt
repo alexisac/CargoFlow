@@ -72,7 +72,8 @@ fun HomeScreen(
                 }
             },
             onRefresh = {
-                // TODO: Refresh
+                tripViewModel.clearMessage()
+                tripViewModel.getCurrentTrip()
             },
             onGoToDriverCompletedTrips = onGoToDriverCompletedTrips,
             onLogout = onLogout

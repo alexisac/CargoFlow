@@ -111,6 +111,10 @@ fun TripDetailsScreen(
                     viewModel.clearMessage()
                     onBack()
                 },
+                onRefresh = {
+                    viewModel.clearMessage()
+                    viewModel.getTrip(tripId)
+                },
                 modifier = Modifier.fillMaxWidth()
             )
 

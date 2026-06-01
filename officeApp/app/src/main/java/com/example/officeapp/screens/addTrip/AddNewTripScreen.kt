@@ -122,6 +122,46 @@ fun AddNewTripScreen(
     val timeSectionColor = AccentViolet
     val cargoAndPaymentSectionColor = AccentPink
 
+    fun resetForm() {
+        pickupCountry = ""
+        pickupAdministrativeArea = ""
+        pickupCity = ""
+        pickupStreetName = ""
+        pickupStreetNumber = ""
+        pickupPostalCode = ""
+        pickupAdditionalDetails = ""
+
+        deliveryCountry = ""
+        deliveryAdministrativeArea = ""
+        deliveryCity = ""
+        deliveryStreetName = ""
+        deliveryStreetNumber = ""
+        deliveryPostalCode = ""
+        deliveryAdditionalDetails = ""
+
+        pickupDate = ""
+        pickupTime = ""
+        pickupTimeZone = ZoneId.systemDefault().id
+        deliveryDate = ""
+        deliveryTime = ""
+        deliveryTimeZone = ZoneId.systemDefault().id
+
+        cargoDescription = ""
+        cargoWeight = ""
+        cargoVolume = ""
+        cargoType = CargoType.GENERAL
+        price = ""
+        currency = Currency.RON
+        additionalInfo = ""
+
+        pickupAddressExpanded = false
+        deliveryAddressExpanded = false
+        timeExpanded = false
+        cargoAndPaymentExpanded = false
+
+        viewModel.clearMessage()
+    }
+
     DisposableEffect(Unit) {
         onDispose {
             viewModel.clearMessage()
@@ -205,6 +245,7 @@ fun AddNewTripScreen(
                     viewModel.clearMessage()
                     onBack()
                 },
+                onRefresh = { resetForm() },
                 modifier = Modifier.fillMaxWidth()
             )
 

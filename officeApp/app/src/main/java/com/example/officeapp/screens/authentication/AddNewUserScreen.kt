@@ -78,6 +78,16 @@ fun AddNewUserScreen(
         PrimaryBlueLight.copy(alpha = 0.75f)
     }
 
+    fun resetForm() {
+        firstName = ""
+        lastName = ""
+        email = ""
+        password = ""
+        confirmedPassword = ""
+        selectedRole = null
+        viewModel.clearMessages()
+    }
+
     DisposableEffect(Unit) {
         onDispose {
             viewModel.clearMessages()
@@ -116,6 +126,7 @@ fun AddNewUserScreen(
                     viewModel.clearMessages()
                     onBack()
                 },
+                onRefresh = { resetForm() },
                 modifier = Modifier.fillMaxWidth()
             )
 

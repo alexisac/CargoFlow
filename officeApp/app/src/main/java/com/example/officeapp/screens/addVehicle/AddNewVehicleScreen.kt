@@ -92,6 +92,19 @@ fun AddNewVehicleScreen(
     val subtleBorderColor = if (isDarkTheme) BorderDark else BorderLight
     val primaryColor = if (isDarkTheme) PrimaryBlueDark else PrimaryBlueLight
 
+    fun resetForm() {
+        licencePlate = ""
+        vin = ""
+        brand = ""
+        model = ""
+        manufactureYear = ""
+        vehicleType = VehicleType.TRACTOR_UNIT
+        maxWeight = ""
+        maxVolume = ""
+        additionalInfo = ""
+        viewModel.clearMessage()
+    }
+
     DisposableEffect(Unit) {
         onDispose {
             viewModel.clearMessage()
@@ -140,6 +153,7 @@ fun AddNewVehicleScreen(
                     viewModel.clearMessage()
                     onBack()
                 },
+                onRefresh = { resetForm() },
                 modifier = Modifier.fillMaxWidth()
             )
 

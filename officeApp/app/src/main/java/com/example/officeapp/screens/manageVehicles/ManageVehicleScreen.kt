@@ -58,12 +58,18 @@ fun ManageVehiclesScreen(
     val secondaryTextColor = if (isDarkTheme) TextSecondaryDark else TextSecondaryLight
     val subtleBorderColor = if (isDarkTheme) BorderDark else BorderLight
 
-    LaunchedEffect(Unit) {
+    fun refreshVehicles() {
+        viewModel.clearVehicles()
+        viewModel.clearMessage()
         viewModel.getAllVehicles(
             pageNumber = 0,
             pageSize = 20,
             append = false
         )
+    }
+
+    LaunchedEffect(Unit) {
+        refreshVehicles()
     }
 
     DisposableEffect(Unit) {
@@ -97,6 +103,7 @@ fun ManageVehiclesScreen(
                     viewModel.clearMessage()
                     onBack()
                 },
+                onRefresh = { refreshVehicles() },
                 modifier = Modifier.fillMaxWidth()
             )
 

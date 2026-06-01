@@ -33,6 +33,7 @@ fun FormScreenHeader(
     borderColor: Color,
     iconColor: Color,
     onBack: () -> Unit,
+    onRefresh: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -71,16 +72,16 @@ fun FormScreenHeader(
             }
         }
 
-        IconButton(
-            onClick = {
-                // TODO: refresh
+        if (onRefresh != null) {
+            IconButton(
+                onClick = onRefresh
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Refresh,
+                    contentDescription = stringResource(R.string.button_refresh),
+                    tint = iconColor
+                )
             }
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.Refresh,
-                contentDescription = stringResource(R.string.button_refresh),
-                tint = iconColor
-            )
         }
     }
 }
