@@ -1,6 +1,6 @@
 spring:
     application:
-        name: backendCargoFlow
+        name: cargo-core-service
     datasource:
         url: jdbc:postgresql://localhost:5432/<your_DB_name>
         username: <PostgreSQL username>
@@ -11,6 +11,15 @@ spring:
 logging:
     level:
         org.hibernate.SQL: debug
+eureka:
+    client:
+        service-url:
+            defaultZone: <your_microservice_ip>
+        register-with-eureka: true
+        fetch-registry: true
+    instance:
+        prefer-ip-address: true
+
 jwt:
     secret: <secret key for JWT>
     expiration-ms: <time for JWT>
