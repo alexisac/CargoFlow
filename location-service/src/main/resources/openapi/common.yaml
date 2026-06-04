@@ -1,0 +1,27 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: User management
+  description: Common models
+paths: {}
+components:
+  schemas:
+    GenericApplicationResponse:
+      type: object
+      required:
+        - success
+        - code
+        - message
+      properties:
+        success:
+          type: boolean
+          description: Whether the operation was successful
+          example: true
+        code:
+          type: string
+          description: Application-specific result code
+          example: 201 - ENTITY_CREATED
+        message:
+          type: string
+          description: Human-readable result message
+          example: User was created successfully

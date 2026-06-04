@@ -10,6 +10,11 @@ spring:
           uri: lb://CARGO-CORE-SERVICE
           predicates:
             - Path=/users/**,/trips/**,/vehicles/**,/trip-assignments/**
+
+        - id: location-service
+          uri: lb://LOCATION-SERVICE
+          predicates:
+            - Path=/locations/**
 eureka:
   client:
     service-url:

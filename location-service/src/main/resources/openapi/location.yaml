@@ -1,0 +1,76 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: Driver location management
+  description: API related to driver location tracking
+paths:
+  /locations/me:
+    put:
+      tags:
+        - Locations
+      summary: Update current authenticated driver's location
+      operationId: updateMyLocation
+      requestBody:
+        description: Current driver location data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMyLocationRequest'
+      responses:
+        '200':
+          description: Driver location was updated successfully or ignored if older
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+
+components:
+  schemas:
+    UpdateMyLocationRequest:
+      type: object
+      required:
+        - latitude
+        - longitude
+        - updatedAt
+      properties:
+        latitude:
+          type: number
+          format: double
+          minimum: -90
+          maximum: 90
+          example: 44.4268
+        longitude:
+          type: number
+          format: double
+          minimum: -180
+          maximum: 180
+          example: 26.1025
+        updatedAt:
+          type: string
+          format: date-time
+          example: 2026-06-02T14:30:00Z
