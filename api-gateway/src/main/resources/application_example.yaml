@@ -9,7 +9,7 @@ spring:
         - id: cargo-core-service
           uri: lb://CARGO-CORE-SERVICE
           predicates:
-            - Path=/users/**,/trips/**,/vehicles/**,/trip-assignments/**
+            - Path=/users/**,/trip/**,/vehicle/**,/tripAssignment/**
 
         - id: location-service
           uri: lb://LOCATION-SERVICE

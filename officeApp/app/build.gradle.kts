@@ -78,4 +78,8 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     // Source: https://mvnrepository.com/artifact/androidx.compose.material/material-icons-extended
     implementation(libs.androidx.compose.material.icons.extended)
+    // Source: https://mvnrepository.com/artifact/com.google.android.gms/play-services-location
+    implementation(libs.play.services.location)
+    // Source: https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-play-services
+    implementation(libs.kotlinx.coroutines.play.services)
 }

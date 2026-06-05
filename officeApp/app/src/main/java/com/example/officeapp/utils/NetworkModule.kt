@@ -3,6 +3,7 @@ package com.example.officeapp.utils
 import com.example.officeapp.interfacesAPI.TripInterfaceAPI
 import com.example.officeapp.interfacesAPI.VehicleInterfaceAPI
 import com.example.officeapp.interfacesAPI.AuthenticationInterfaceAPI
+import com.example.officeapp.interfacesAPI.LocationInterfaceAPI
 import com.example.officeapp.interfacesAPI.TripAssignmentInterfaceAPI
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -19,7 +20,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private val BASE_URL = "http://<YOUR_IP>:8080"
+    private val BASE_URL = "http://<YOUR_IP>:8081"
 
     @Provides
     @Singleton
@@ -82,5 +83,11 @@ object NetworkModule {
     @Singleton
     fun provideTripAssignmentInterfaceAPI(retrofit: Retrofit): TripAssignmentInterfaceAPI {
         return retrofit.create(TripAssignmentInterfaceAPI::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocationInterfaceAPI(retrofit: Retrofit): LocationInterfaceAPI {
+        return retrofit.create(LocationInterfaceAPI::class.java)
     }
 }

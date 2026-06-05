@@ -1,5 +1,6 @@
 package com.example.officeapp.screens.authentication
 
+import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -31,12 +33,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.officeapp.R
+import com.example.officeapp.models.location.DriverTrackingPermissionResult
+import com.example.officeapp.models.user.UserRole
 import com.example.officeapp.screens.reusableComponents.FormMessages
 import com.example.officeapp.viewModels.AuthenticationViewModel
 import com.example.officeapp.screens.reusableComponents.LoadingButton
+import com.example.officeapp.screens.reusableComponents.LocationTrackingPermissionHandler
 import com.example.officeapp.screens.reusableComponents.OfficeFormTextField
 import com.example.officeapp.screens.reusableComponents.PasswordField
 import com.example.officeapp.screens.reusableComponents.ThemeToggle
+import com.example.officeapp.screens.reusableComponents.openAppSettings
 import com.example.officeapp.ui.theme.DarkBackground
 import com.example.officeapp.ui.theme.DarkCard
 import com.example.officeapp.ui.theme.LightBackground
@@ -54,9 +60,14 @@ fun LoginScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     val isDark = isDarkTheme
+    val context = LocalContext.current
+    val activity = context as? Activity
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var requestLocationPermissions by remember { mutableStateOf(false) }
+    var waitingForDriverPermissions by remember { mutableStateOf(false) }
+    var loginHandled by remember { mutableStateOf(false) }
 
     val backgroundColor = if (isDark) DarkBackground else LightBackground
     val textColor = MaterialTheme.colorScheme.onBackground
@@ -73,11 +84,65 @@ fun LoginScreen(
         viewModel.clearMessages()
     }
 
+    LaunchedEffect(
+        uiState.isLoggedIn,
+        uiState.userRole,
+        waitingForDriverPermissions
+    ) {
+        if (!uiState.isLoggedIn || loginHandled) { return@LaunchedEffect }
+
+        if (uiState.userRole == UserRole.DRIVER.name && waitingForDriverPermissions) {
+            requestLocationPermissions = true
+            return@LaunchedEffect
+        }
+
+        if (uiState.userRole != UserRole.DRIVER.name) {
+            loginHandled = true
+            onLoggedIn()
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(backgroundColor)
     ) {
+        LocationTrackingPermissionHandler(
+            context = context,
+            activity = activity,
+            requestPermissions = requestLocationPermissions,
+            onPermissionsResult = { result ->
+                when (result) {
+                    DriverTrackingPermissionResult.GRANTED -> {
+                        val trackingStarted = viewModel.startDriverLocationTracking()
+
+                        if (trackingStarted) {
+                            loginHandled = true
+                            waitingForDriverPermissions = false
+                            onLoggedIn()
+                        } else {
+                            waitingForDriverPermissions = false
+                            viewModel.logout()
+                            activity?.finishAffinity()
+                        }
+                    }
+
+                    DriverTrackingPermissionResult.DENIED -> {
+                        waitingForDriverPermissions = false
+                        viewModel.logout()
+                        activity?.finishAffinity()
+                    }
+
+                    DriverTrackingPermissionResult.PERMANENTLY_DENIED -> {
+                        waitingForDriverPermissions = false
+                        viewModel.logout()
+                        openAppSettings(context)
+                        activity?.finishAffinity()
+                    }
+                }
+            },
+            onRequestConsumed = { requestLocationPermissions = false }
+        )
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -153,10 +218,15 @@ fun LoginScreen(
                 text = stringResource(R.string.button_login),
                 isLoading = uiState.isLoading,
                 onClick = {
+                    loginHandled = false
+                    waitingForDriverPermissions = true
+
                     viewModel.loginUser(
                         email = email,
                         password = password,
-                        onSuccess = onLoggedIn
+                        onSuccess = {
+                            // Navigation is handled in LaunchedEffect
+                        }
                     )
                 },
                 modifier = Modifier
