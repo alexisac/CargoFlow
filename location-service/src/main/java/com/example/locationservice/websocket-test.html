@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Location WebSocket Test</title>
+</head>
+<body>
+<h2>Location WebSocket Test</h2>
+<pre id="output"></pre>
+
+<script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+<script>
+    const output = document.getElementById("output");
+
+    function log(message) {
+        output.textContent += message + "\n";
+    }
+
+    const client = new StompJs.Client({
+        brokerURL: "ws://localhost:8081/ws-locations",
+        reconnectDelay: 5000,
+        debug: function (message) {
+            console.log(message);
+        }
+    });
+
+    client.onConnect = function () {
+        log("Connected to STOMP");
+
+        client.subscribe("/topic/driver-locations", function (message) {
+            log("Received: " + message.body);
+        });
+
+        log("Subscribed to /topic/driver-locations");
+    };
+
+    client.onStompError = function (frame) {
+        log("STOMP error: " + frame.headers["message"]);
+        log(frame.body);
+    };
+
+    client.onWebSocketError = function (event) {
+        log("WebSocket error");
+        console.log(event);
+    };
+
+    client.activate();
+</script>
+</body>
+</html>

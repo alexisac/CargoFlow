@@ -49,6 +49,39 @@ paths:
               schema:
                 $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
 
+  /locations/drivers/latest:
+    get:
+      tags:
+        - Locations
+      summary: Get latest known locations for all drivers
+      description: Used by dispatchers to load the initial state of the live map before subscribing to WebSocket updates.
+      operationId: getLatestDriverLocations
+      responses:
+        '200':
+          description: Latest driver locations returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetLatestDriverLocationsResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+
 components:
   schemas:
     UpdateMyLocationRequest:
@@ -74,3 +107,40 @@ components:
           type: string
           format: date-time
           example: 2026-06-02T14:30:00Z
+    DriverLocation:
+      type: object
+      required:
+        - driverId
+        - latitude
+        - longitude
+        - updatedAt
+      properties:
+        driverId:
+          type: integer
+          format: int64
+          example: 26
+        latitude:
+          type: number
+          format: double
+          minimum: -90
+          maximum: 90
+          example: 44.4268
+        longitude:
+          type: number
+          format: double
+          minimum: -180
+          maximum: 180
+          example: 26.1025
+        updatedAt:
+          type: string
+          format: date-time
+          example: 2026-06-02T14:30:00Z
+    GetLatestDriverLocationsResponse:
+      type: object
+      required:
+        - driverLocations
+      properties:
+        driverLocations:
+          type: array
+          items:
+            $ref: '#/components/schemas/DriverLocation'

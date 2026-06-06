@@ -6,4 +6,6 @@ public class LogMessage {
             " latitude = %s, \n" +
             " longitude = %s, \n" +
             " updatedAt = %s";
+
+    public static final String GET_LATEST_DRIVER_LOCATION = "GET_LATEST_DRIVER_LOCATION operation was invoked";
 }

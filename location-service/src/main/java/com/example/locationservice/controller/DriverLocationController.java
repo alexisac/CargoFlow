@@ -4,6 +4,7 @@ import com.example.locationservice.common.LogMessage;
 import com.example.locationservice.common.security.CurrentUserService;
 import com.example.locationservice.controller.common.models.GenericApplicationResponseDto;
 import com.example.locationservice.controller.location.api.LocationsApi;
+import com.example.locationservice.controller.location.models.GetLatestDriverLocationsResponseDto;
 import com.example.locationservice.controller.location.models.UpdateMyLocationRequestDto;
 import com.example.locationservice.service.DriverLocationService;
 import lombok.RequiredArgsConstructor;
@@ -32,5 +33,11 @@ public class DriverLocationController implements LocationsApi {
         ));
 
         return driverLocationService.updateMyLocation(driverId, updateMyLocationRequestDto);
+    }
+
+    @Override
+    public GetLatestDriverLocationsResponseDto getLatestDriverLocations() {
+        log.info(String.format(LogMessage.GET_LATEST_DRIVER_LOCATION));
+        return driverLocationService.getLatestDriverLocations();
     }
 }

@@ -21,3 +21,6 @@ eureka:
 jwt:
   secret: <same secret as cargo-core-service>
   expiration-ms: <same expiration or optional>
+websocket:
+  topics:
+    driver-locations: /topic/driver-locations

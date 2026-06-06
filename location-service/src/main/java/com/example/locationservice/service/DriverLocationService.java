@@ -1,6 +1,8 @@
 package com.example.locationservice.service;
 
 import com.example.locationservice.controller.common.models.GenericApplicationResponseDto;
+import com.example.locationservice.controller.location.models.DriverLocationDto;
+import com.example.locationservice.controller.location.models.GetLatestDriverLocationsResponseDto;
 import com.example.locationservice.controller.location.models.UpdateMyLocationRequestDto;
 import com.example.locationservice.domain.entity.DriverLocation;
 import com.example.locationservice.domain.repository.DriverLocationRepository;
@@ -10,11 +12,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.ZoneOffset;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class DriverLocationService {
     private final DriverLocationRepository driverLocationRepository;
+    private final DriverLocationWebSocketPublisher driverLocationWebSocketPublisher;
 
     @Transactional
     @PreAuthorize("hasRole('DRIVER')")
@@ -39,6 +44,20 @@ public class DriverLocationService {
                 ));
     }
 
+    @Transactional(readOnly = true)
+    @PreAuthorize("hasAnyRole('DISPATCHER', 'MANAGER', 'ADMIN')")
+    public GetLatestDriverLocationsResponseDto getLatestDriverLocations() {
+        List<DriverLocationDto> driverLocationDtos = driverLocationRepository.findAll()
+                .stream()
+                .map(this::mapDriverLocationToDriverLocationDto)
+                .toList();
+
+        GetLatestDriverLocationsResponseDto response = new GetLatestDriverLocationsResponseDto();
+        response.setDriverLocations(driverLocationDtos);
+
+        return response;
+    }
+
     private GenericApplicationResponseDto updateExistingLocationIfNewer(
             DriverLocation existingLocation,
             Double latitude,
@@ -56,7 +75,9 @@ public class DriverLocationService {
         existingLocation.setLongitude(longitude);
         existingLocation.setUpdatedAt(updatedAt);
 
-        driverLocationRepository.save(existingLocation);
+        DriverLocation savedLocation = driverLocationRepository.save(existingLocation);
+
+        publishLocationUpdate(savedLocation);
 
         return GenericApplicationResponseFactory.success(
                 "200 - LOCATION_UPDATED",
@@ -76,11 +97,29 @@ public class DriverLocationService {
         driverLocation.setLongitude(longitude);
         driverLocation.setUpdatedAt(updatedAt);
 
-        driverLocationRepository.save(driverLocation);
+        DriverLocation savedLocation = driverLocationRepository.save(driverLocation);
+
+        publishLocationUpdate(savedLocation);
 
         return GenericApplicationResponseFactory.success(
                 "201 - LOCATION_CREATED",
                 "Driver location was created successfully."
         );
+    }
+
+    private void publishLocationUpdate(DriverLocation driverLocation) {
+        DriverLocationDto driverLocationDto = mapDriverLocationToDriverLocationDto(driverLocation);
+        driverLocationWebSocketPublisher.publishDriverLocation(driverLocationDto);
+    }
+
+    private DriverLocationDto mapDriverLocationToDriverLocationDto(DriverLocation driverLocation) {
+        DriverLocationDto driverLocationDto = new DriverLocationDto();
+
+        driverLocationDto.setDriverId(driverLocation.getDriverId());
+        driverLocationDto.setLatitude(driverLocation.getLatitude());
+        driverLocationDto.setLongitude(driverLocation.getLongitude());
+        driverLocationDto.setUpdatedAt(driverLocation.getUpdatedAt().atOffset(ZoneOffset.UTC));
+
+        return driverLocationDto;
     }
 }
