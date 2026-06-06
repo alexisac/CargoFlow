@@ -21,6 +21,7 @@ fun OfficeHomeMenu(
     onGoToSearchTrips: () -> Unit,
     onGoToManageUsers: () -> Unit,
     onGoToManageVehicles: () -> Unit,
+    onGoToDriverLocationsMap: () -> Unit,
     onLogout: () -> Unit
 ) {
     if (userRole == UserRole.ADMIN.name) {
@@ -83,6 +84,15 @@ fun OfficeHomeMenu(
                 .padding(top = 12.dp)
         ) {
             Text(stringResource(R.string.manage_vehicles_title))
+        }
+
+        Button(
+            onClick = onGoToDriverLocationsMap,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp)
+        ) {
+            Text(stringResource(R.string.live_driver_locations_title))
         }
     }
 

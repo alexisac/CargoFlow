@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -13,6 +16,15 @@ android {
         }
     }
 
+    val localProperties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+
+    if (localPropertiesFile.exists()) {
+        localProperties.load(FileInputStream(localPropertiesFile))
+    }
+
+    val mapsApiKey = localProperties.getProperty("MAPS_API_KEY") ?: ""
+
     defaultConfig {
         applicationId = "com.example.officeapp"
         minSdk = 26
@@ -21,6 +33,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 
     buildTypes {
@@ -82,4 +95,8 @@ dependencies {
     implementation(libs.play.services.location)
     // Source: https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-play-services
     implementation(libs.kotlinx.coroutines.play.services)
+    // Source: https://mvnrepository.com/artifact/com.google.maps.android/maps-compose
+    implementation(libs.android.maps.compose)
+    // Source: https://mvnrepository.com/artifact/com.google.android.gms/play-services-maps
+    implementation(libs.android.gms.play.services.maps)
 }

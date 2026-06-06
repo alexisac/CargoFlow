@@ -21,6 +21,8 @@ hilt-navigation-compose = "1.3.0"
 material-icons-extended = "1.7.8"
 location = "21.3.0"
 coroutine-service = "1.10.2"
+maps-compose = "8.3.0"
+play-service-maps = "20.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -50,6 +52,8 @@ androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navig
 androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "material-icons-extended" }
 play-services-location = {group = "com.google.android.gms", name = "play-services-location", version.ref = "location"}
 kotlinx-coroutines-play-services = {group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "coroutine-service"}
+android-maps-compose = {group = "com.google.maps.android", name = "maps-compose", version.ref = "maps-compose"}
+android-gms-play-services-maps = {group = "com.google.android.gms", name = "play-services-maps", version.ref = "play-service-maps"}
 
 
 [plugins]

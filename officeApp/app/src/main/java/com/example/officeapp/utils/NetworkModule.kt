@@ -15,12 +15,27 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Qualifier
 import javax.inject.Singleton
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class BaseWebSocketUrl
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private val BASE_URL = "http://<YOUR_IP>:8081"
+
+    private const val IP = "<YOUR_IP>:8081"
+    private const val BASE_URL = "http://${IP}"
+    private const val BASE_WS_URL = "ws://${IP}"
+
+    @Provides
+    @Singleton
+    @BaseWebSocketUrl
+    fun provideBaseWebSocketUrl(): String {
+        return BASE_WS_URL
+    }
 
     @Provides
     @Singleton

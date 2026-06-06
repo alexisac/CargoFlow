@@ -33,7 +33,8 @@ fun HomeScreen(
     onGoToSearchTrips: () -> Unit,
     onGoToDriverCompletedTrips: () -> Unit,
     onGoToManageUsers: () -> Unit,
-    onGoToManageVehicles: () -> Unit
+    onGoToManageVehicles: () -> Unit,
+    onGoToDriverLocationsMap: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val tripUiState by tripViewModel.uiState.collectAsState()
@@ -118,6 +119,7 @@ fun HomeScreen(
                 onGoToSearchTrips = onGoToSearchTrips,
                 onGoToManageUsers = onGoToManageUsers,
                 onGoToManageVehicles = onGoToManageVehicles,
+                onGoToDriverLocationsMap = onGoToDriverLocationsMap,
                 onLogout = onLogout
             )
         }

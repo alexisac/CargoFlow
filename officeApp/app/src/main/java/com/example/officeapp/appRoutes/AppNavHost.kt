@@ -18,10 +18,12 @@ import com.example.officeapp.screens.HomeScreen
 import com.example.officeapp.screens.assignDriver.AssignDriverScreen
 import com.example.officeapp.screens.authentication.LoginScreen
 import com.example.officeapp.screens.currentDriverTrip.DriverCompletedTripsScreen
+import com.example.officeapp.screens.driverLocations.DriverLocationsMapScreen
 import com.example.officeapp.screens.manageUsers.ManageUsersScreen
 import com.example.officeapp.screens.manageVehicles.ManageVehiclesScreen
 import com.example.officeapp.screens.searchTrips.TripDetailsScreen
 import com.example.officeapp.screens.searchTrips.TripSearchScreen
+import com.example.officeapp.viewModels.LocationViewModel
 import com.example.officeapp.viewModels.TripAssignmentViewModel
 
 @Composable
@@ -35,6 +37,7 @@ fun AppNavHost(
     val vehicleViewModel: VehicleViewModel = hiltViewModel()
     val tripViewModel: TripViewModel = hiltViewModel()
     val tripAssignmentViewModel: TripAssignmentViewModel = hiltViewModel()
+    val locationViewModel: LocationViewModel = hiltViewModel()
 
     NavHost(
         navController = navController,
@@ -114,6 +117,9 @@ fun AppNavHost(
                 },
                 onGoToManageVehicles = {
                     navController.navigate(AppRoutes.MANAGE_VEHICLES_ROUTE)
+                },
+                onGoToDriverLocationsMap = {
+                    navController.navigate(AppRoutes.DRIVER_LOCATIONS_MAP_ROUTE)
                 }
             )
         }
@@ -231,6 +237,16 @@ fun AppNavHost(
         composable(AppRoutes.MANAGE_VEHICLES_ROUTE) {
             ManageVehiclesScreen(
                 viewModel = vehicleViewModel,
+                isDarkTheme = isDarkTheme,
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(AppRoutes.DRIVER_LOCATIONS_MAP_ROUTE) {
+            DriverLocationsMapScreen(
+                viewModel = locationViewModel,
                 isDarkTheme = isDarkTheme,
                 onBack = {
                     navController.popBackStack()

@@ -2,6 +2,7 @@ package com.example.officeapp.repositories
 
 import com.example.officeapp.interfacesAPI.LocationInterfaceAPI
 import com.example.officeapp.models.GenericApplicationResponse
+import com.example.officeapp.models.location.GetLatestDriverLocationsResponse
 import com.example.officeapp.models.location.UpdateDriverLocationRequest
 import com.example.officeapp.utils.ApiResult
 import com.example.officeapp.utils.parseApiError
@@ -29,6 +30,26 @@ class LocationRepository @Inject constructor(
             }
         } catch (ex: Exception) {
             ApiResult.Error(ex.message ?: "Unexpected error while updating driver location.")
+        }
+    }
+
+    suspend fun getLatestDriverLocations(): ApiResult<GetLatestDriverLocationsResponse> {
+        return try {
+            val response = locationInterfaceAPI.getLatestDriverLocations()
+
+            if (response.isSuccessful) {
+                val body = response.body()
+
+                if (body == null) {
+                    ApiResult.Error("Empty response from server.")
+                } else {
+                    ApiResult.Success(body)
+                }
+            } else {
+                parseApiError(response)
+            }
+        } catch (ex: Exception) {
+            ApiResult.Error(ex.message ?: "Unexpected error while loading driver locations.")
         }
     }
 }

@@ -6,6 +6,7 @@
     <string name="add_new_vehicle_title">Add new vehicle</string>
     <string name="completed_trips_history_title">Completed trips history</string>
     <string name="current_trip_title">Current trip</string>
+    <string name="live_driver_locations_title">Live driver locations</string>
     <string name="login_screen_title">Welcome back!</string>
     <string name="manage_users_title">Manage users</string>
     <string name="manage_vehicles_title">Manage vehicles</string>
@@ -20,6 +21,7 @@
     <string name="add_new_user_subtitle">Create a new user account</string>
     <string name="add_new_vehicle_subtitle">Fill in the vehicle details</string>
     <string name="all_trips_subtitle">All trips</string>
+    <string name="live_driver_locations_subtitle">View active driver positions in real time</string>
     <string name="login_screen_subtitle">Sign in to continue</string>
     <string name="trip_cargo_payment_subtitle">Cargo details and payment information</string>
     <string name="trip_delivery_address_subtitle">Where the cargo will be delivered</string>
@@ -87,6 +89,7 @@
     <string name="label_description">Description</string>
     <string name="label_details">Details</string>
     <string name="label_disabled">Disabled</string>
+    <string name="label_drivers_on_map">Drivers on map</string>
     <string name="label_email">Email</string>
     <string name="label_enter_street_name">Enter street name</string>
     <string name="label_enter_street_number">Enter street number</string>
@@ -98,6 +101,7 @@
     <string name="label_kilograms">(kg)</string>
     <string name="label_last_name">Last name</string>
     <string name="label_licence_plate">Licence plate</string>
+    <string name="label_live">Live</string>
     <string name="label_locations">Locations</string>
     <string name="label_make_active">Make active</string>
     <string name="label_make_inactive">Make inactive</string>
@@ -110,8 +114,10 @@
     <string name="label_no_available_trailers_found">No available trailers found.</string>
     <string name="label_no_completed_trips_found">No completed trips found.</string>
     <string name="label_no_current_trip_found">No current trip found.</string>
+    <string name="label_no_driver_locations_found">No driver locations found</string>
     <string name="label_no_users_found">No users found.</string>
     <string name="label_no_vehicles_found">No vehicle found.</string>
+    <string name="label_offline">Offline</string>
     <string name="label_password">Password</string>
     <string name="label_pickup">Pickup</string>
     <string name="label_pickup_city">Pickup city</string>
@@ -150,6 +156,8 @@
     <string name="label_vehicle_type">Vehicle type</string>
     <string name="label_vin">VIN</string>
     <string name="label_volume">Volume</string>
+    <string name="label_waiting_for_live_updates">Waiting for live updates</string>
+    <string name="label_websocket_connected">WebSocket connected</string>
     <string name="label_weight">Weight</string>
     <string name="label_30_days">30 days</string>
     <string name="label_60_days">60 days</string>

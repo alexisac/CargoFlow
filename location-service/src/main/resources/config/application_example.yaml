@@ -24,3 +24,24 @@ jwt:
 websocket:
   topics:
     driver-locations: /topic/driver-locations
+location-simulator:
+  enabled: false
+  initial-delay-seconds: 30
+  interval-seconds: 5
+  steps-between-points: 10
+  drivers:
+    - driver-id: <DRIVER_ID>
+      name: <DRIVER_NAME>
+      route:
+        - latitude: 1
+          longitude: 1
+        - latitude: 1
+          longitude: 1
+
+    - driver-id: <DRIVER_ID>
+      name: <DRIVER_NAME>
+      route:
+        - latitude: 1
+          longitude: 1
+        - latitude: 1
+          longitude: 1

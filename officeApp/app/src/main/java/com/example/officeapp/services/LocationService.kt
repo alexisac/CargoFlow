@@ -1,6 +1,7 @@
 package com.example.officeapp.services
 
 import com.example.officeapp.models.GenericApplicationResponse
+import com.example.officeapp.models.location.GetLatestDriverLocationsResponse
 import com.example.officeapp.models.location.UpdateDriverLocationRequest
 import com.example.officeapp.repositories.LocationRepository
 import com.example.officeapp.utils.ApiResult
@@ -20,5 +21,9 @@ class LocationService @Inject constructor(
             updatedAt = Instant.now().toString()
         )
         return locationRepository.updateMyLocation(request)
+    }
+
+    suspend fun getLatestDriverLocations(): ApiResult<GetLatestDriverLocationsResponse> {
+        return locationRepository.getLatestDriverLocations()
     }
 }
