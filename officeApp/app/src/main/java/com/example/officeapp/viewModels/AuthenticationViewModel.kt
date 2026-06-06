@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.officeapp.models.user.AuthenticationUiState
 import com.example.officeapp.models.user.UserRole
 import com.example.officeapp.services.AuthenticationService
+import com.example.officeapp.tracking.DriverLocationTrackingManager
 import com.example.officeapp.utils.ApiResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthenticationViewModel @Inject constructor(
-    private val authenticationService: AuthenticationService
+    private val authenticationService: AuthenticationService,
+    private val driverLocationTrackingManager: DriverLocationTrackingManager
 ): ViewModel() {
     private val _uiState = MutableStateFlow(AuthenticationUiState())
     val uiState: StateFlow<AuthenticationUiState> = _uiState.asStateFlow()
@@ -241,6 +243,8 @@ class AuthenticationViewModel @Inject constructor(
 
     fun logout() {
         viewModelScope.launch {
+            driverLocationTrackingManager.stopTracking()
+
             authenticationService.logout()
 
             _uiState.value = AuthenticationUiState(
@@ -307,6 +311,20 @@ class AuthenticationViewModel @Inject constructor(
                 userFirstName = firstName,
                 userLastName = lastName
             )
+
+            if (!isValid) {
+                driverLocationTrackingManager.stopTracking()
+            }
         }
+    }
+
+    fun startDriverLocationTracking(): Boolean {
+        return driverLocationTrackingManager.startTracking(
+            intervalMillis = DriverLocationTrackingManager.FIVE_MINUTES
+        )
+    }
+
+    fun stopDriverLocationTracking() {
+        driverLocationTrackingManager.stopTracking()
     }
 }
