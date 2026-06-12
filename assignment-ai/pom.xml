@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>backendCargoFlow</artifactId>
+    <artifactId>assignment-ai</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>backendCargoFlow</name>
-    <description>backendCargoFlow</description>
+    <name>assignment-ai</name>
+    <description>assignment-ai</description>
     <url/>
     <licenses>
         <license/>
@@ -28,38 +28,41 @@
     </scm>
     <properties>
         <java.version>21</java.version>
-        <mapstruct.version>1.6.3</mapstruct.version>
-        <lombok.version>1.18.46</lombok.version>
-        <kotlin.version>2.3.10</kotlin.version>
         <spring-cloud.version>2024.0.1</spring-cloud.version>
+        <lombok.version>1.18.46</lombok.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
+        <kotlin.version>2.3.10</kotlin.version>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-jdbc -->
+        <!-- Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <!-- Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
-        <!-- Source: https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <!-- Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa -->
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <optional>true</optional>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
         </dependency>
         <!-- Source: https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
         <dependency>
@@ -71,21 +74,35 @@
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-database-postgresql</artifactId>
         </dependency>
-        <!-- Source: https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+        <!-- Source: https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-eureka-client -->
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
-        <!-- Source: https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
+        <!-- Source: https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api -->
         <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
-            <version>1.6.3</version>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.12.6</version>
         </dependency>
-        <!-- Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
+        <!-- Source: https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.12.6</version>
+        </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-impl -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.12.6</version>
+        </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <optional>true</optional>
         </dependency>
         <!-- Source: https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui -->
         <dependency>
@@ -99,51 +116,37 @@
             <artifactId>jackson-databind-nullable</artifactId>
             <version>0.2.2</version>
         </dependency>
-        <!-- Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa -->
+        <!-- Source: https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.6.3</version>
         </dependency>
-        <!-- Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-        <!-- Source: https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api -->
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-api</artifactId>
-            <version>0.12.6</version>
-        </dependency>
-        <!-- Source: https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-impl -->
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-impl</artifactId>
-            <version>0.12.6</version>
-        </dependency>
-        <!-- Source: https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson -->
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-jackson</artifactId>
-            <version>0.12.6</version>
-        </dependency>
-
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-test</artifactId>
             <version>${kotlin.version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- Source: https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-eureka-client -->
+        <!-- Source: https://mvnrepository.com/artifact/com.github.haifengl/smile-core -->
+        <dependency>
+            <groupId>com.github.haifengl</groupId>
+            <artifactId>smile-core</artifactId>
+            <version>4.4.0</version>
+        </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-webflux -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
     </dependencies>
 
@@ -195,18 +198,18 @@
                                 <interfaceOnly>true</interfaceOnly>
                                 <dateLibrary>java8</dateLibrary>
                                 <useOptional>false</useOptional>
-                                <modelPackage>com.example.backendcargoflow.controller.common.models</modelPackage>
+                                <modelPackage>com.example.assignmentai.controller.common.models</modelPackage>
                                 <useSpringBoot3>true</useSpringBoot3>
                             </configOptions>
                         </configuration>
                     </execution>
                     <execution>
-                        <id>User OpenApi generation</id>
+                        <id>Assignment AI OpenApi generation</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapi/user.yaml</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapi/assignmentAi.yaml</inputSpec>
                             <generatorName>spring</generatorName>
                             <output>${project.build.directory}/generated-sources/openapi</output>
                             <modelNameSuffix>Dto</modelNameSuffix>
@@ -214,7 +217,7 @@
                                 <schemaMapping>GenericApplicationResponse=GenericApplicationResponseDto</schemaMapping>
                             </schemaMappings>
                             <importMappings>
-                                <importMapping>GenericApplicationResponseDto=com.example.backendcargoflow.controller.common.models.GenericApplicationResponseDto</importMapping>
+                                <importMapping>GenericApplicationResponseDto=com.example.assignmentai.controller.common.models.GenericApplicationResponseDto</importMapping>
                             </importMappings>
                             <configOptions>
                                 <useResponseEntity>false</useResponseEntity>
@@ -223,20 +226,20 @@
                                 <useTags>true</useTags>
                                 <useOptional>false</useOptional>
                                 <unhandledException>true</unhandledException>
-                                <invokerPackage>com.example.backendcargoflow.controller.user</invokerPackage>
-                                <apiPackage>com.example.backendcargoflow.controller.user.api</apiPackage>
-                                <modelPackage>com.example.backendcargoflow.controller.user.models</modelPackage>
+                                <invokerPackage>com.example.assignmentai.controller.assignmentai</invokerPackage>
+                                <apiPackage>com.example.assignmentai.controller.assignmentai.api</apiPackage>
+                                <modelPackage>com.example.assignmentai.controller.assignmentai.models</modelPackage>
                                 <useSpringBoot3>true</useSpringBoot3>
                             </configOptions>
                         </configuration>
                     </execution>
                     <execution>
-                        <id>Vehicle OpenApi generation</id>
+                        <id>CargoCoreInternal OpenApi generation</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapi/vehicle.yaml</inputSpec>
+                            <inputSpec>${project.basedir}/src/main/resources/openapi/cargoCoreInternal.yaml</inputSpec>
                             <generatorName>spring</generatorName>
                             <output>${project.build.directory}/generated-sources/openapi</output>
                             <modelNameSuffix>Dto</modelNameSuffix>
@@ -244,7 +247,7 @@
                                 <schemaMapping>GenericApplicationResponse=GenericApplicationResponseDto</schemaMapping>
                             </schemaMappings>
                             <importMappings>
-                                <importMapping>GenericApplicationResponseDto=com.example.backendcargoflow.controller.common.models.GenericApplicationResponseDto</importMapping>
+                                <importMapping>GenericApplicationResponseDto=com.example.assignmentai.controller.common.models.GenericApplicationResponseDto</importMapping>
                             </importMappings>
                             <configOptions>
                                 <useResponseEntity>false</useResponseEntity>
@@ -253,99 +256,9 @@
                                 <useTags>true</useTags>
                                 <useOptional>false</useOptional>
                                 <unhandledException>true</unhandledException>
-                                <invokerPackage>com.example.backendcargoflow.controller.vehicle</invokerPackage>
-                                <apiPackage>com.example.backendcargoflow.controller.vehicle.api</apiPackage>
-                                <modelPackage>com.example.backendcargoflow.controller.vehicle.models</modelPackage>
-                                <useSpringBoot3>true</useSpringBoot3>
-                            </configOptions>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>Trip OpenApi generation</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapi/trip.yaml</inputSpec>
-                            <generatorName>spring</generatorName>
-                            <output>${project.build.directory}/generated-sources/openapi</output>
-                            <modelNameSuffix>Dto</modelNameSuffix>
-                            <schemaMappings>
-                                <schemaMapping>GenericApplicationResponse=GenericApplicationResponseDto</schemaMapping>
-                            </schemaMappings>
-                            <importMappings>
-                                <importMapping>GenericApplicationResponseDto=com.example.backendcargoflow.controller.common.models.GenericApplicationResponseDto</importMapping>
-                            </importMappings>
-                            <configOptions>
-                                <useResponseEntity>false</useResponseEntity>
-                                <interfaceOnly>true</interfaceOnly>
-                                <dateLibrary>java8</dateLibrary>
-                                <useTags>true</useTags>
-                                <useOptional>false</useOptional>
-                                <unhandledException>true</unhandledException>
-                                <invokerPackage>com.example.backendcargoflow.controller.trip</invokerPackage>
-                                <apiPackage>com.example.backendcargoflow.controller.trip.api</apiPackage>
-                                <modelPackage>com.example.backendcargoflow.controller.trip.models</modelPackage>
-                                <useSpringBoot3>true</useSpringBoot3>
-                            </configOptions>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>TripAssignment OpenApi generation</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapi/tripAssignment.yaml</inputSpec>
-                            <generatorName>spring</generatorName>
-                            <output>${project.build.directory}/generated-sources/openapi</output>
-                            <modelNameSuffix>Dto</modelNameSuffix>
-                            <schemaMappings>
-                                <schemaMapping>GenericApplicationResponse=GenericApplicationResponseDto</schemaMapping>
-                            </schemaMappings>
-                            <importMappings>
-                                <importMapping>GenericApplicationResponseDto=com.example.backendcargoflow.controller.common.models.GenericApplicationResponseDto</importMapping>
-                            </importMappings>
-                            <configOptions>
-                                <useResponseEntity>false</useResponseEntity>
-                                <interfaceOnly>true</interfaceOnly>
-                                <dateLibrary>java8</dateLibrary>
-                                <useTags>true</useTags>
-                                <useOptional>false</useOptional>
-                                <unhandledException>true</unhandledException>
-                                <invokerPackage>com.example.backendcargoflow.controller.tripAssignment</invokerPackage>
-                                <apiPackage>com.example.backendcargoflow.controller.tripAssignment.api</apiPackage>
-                                <modelPackage>com.example.backendcargoflow.controller.tripAssignment.models</modelPackage>
-                                <useSpringBoot3>true</useSpringBoot3>
-                            </configOptions>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>AssignmentAiInternal OpenApi generation</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapi/assignmentAiInternal.yaml</inputSpec>
-                            <generatorName>spring</generatorName>
-                            <output>${project.build.directory}/generated-sources/openapi</output>
-                            <modelNameSuffix>Dto</modelNameSuffix>
-                            <schemaMappings>
-                                <schemaMapping>GenericApplicationResponse=GenericApplicationResponseDto</schemaMapping>
-                            </schemaMappings>
-                            <importMappings>
-                                <importMapping>GenericApplicationResponseDto=com.example.backendcargoflow.controller.common.models.GenericApplicationResponseDto</importMapping>
-                            </importMappings>
-                            <configOptions>
-                                <useResponseEntity>false</useResponseEntity>
-                                <interfaceOnly>true</interfaceOnly>
-                                <dateLibrary>java8</dateLibrary>
-                                <useTags>true</useTags>
-                                <useOptional>false</useOptional>
-                                <unhandledException>true</unhandledException>
-                                <invokerPackage>com.example.backendcargoflow.controller.assignmentAiInternal</invokerPackage>
-                                <apiPackage>com.example.backendcargoflow.controller.assignmentAiInternal.api</apiPackage>
-                                <modelPackage>com.example.backendcargoflow.controller.assignmentAiInternal.models</modelPackage>
+                                <invokerPackage>com.example.assignmentai.controller.cargoCoreInternal</invokerPackage>
+                                <apiPackage>com.example.assignmentai.controller.cargoCoreInternal.api</apiPackage>
+                                <modelPackage>com.example.assignmentai.controller.cargoCoreInternal.models</modelPackage>
                                 <useSpringBoot3>true</useSpringBoot3>
                             </configOptions>
                         </configuration>
@@ -444,5 +357,6 @@
             </plugin>
         </plugins>
     </build>
+
 
 </project>

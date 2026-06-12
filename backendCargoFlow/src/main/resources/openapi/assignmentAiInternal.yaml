@@ -1,0 +1,186 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: Assignment AI Internal API
+  description: Internal endpoints used by assignment-ai service
+
+paths:
+  /internal/assignment-ai/trips/{tripId}/context:
+    get:
+      tags:
+        - Assignment AI Internal
+      summary: Get trip assignment context for AI optimization
+      operationId: getTripAssignmentContext
+      parameters:
+        - name: tripId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Assignment context was loaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssignmentAiTripContextResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '404':
+          description: Trip was not found
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+
+components:
+  schemas:
+    AssignmentAiTripContextResponse:
+      type: object
+      required:
+        - trip
+        - drivers
+        - primaryVehicles
+        - trailers
+      properties:
+        trip:
+          $ref: '#/components/schemas/AssignmentAiTripData'
+        drivers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssignmentAiDriverData'
+        primaryVehicles:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssignmentAiVehicleData'
+        trailers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssignmentAiVehicleData'
+
+    AssignmentAiTripData:
+      type: object
+      required:
+        - tripId
+        - pickupAddress
+        - deliveryAddress
+        - pickupInstant
+        - deliveryInstant
+        - cargoType
+      properties:
+        tripId:
+          type: integer
+          format: int64
+        pickupAddress:
+          $ref: '#/components/schemas/AssignmentAiAddressData'
+        deliveryAddress:
+          $ref: '#/components/schemas/AssignmentAiAddressData'
+        pickupInstant:
+          type: string
+          format: date-time
+        deliveryInstant:
+          type: string
+          format: date-time
+        cargoWeight:
+          type: number
+          format: double
+          nullable: true
+        cargoVolume:
+          type: number
+          format: double
+          nullable: true
+        cargoType:
+          type: string
+
+    AssignmentAiAddressData:
+      type: object
+      required:
+        - country
+        - administrativeArea
+        - city
+        - streetName
+        - streetNumber
+        - postalCode
+      properties:
+        country:
+          type: string
+        administrativeArea:
+          type: string
+        city:
+          type: string
+        streetName:
+          type: string
+        streetNumber:
+          type: string
+        postalCode:
+          type: string
+        additionalDetails:
+          type: string
+          nullable: true
+
+    AssignmentAiDriverData:
+      type: object
+      required:
+        - driverId
+        - driverAvailable
+        - driverCompletedTripsLast30Days
+      properties:
+        driverId:
+          type: integer
+          format: int64
+        driverAvailable:
+          type: boolean
+        driverCompletedTripsLast30Days:
+          type: integer
+          format: int32
+        lastPrimaryVehicleId:
+          type: integer
+          format: int64
+          nullable: true
+        lastTrailerId:
+          type: integer
+          format: int64
+          nullable: true
+
+    AssignmentAiVehicleData:
+      type: object
+      required:
+        - vehicleId
+        - vehicleType
+      properties:
+        vehicleId:
+          type: integer
+          format: int64
+        vehicleType:
+          $ref: '#/components/schemas/AssignmentAiVehicleType'
+        maxWeight:
+          type: number
+          format: double
+          nullable: true
+        maxVolume:
+          type: number
+          format: double
+          nullable: true
+
+    AssignmentAiVehicleType:
+      type: string
+      enum:
+        - TRACTOR_UNIT
+        - VAN
+        - BOX_TRUCK
+        - REFRIGERATED_TRUCK
+        - TANKER_TRUCK
+        - SEMI_TRAILER
+        - REFRIGERATED_TRAILER
+        - TANKER_TRAILER

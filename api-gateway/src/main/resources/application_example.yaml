@@ -9,12 +9,22 @@ spring:
         - id: cargo-core-service
           uri: lb://CARGO-CORE-SERVICE
           predicates:
-            - Path=/users/**,/trip/**,/vehicle/**,/tripAssignment/**
+            - Path=/users/**,/trip/**,/vehicle/**,/tripAssignment/**,/internal/**
 
         - id: location-service
           uri: lb://LOCATION-SERVICE
           predicates:
             - Path=/locations/**
+
+        - id: location-service-websocket
+          uri: lb:ws://LOCATION-SERVICE
+          predicates:
+            - Path=/ws-locations,/ws-locations/**
+
+        - id: assignment-ai
+          uri: lb://ASSIGNMENT-AI
+          predicates:
+            - Path=/assignment-ai/**
 eureka:
   client:
     service-url:

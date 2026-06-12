@@ -1,5 +1,6 @@
 package com.example.backendcargoflow.domain.trip.repository;
 
+import com.example.backendcargoflow.domain.trip.entity.DriverCompletedTripsCountProjection;
 import com.example.backendcargoflow.domain.trip.entity.Trip;
 import com.example.backendcargoflow.domain.trip.entity.TripStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -52,6 +53,22 @@ public interface TripRepository extends JpaRepository<Trip, Long>, JpaSpecificat
     List<Trip> findCompletedTripsForDriverFromDate(
             @Param("driverId") Long driverId,
             @Param("tripStatus") TripStatus tripStatus,
+            @Param("fromInstant") Instant fromInstant
+    );
+
+    @Query("""
+    SELECT ta.driverId AS driverId,
+           CAST(COUNT(t.id) AS int) AS completedTripsCount
+    FROM TripAssignment ta
+    JOIN Trip t ON t.id = ta.tripId
+    WHERE ta.driverId IN :driverIds
+      AND t.tripStatus = :completedStatus
+      AND t.deliveryInstant >= :fromInstant
+    GROUP BY ta.driverId
+    """)
+    List<DriverCompletedTripsCountProjection> countCompletedTripsForDriversSince(
+            @Param("driverIds") List<Long> driverIds,
+            @Param("completedStatus") TripStatus completedStatus,
             @Param("fromInstant") Instant fromInstant
     );
 }

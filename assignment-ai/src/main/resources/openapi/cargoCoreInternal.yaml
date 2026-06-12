@@ -1,0 +1,145 @@
+openapi: 3.0.3
+info:
+  title: Cargo Core Assignment AI Internal API
+  version: 1.0.0
+
+paths:
+  /internal/assignment-ai/trips/{tripId}/context:
+    get:
+      tags:
+        - Cargo Core Assignment AI
+      summary: Get trip assignment context for Assignment AI
+      operationId: getTripAssignmentContext
+      parameters:
+        - name: tripId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Assignment context returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CargoCoreAssignmentContextResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Trip not found
+
+components:
+  schemas:
+    CargoCoreAssignmentContextResponse:
+      type: object
+      required:
+        - trip
+        - drivers
+        - primaryVehicles
+        - trailers
+      properties:
+        trip:
+          $ref: '#/components/schemas/CargoCoreTripData'
+        drivers:
+          type: array
+          items:
+            $ref: '#/components/schemas/CargoCoreDriverData'
+        primaryVehicles:
+          type: array
+          items:
+            $ref: '#/components/schemas/CargoCoreVehicleData'
+        trailers:
+          type: array
+          items:
+            $ref: '#/components/schemas/CargoCoreVehicleData'
+
+    CargoCoreTripData:
+      type: object
+      required:
+        - tripId
+        - pickupAddress
+        - deliveryAddress
+        - pickupInstant
+        - deliveryInstant
+      properties:
+        tripId:
+          type: integer
+          format: int64
+        pickupAddress:
+          $ref: '#/components/schemas/CargoCoreAddressData'
+        deliveryAddress:
+          $ref: '#/components/schemas/CargoCoreAddressData'
+        pickupInstant:
+          type: string
+          format: date-time
+        deliveryInstant:
+          type: string
+          format: date-time
+        cargoWeight:
+          type: number
+          format: double
+        cargoVolume:
+          type: number
+          format: double
+        cargoType:
+          type: string
+
+    CargoCoreAddressData:
+      type: object
+      properties:
+        country:
+          type: string
+        administrativeArea:
+          type: string
+        city:
+          type: string
+        streetName:
+          type: string
+        streetNumber:
+          type: string
+        postalCode:
+          type: string
+        additionalDetails:
+          type: string
+
+    CargoCoreDriverData:
+      type: object
+      required:
+        - driverId
+        - driverAvailable
+      properties:
+        driverId:
+          type: integer
+          format: int64
+        driverAvailable:
+          type: boolean
+        lastPrimaryVehicleId:
+          type: integer
+          format: int64
+        lastTrailerId:
+          type: integer
+          format: int64
+        driverCompletedTripsLast30Days:
+          type: integer
+          format: int32
+
+    CargoCoreVehicleData:
+      type: object
+      required:
+        - vehicleId
+        - vehicleType
+      properties:
+        vehicleId:
+          type: integer
+          format: int64
+        vehicleType:
+          type: string
+        maxWeight:
+          type: number
+          format: double
+        maxVolume:
+          type: number
+          format: double

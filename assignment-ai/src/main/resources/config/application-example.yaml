@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: assignment-ai
+  datasource:
+    url: jdbc:postgresql://localhost:5432/<your_DB_name>
+    username: <PostgreSQL username>
+    password: <PostgreSQL password>
+  flyway:
+    enabled: true
+    out-of-order: true
+logging:
+  level:
+    org.hibernate.SQL: debug
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+server:
+  port: 8083
+google:
+  maps:
+    api-key: <YOUR_MAPS_KEY_FOR_BACKEND>
+assignment-ai:
+  maps:
+    max-drivers-for-routes-api: 5
+jwt:
+  secret: <same secret as cargo-core-service>
+  expiration-ms: <same expiration or optional>
