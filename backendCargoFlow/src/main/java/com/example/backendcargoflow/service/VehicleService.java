@@ -5,10 +5,7 @@ import com.example.backendcargoflow.common.exceptions.BadRequestException;
 import com.example.backendcargoflow.common.exceptions.ConflictException;
 import com.example.backendcargoflow.common.exceptions.NotFoundException;
 import com.example.backendcargoflow.controller.common.models.GenericApplicationResponseDto;
-import com.example.backendcargoflow.controller.vehicle.models.AddNewVehicleRequestDto;
-import com.example.backendcargoflow.controller.vehicle.models.ChangeVehicleStatusRequestDto;
-import com.example.backendcargoflow.controller.vehicle.models.GetAllVehiclesResponseDto;
-import com.example.backendcargoflow.controller.vehicle.models.VehicleSummaryDto;
+import com.example.backendcargoflow.controller.vehicle.models.*;
 import com.example.backendcargoflow.domain.vehicle.entity.Vehicle;
 import com.example.backendcargoflow.domain.vehicle.entity.VehicleStatus;
 import com.example.backendcargoflow.domain.vehicle.mapper.VehicleMapper;
@@ -30,7 +27,8 @@ public class VehicleService {
     private final VehicleMapper vehicleMapper;
 
     @PreAuthorize("hasAnyRole('DISPATCHER', 'MANAGER', 'ADMIN')")
-    public GenericApplicationResponseDto addNewVehicle(AddNewVehicleRequestDto addNewVehicleRequestDto){
+    public GenericApplicationResponseDto addNewVehicle(
+            AddNewVehicleRequestDto addNewVehicleRequestDto){
         Optional<Vehicle> vehicle = vehicleRepository.findByLicencePlateOrVin(
                 addNewVehicleRequestDto.getLicencePlate(),
                 addNewVehicleRequestDto.getVin()
@@ -42,7 +40,8 @@ public class VehicleService {
 
         validateVehicleCapacity(addNewVehicleRequestDto);
 
-        Vehicle newVehicle = vehicleMapper.mapAddNewVehicleRequestDtoToVehicle(addNewVehicleRequestDto);
+        Vehicle newVehicle =
+                vehicleMapper.mapAddNewVehicleRequestDtoToVehicle(addNewVehicleRequestDto);
         newVehicle.setVehicleStatus(VehicleStatus.AVAILABLE);
         vehicleRepository.save(newVehicle);
         return GenericApplicationResponseFactory.success(
@@ -90,6 +89,26 @@ public class VehicleService {
                 "200 - VEHICLE_STATUS_CHANGED",
                 "Vehicle status was changed successfully"
         );
+    }
+
+    @PreAuthorize("hasAnyRole('DISPATCHER', 'MANAGER', 'ADMIN')")
+    public VehicleDashboardSummaryResponseDto getVehicleDashboardSummary() {
+        List<VehicleDashboardSummaryItemDto> items = new java.util.ArrayList<>();
+
+        for (VehicleStatus status : VehicleStatus.values()) {
+            long count = vehicleRepository.countByVehicleStatus(status);
+
+            VehicleDashboardSummaryItemDto item = new VehicleDashboardSummaryItemDto();
+            item.setVehicleStatus(VehicleStatusDto.valueOf(status.name()));
+            item.setValue(count);
+
+            items.add(item);
+        }
+
+        VehicleDashboardSummaryResponseDto response = new VehicleDashboardSummaryResponseDto();
+        response.setItems(items);
+
+        return response;
     }
 
     private void validateVehicleCapacity(AddNewVehicleRequestDto addNewVehicleRequestDto) {

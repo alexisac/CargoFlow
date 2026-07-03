@@ -23,6 +23,7 @@ import com.example.officeapp.screens.manageUsers.ManageUsersScreen
 import com.example.officeapp.screens.manageVehicles.ManageVehiclesScreen
 import com.example.officeapp.screens.searchTrips.TripDetailsScreen
 import com.example.officeapp.screens.searchTrips.TripSearchScreen
+import com.example.officeapp.viewModels.AssignmentAiViewModel
 import com.example.officeapp.viewModels.LocationViewModel
 import com.example.officeapp.viewModels.TripAssignmentViewModel
 
@@ -38,6 +39,7 @@ fun AppNavHost(
     val tripViewModel: TripViewModel = hiltViewModel()
     val tripAssignmentViewModel: TripAssignmentViewModel = hiltViewModel()
     val locationViewModel: LocationViewModel = hiltViewModel()
+    val assignmentAiViewModel: AssignmentAiViewModel = hiltViewModel()
 
     NavHost(
         navController = navController,
@@ -85,6 +87,7 @@ fun AppNavHost(
             HomeScreen(
                 viewModel = authenticationViewModel,
                 tripViewModel = tripViewModel,
+                vehicleViewModel = vehicleViewModel,
                 isDarkTheme = isDarkTheme,
                 onThemeChange = onThemeChange,
                 onLogout = {
@@ -206,6 +209,7 @@ fun AppNavHost(
                 AssignDriverScreen(
                     tripId = tripId,
                     viewModel = tripAssignmentViewModel,
+                    assignmentAiViewModel = assignmentAiViewModel,
                     isDarkTheme = isDarkTheme,
                     onBack = {
                         navController.popBackStack()

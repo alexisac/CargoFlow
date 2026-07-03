@@ -72,6 +72,7 @@ public class LogMessage {
     public static final String GET_CURRENT_TRIP = "GET_CURRENT_TRIP operation was invoked";
     public static final String GET_COMPLETED_TRIPS = "GET_COMPLETED_TRIPS operation was invoked with days: %s";
     public static final String CANCEL_TRIP = "CANCEL_TRIP operation was invoked with: tripId: %s";
+    public static final String ADVANCE_TRIP_STATUS = "ADVANCE_TRIP_STATUS was invoked with: tripId: %s";
 
     public static final String GET_AVAILABLE_DRIVERS_FOR_TRIP = "GET_AVAILABLE_DRIVERS_FOR_TRIP operation was invoked with:" +
             "tripId: %s, \n" +
@@ -90,4 +91,7 @@ public class LogMessage {
             "driverID: %s, \n" +
             "primaryVehicleID: %s, \n" +
             "trailerID: %s";
+
+    public static final String GET_TRIP_DASHBOARD_SUMMARY = "Get trip dashboard summary";
+    public static final String GET_VEHICLE_DASHBOARD_SUMMARY = "Get vehicle dashboard summary";
 }

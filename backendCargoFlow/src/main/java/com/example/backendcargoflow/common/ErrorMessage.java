@@ -19,4 +19,5 @@ public class ErrorMessage {
     public static final String CURRENT_TRIP_NOT_FOUND = "Current trip was not found";
     public static final String INVALID_COMPLETED_TRIPS_PERIOD = "Completed trips period must be 30, 60 or 90 days";
     public static final String TRIP_CANNOT_BE_CANCELED = "Only planned or assigned trips can be canceled";
+    public static final String TRIP_STATUS_CANNOT_BE_ADVANCED = "Trip status cannot be advanced from the current status.";
 }

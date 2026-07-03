@@ -79,7 +79,8 @@ class DriverLocationWebSocketClient @Inject constructor(
 
                                     onLocationReceived(driverLocation)
                                 } catch (ex: Exception) {
-                                    onError(ex.message ?: "Failed to parse WebSocket location message.")
+                                    onError(ex.message
+                                        ?: "Failed to parse WebSocket location message.")
                                 }
                             }
                         }

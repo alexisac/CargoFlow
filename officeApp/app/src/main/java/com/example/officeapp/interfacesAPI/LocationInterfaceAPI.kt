@@ -18,5 +18,6 @@ interface LocationInterfaceAPI {
 
     @Headers("Content-Type: application/json")
     @GET("locations/drivers/latest")
-    suspend fun getLatestDriverLocations(): Response<GetLatestDriverLocationsResponse>
+    suspend fun getLatestDriverLocations(
+    ): Response<GetLatestDriverLocationsResponse>
 }

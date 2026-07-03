@@ -35,6 +35,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.officeapp.R
 import com.example.officeapp.models.trip.CurrentTrip
+import com.example.officeapp.models.trip.TripStatus
+import com.example.officeapp.screens.reusableComponents.LoadingButton
 import com.example.officeapp.screens.reusableComponents.formatDate
 import com.example.officeapp.screens.reusableComponents.formatHourMinute
 import com.example.officeapp.ui.theme.BorderDark
@@ -51,6 +53,8 @@ import com.example.officeapp.ui.theme.TextSecondaryLight
 @Composable
 fun CurrentDriverTripCard(
     trip: CurrentTrip,
+    isLoading: Boolean,
+    onAdvanceTripStatus: (Long, TripStatus) -> Unit,
     isDarkTheme: Boolean
 ) {
     val cardColor = if (isDarkTheme) DarkCard else LightSurface
@@ -202,6 +206,31 @@ fun CurrentDriverTripCard(
                     iconColor = primaryColor,
                     textColor = textColor,
                     secondaryTextColor = secondaryTextColor
+                )
+            }
+
+            val actionText = when (trip.tripStatus) {
+                TripStatus.ASSIGNED -> "Start trip"
+                TripStatus.IN_PROGRESS -> "Finish trip"
+                else -> null
+            }
+
+            if (actionText != null) {
+                Spacer(modifier = Modifier.height(18.dp))
+
+                LoadingButton(
+                    text = actionText,
+                    isLoading = isLoading,
+                    onClick = {
+                        onAdvanceTripStatus(
+                            trip.tripId,
+                            trip.tripStatus
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    enabled = !isLoading
                 )
             }
         }

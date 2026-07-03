@@ -71,4 +71,6 @@ public interface TripRepository extends JpaRepository<Trip, Long>, JpaSpecificat
             @Param("completedStatus") TripStatus completedStatus,
             @Param("fromInstant") Instant fromInstant
     );
+
+    long countByTripStatus(TripStatus tripStatus);
 }

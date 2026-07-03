@@ -91,4 +91,16 @@ public class TripController implements TripsApi {
 
         return tripService.cancelTrip(tripId);
     }
+
+    @Override
+    public GenericApplicationResponseDto advanceTripStatus(@PathVariable Long tripId) {
+        log.info(String.format(LogMessage.ADVANCE_TRIP_STATUS, tripId));
+        return tripService.advanceTripStatus(tripId);
+    }
+
+    @Override
+    public TripDashboardSummaryResponseDto getTripDashboardSummary() {
+        log.info(LogMessage.GET_TRIP_DASHBOARD_SUMMARY);
+        return tripService.getTripDashboardSummary();
+    }
 }

@@ -8,5 +8,7 @@ data class VehicleUiState (
     val vehicles: List<VehicleSummary> = emptyList(),
     val pageNumber: Int = 0,
     val pageSize: Int = 20,
-    val lastPage: Boolean = false
+    val lastPage: Boolean = false,
+
+    val vehicleDashboardSummaryItems: List<VehicleDashboardSummaryItem> = emptyList()
 )

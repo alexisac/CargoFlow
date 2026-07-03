@@ -8,6 +8,7 @@ import com.example.officeapp.models.trip.CompletedTripsResponse
 import com.example.officeapp.models.trip.Currency
 import com.example.officeapp.models.trip.CurrentTrip
 import com.example.officeapp.models.trip.Trip
+import com.example.officeapp.models.trip.TripDashboardSummaryResponse
 import com.example.officeapp.models.trip.TripPageResponse
 import com.example.officeapp.models.trip.TripSearchRequest
 import com.example.officeapp.models.trip.TripStatus
@@ -229,6 +230,17 @@ class TripService @Inject constructor(
             return ApiResult.Error(ValidationMessages.ID_RANGE)
 
         return tripRepository.cancelTrip(tripId)
+    }
+
+    suspend fun advanceTripStatus(tripId: Long): ApiResult<GenericApplicationResponse> {
+        if (tripId < 0)
+            return ApiResult.Error(ValidationMessages.ID_RANGE)
+
+        return tripRepository.advanceTripStatus(tripId)
+    }
+
+    suspend fun getTripDashboardSummary(): ApiResult<TripDashboardSummaryResponse> {
+        return tripRepository.getTripDashboardSummary()
     }
 
     private fun buildAddress(

@@ -76,4 +76,6 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     );
 
     Page<Vehicle> findAllByOrderByCreateDateDesc(Pageable pageable);
+
+    long countByVehicleStatus(VehicleStatus vehicleStatus);
 }

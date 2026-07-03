@@ -28,12 +28,6 @@ public class AssignmentRandomForestService {
         train(trainingExamples);
     }
 
-    public void train(List<TrainingExample> trainingExamples) {
-        DataFrame trainingDataFrame = buildTrainingDataFrame(trainingExamples);
-        Formula formula = Formula.lhs("wasSelected");
-        randomForest = RandomForest.fit(formula, trainingDataFrame);
-    }
-
     public int trainModel() {
         List<TrainingExample> seedTrainingExamples = seedTrainingDataService.getSeedTrainingExamples();
         List<TrainingExample> dbTrainingExamples = dbTrainingDataService.getTrainingExamplesFromDb();
@@ -47,7 +41,9 @@ public class AssignmentRandomForestService {
         return allTrainingExamples.size();
     }
 
-    public double predictProbabilitySelected(AssignmentCandidateFeatures features) {
+    public double predictProbabilitySelected(
+            AssignmentCandidateFeatures features
+    ) {
         if (randomForest == null) {
             return 0.0;
         }
@@ -65,6 +61,12 @@ public class AssignmentRandomForestService {
         }
 
         return predictedClass == 1 ? 0.75 : 0.25;
+    }
+
+    private void train(List<TrainingExample> trainingExamples) {
+        DataFrame trainingDataFrame = buildTrainingDataFrame(trainingExamples);
+        Formula formula = Formula.lhs("wasSelected");
+        randomForest = RandomForest.fit(formula, trainingDataFrame);
     }
 
     private DataFrame buildTrainingDataFrame(List<TrainingExample> trainingExamples) {

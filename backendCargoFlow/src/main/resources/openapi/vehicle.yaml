@@ -133,6 +133,31 @@ paths:
             application/json:
               schema:
                 $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+  /vehicle/dashboard/summary:
+    get:
+      tags:
+        - Vehicles
+      summary: Get vehicle dashboard summary
+      operationId: getVehicleDashboardSummary
+      responses:
+        '200':
+          description: Vehicle dashboard summary was retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleDashboardSummaryResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
 
 components:
   schemas:
@@ -285,3 +310,24 @@ components:
       properties:
         vehicleStatus:
           $ref: '#/components/schemas/VehicleStatus'
+    VehicleDashboardSummaryItem:
+      type: object
+      required:
+        - vehicleStatus
+        - value
+      properties:
+        vehicleStatus:
+          $ref: '#/components/schemas/VehicleStatus'
+        value:
+          type: integer
+          format: int64
+          example: 15
+    VehicleDashboardSummaryResponse:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/VehicleDashboardSummaryItem'

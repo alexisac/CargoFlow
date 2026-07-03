@@ -23,6 +23,7 @@ location = "21.3.0"
 coroutine-service = "1.10.2"
 maps-compose = "8.3.0"
 play-service-maps = "20.0.0"
+mpandroidchart = "v3.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -54,6 +55,7 @@ play-services-location = {group = "com.google.android.gms", name = "play-service
 kotlinx-coroutines-play-services = {group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "coroutine-service"}
 android-maps-compose = {group = "com.google.maps.android", name = "maps-compose", version.ref = "maps-compose"}
 android-gms-play-services-maps = {group = "com.google.android.gms", name = "play-services-maps", version.ref = "play-service-maps"}
+mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
 
 
 [plugins]

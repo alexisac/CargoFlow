@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 public class AssignmentFeatureExtractor {
     private final VehicleCapacityFeatureService vehicleCapacityFeatureService;
 
-    public AssignmentCandidateFeatures extractFeatures(EnrichedAssignmentCandidate enrichedAssignmentCandidate) {
+    public AssignmentCandidateFeatures extractFeatures(
+            EnrichedAssignmentCandidate enrichedAssignmentCandidate
+    ) {
         AssignmentCandidate candidate = enrichedAssignmentCandidate.candidate();
 
         return new AssignmentCandidateFeatures(
@@ -28,8 +30,10 @@ public class AssignmentFeatureExtractor {
                 boolToDouble(candidate.driverAvailable()),
                 boolToDouble(candidate.primaryVehicleAvailable()),
                 boolToDouble(candidate.trailerAvailable()),
-                candidate.minutesUntilPickup() == null ? 0.0 : candidate.minutesUntilPickup(),
-                candidate.driverCompletedTripsLast30Days() == null ? 0.0 : candidate.driverCompletedTripsLast30Days()
+                candidate.minutesUntilPickup() == null
+                        ? 0.0 : candidate.minutesUntilPickup(),
+                candidate.driverCompletedTripsLast30Days() == null
+                        ? 0.0 : candidate.driverCompletedTripsLast30Days()
         );
     }
 

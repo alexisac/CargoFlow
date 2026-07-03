@@ -278,19 +278,7 @@ class TripAssignmentViewModel @Inject constructor(
     fun clearMessage() {
         _uiState.value = _uiState.value.copy(
             successMessage = null,
-            errorMessage = null,
-
-            availableDrivers = emptyList(),
-            driversPageNumber = 0,
-            driversLastPage = false,
-
-            availablePrimaryVehicles = emptyList(),
-            primaryVehiclesPageNumber = 0,
-            primaryVehiclesLastPage = false,
-
-            availableTrailers = emptyList(),
-            trailersPageNumber = 0,
-            trailersLastPage = false
+            errorMessage = null
         )
     }
 

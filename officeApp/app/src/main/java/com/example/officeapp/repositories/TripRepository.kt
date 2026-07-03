@@ -6,6 +6,7 @@ import com.example.officeapp.models.trip.AddNewTripRequest
 import com.example.officeapp.models.trip.CompletedTripsResponse
 import com.example.officeapp.models.trip.CurrentTrip
 import com.example.officeapp.models.trip.Trip
+import com.example.officeapp.models.trip.TripDashboardSummaryResponse
 import com.example.officeapp.models.trip.TripPageResponse
 import com.example.officeapp.models.trip.TripSearchRequest
 import com.example.officeapp.utils.ApiResult
@@ -126,6 +127,44 @@ class TripRepository @Inject constructor(
             }
         } catch (ex: Exception) {
             ApiResult.Error(ex.message ?: "Unexpected error occurred.")
+        }
+    }
+
+    suspend fun advanceTripStatus(tripId: Long): ApiResult<GenericApplicationResponse> {
+        return try {
+            val response = tripInterfaceAPI.advanceTripStatus(tripId)
+
+            if (response.isSuccessful) {
+                val body = response.body()
+
+                if (body == null)
+                    ApiResult.Error("Empty response from server.")
+                else
+                    ApiResult.Success(body)
+            } else {
+                parseApiError(response)
+            }
+        } catch (ex: Exception) {
+            ApiResult.Error(ex.message ?: "Could not update trip status.")
+        }
+    }
+
+    suspend fun getTripDashboardSummary(): ApiResult<TripDashboardSummaryResponse> {
+        return try {
+            val response = tripInterfaceAPI.getTripDashboardSummary()
+
+            if (response.isSuccessful) {
+                val body = response.body()
+
+                if (body == null)
+                    ApiResult.Error("Empty response from server.")
+                else
+                    ApiResult.Success(body)
+            } else {
+                parseApiError(response)
+            }
+        } catch (ex: Exception) {
+            ApiResult.Error(ex.message ?: "Could not load trip dashboard summary.")
         }
     }
 }

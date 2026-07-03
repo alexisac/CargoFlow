@@ -153,6 +153,54 @@ public class TripService {
         );
     }
 
+    @PreAuthorize("hasRole('DRIVER')")
+    public GenericApplicationResponseDto advanceTripStatus(Long tripId) {
+        Trip trip = tripRepository.findById(tripId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.TRIP_NOT_FOUND));
+
+        if (trip.getTripStatus() == TripStatus.ASSIGNED) {
+            trip.setTripStatus(TripStatus.IN_PROGRESS);
+            tripRepository.save(trip);
+
+            return GenericApplicationResponseFactory.success(
+                    "200 - TRIP_STARTED",
+                    "Trip was started successfully"
+            );
+        }
+
+        if (trip.getTripStatus() == TripStatus.IN_PROGRESS) {
+            trip.setTripStatus(TripStatus.COMPLETED);
+            tripRepository.save(trip);
+
+            return GenericApplicationResponseFactory.success(
+                    "200 - TRIP_COMPLETED",
+                    "Trip was completed successfully"
+            );
+        }
+
+        throw new BadRequestException(ErrorMessage.TRIP_STATUS_CANNOT_BE_ADVANCED);
+    }
+
+    @PreAuthorize("hasAnyRole('DISPATCHER', 'MANAGER', 'ADMIN')")
+    public TripDashboardSummaryResponseDto getTripDashboardSummary() {
+        List<TripDashboardSummaryItemDto> items = new java.util.ArrayList<>();
+
+        for (TripStatus status : TripStatus.values()) {
+            long count = tripRepository.countByTripStatus(status);
+
+            TripDashboardSummaryItemDto item = new TripDashboardSummaryItemDto();
+            item.setTripStatus(TripStatusDto.valueOf(status.name()));
+            item.setValue(count);
+
+            items.add(item);
+        }
+
+        TripDashboardSummaryResponseDto response = new TripDashboardSummaryResponseDto();
+        response.setItems(items);
+
+        return response;
+    }
+
     private void validateCompletedTripsDays(Integer days) {
         if (days == null || !(days == 30 || days == 60 || days == 90)) {
             throw new BadRequestException(ErrorMessage.INVALID_COMPLETED_TRIPS_PERIOD);

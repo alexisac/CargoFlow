@@ -5,6 +5,7 @@ import com.example.officeapp.models.trip.AddNewTripRequest
 import com.example.officeapp.models.trip.CompletedTripsResponse
 import com.example.officeapp.models.trip.CurrentTrip
 import com.example.officeapp.models.trip.Trip
+import com.example.officeapp.models.trip.TripDashboardSummaryResponse
 import com.example.officeapp.models.trip.TripPageResponse
 import com.example.officeapp.models.trip.TripSearchRequest
 import retrofit2.Response
@@ -50,4 +51,14 @@ interface TripInterfaceAPI {
     suspend fun cancelTrip(
         @Path("tripId") tripId: Long
     ): Response<GenericApplicationResponse>
+
+    @Headers("Content-Type: application/json")
+    @PATCH("trip/{tripId}/advance-status")
+    suspend fun advanceTripStatus(
+        @Path("tripId") tripId: Long
+    ): Response<GenericApplicationResponse>
+
+    @Headers("Content-Type: application/json")
+    @GET("trip/dashboard/summary")
+    suspend fun getTripDashboardSummary(): Response<TripDashboardSummaryResponse>
 }

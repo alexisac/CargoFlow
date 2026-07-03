@@ -13,5 +13,7 @@ data class TripUiState(
     val currentTrip: Trip? = null,
 
     val currentDriverTrip: CurrentTrip? = null,
-    val completedTrips: List<CompletedTrip> = emptyList()
+    val completedTrips: List<CompletedTrip> = emptyList(),
+
+    val tripDashboardSummaryItems: List<TripDashboardSummaryItem> = emptyList()
 )

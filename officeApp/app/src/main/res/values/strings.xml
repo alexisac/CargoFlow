@@ -31,6 +31,7 @@
 
     <string name="button_add_field">Add field</string>
     <string name="button_add_status_filter">Add status filter</string>
+    <string name="button_ai_recommendation">AI recommendation</string>
     <string name="button_apply_filters">Apply filters</string>
     <string name="button_assign">Assign</string>
     <string name="button_assign_driver_for_trip">Assign driver for trip</string>

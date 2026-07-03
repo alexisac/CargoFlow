@@ -55,7 +55,8 @@ class VehicleViewModel @Inject constructor(
                 is ApiResult.Success -> {
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
-                        successMessage = result.data.message ?: "Vehicle was created with success."
+                        successMessage = result.data.message
+                            ?: "Vehicle was created with success."
                     )
                 }
 
@@ -179,6 +180,38 @@ class VehicleViewModel @Inject constructor(
                         isLoading = false,
                         errorMessage = result.message,
                         successMessage = null
+                    )
+                }
+
+                ApiResult.Loading -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = true
+                    )
+                }
+            }
+        }
+    }
+
+    fun getVehicleDashboardSummary() {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isLoading = true,
+                errorMessage = null
+            )
+
+            when (val result = vehicleService.getVehicleDashboardSummary()) {
+                is ApiResult.Success -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        vehicleDashboardSummaryItems = result.data.items,
+                        errorMessage = null
+                    )
+                }
+
+                is ApiResult.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = result.message
                     )
                 }
 

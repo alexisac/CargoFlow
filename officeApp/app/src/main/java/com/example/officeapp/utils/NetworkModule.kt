@@ -1,5 +1,6 @@
 package com.example.officeapp.utils
 
+import com.example.officeapp.interfacesAPI.AssignmentAiInterfaceAPI
 import com.example.officeapp.interfacesAPI.TripInterfaceAPI
 import com.example.officeapp.interfacesAPI.VehicleInterfaceAPI
 import com.example.officeapp.interfacesAPI.AuthenticationInterfaceAPI
@@ -26,7 +27,7 @@ annotation class BaseWebSocketUrl
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val IP = "<YOUR_IP>:8081"
+    private const val IP = "192.168.1.5:8081"
     private const val BASE_URL = "http://${IP}"
     private const val BASE_WS_URL = "ws://${IP}"
 
@@ -104,5 +105,11 @@ object NetworkModule {
     @Singleton
     fun provideLocationInterfaceAPI(retrofit: Retrofit): LocationInterfaceAPI {
         return retrofit.create(LocationInterfaceAPI::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAssignmentAiInterfaceAPI(retrofit: Retrofit): AssignmentAiInterfaceAPI {
+        return retrofit.create(AssignmentAiInterfaceAPI::class.java)
     }
 }

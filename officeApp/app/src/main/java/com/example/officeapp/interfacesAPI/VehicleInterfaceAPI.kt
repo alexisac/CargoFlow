@@ -4,6 +4,7 @@ import com.example.officeapp.models.GenericApplicationResponse
 import com.example.officeapp.models.vehicle.AddNewVehicleRequest
 import com.example.officeapp.models.vehicle.ChangeVehicleStatusRequest
 import com.example.officeapp.models.vehicle.GetAllVehiclesResponse
+import com.example.officeapp.models.vehicle.VehicleDashboardSummaryResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -33,4 +34,8 @@ interface VehicleInterfaceAPI {
         @Path("vehicleId") vehicleId: Long,
         @Body request: ChangeVehicleStatusRequest
     ): Response<GenericApplicationResponse>
+
+    @Headers("Content-Type: application/json")
+    @GET("vehicle/dashboard/summary")
+    suspend fun getVehicleDashboardSummary(): Response<VehicleDashboardSummaryResponse>
 }

@@ -5,6 +5,7 @@ import com.example.officeapp.models.vehicle.AddNewVehicleRequest
 import com.example.officeapp.models.vehicle.ChangeVehicleStatusRequest
 import com.example.officeapp.models.vehicle.GetAllVehiclesResponse
 import com.example.officeapp.models.vehicle.VehicleCapacityRequirement
+import com.example.officeapp.models.vehicle.VehicleDashboardSummaryResponse
 import com.example.officeapp.models.vehicle.VehicleStatus
 import com.example.officeapp.models.vehicle.VehicleType
 import com.example.officeapp.models.vehicle.capacityRequirement
@@ -138,5 +139,9 @@ class VehicleService @Inject constructor(
             vehicleId = vehicleId,
             changeVehicleStatusRequest = request
         )
+    }
+
+    suspend fun getVehicleDashboardSummary(): ApiResult<VehicleDashboardSummaryResponse> {
+        return vehicleRepository.getVehicleDashboardSummary()
     }
 }

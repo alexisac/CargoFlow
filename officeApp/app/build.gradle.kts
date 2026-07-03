@@ -99,4 +99,6 @@ dependencies {
     implementation(libs.android.maps.compose)
     // Source: https://mvnrepository.com/artifact/com.google.android.gms/play-services-maps
     implementation(libs.android.gms.play.services.maps)
+    // Source: https://mvnrepository.com/artifact/com.github.PhilJay/MPAndroidChart
+    implementation(libs.mpandroidchart)
 }

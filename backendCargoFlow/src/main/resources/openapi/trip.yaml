@@ -208,6 +208,76 @@ paths:
               schema:
                 $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
 
+  /trip/{tripId}/advance-status:
+    patch:
+      tags:
+        - Trips
+      summary: Advance driver trip status
+      operationId: advanceTripStatus
+      parameters:
+        - name: tripId
+          in: path
+          description: Trip's ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Trip status was advanced successfully
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '400':
+          description: Trip status cannot be advanced
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '404':
+          description: Trip was not found for authenticated driver
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+  /trip/dashboard/summary:
+    get:
+      tags:
+        - Trips
+      summary: Get trip dashboard summary
+      operationId: getTripDashboardSummary
+      responses:
+        '200':
+          description: Trip dashboard summary was retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripDashboardSummaryResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/GenericApplicationResponse'
 components:
   schemas:
     TripStatus:
@@ -715,3 +785,24 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CompletedTrip'
+    TripDashboardSummaryItem:
+      type: object
+      required:
+        - tripStatus
+        - value
+      properties:
+        tripStatus:
+          $ref: '#/components/schemas/TripStatus'
+        value:
+          type: integer
+          format: int64
+          example: 12
+    TripDashboardSummaryResponse:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TripDashboardSummaryItem'

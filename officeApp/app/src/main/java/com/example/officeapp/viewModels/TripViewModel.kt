@@ -363,6 +363,82 @@ class TripViewModel @Inject constructor(
         }
     }
 
+    fun advanceTripStatus(
+        tripId: Long,
+        currentStatus: TripStatus
+    ) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isLoading = true,
+                errorMessage = null,
+                successMessage = null
+            )
+
+            when (val result = tripService.advanceTripStatus(tripId)) {
+                is ApiResult.Success -> {
+                    val newStatus = when (currentStatus) {
+                        TripStatus.ASSIGNED -> TripStatus.IN_PROGRESS
+                        TripStatus.IN_PROGRESS -> TripStatus.COMPLETED
+                        else -> currentStatus
+                    }
+
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        currentDriverTrip = _uiState.value.currentDriverTrip?.copy(tripStatus = newStatus),
+                        successMessage = result.data.message ?: "Trip status was updated successfully.",
+                        errorMessage = null
+                    )
+                }
+
+                is ApiResult.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = result.message,
+                        successMessage = null
+                    )
+                }
+
+                ApiResult.Loading -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = true
+                    )
+                }
+            }
+        }
+    }
+
+    fun getTripDashboardSummary() {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isLoading = true,
+                errorMessage = null
+            )
+
+            when (val result = tripService.getTripDashboardSummary()) {
+                is ApiResult.Success -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        tripDashboardSummaryItems = result.data.items,
+                        errorMessage = null
+                    )
+                }
+
+                is ApiResult.Error -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = result.message
+                    )
+                }
+
+                ApiResult.Loading -> {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = true
+                    )
+                }
+            }
+        }
+    }
+
     fun clearMessage() {
         _uiState.value = _uiState.value.copy(
             successMessage = null,

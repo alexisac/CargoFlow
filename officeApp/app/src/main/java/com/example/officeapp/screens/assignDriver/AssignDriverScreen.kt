@@ -3,6 +3,7 @@ package com.example.officeapp.screens.assignDriver
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Inventory2
 import androidx.compose.material.icons.outlined.LocalShipping
@@ -26,6 +28,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -51,22 +54,35 @@ import com.example.officeapp.ui.theme.TextPrimaryDark
 import com.example.officeapp.ui.theme.TextPrimaryLight
 import com.example.officeapp.ui.theme.TextSecondaryDark
 import com.example.officeapp.ui.theme.TextSecondaryLight
+import com.example.officeapp.viewModels.AssignmentAiViewModel
 import com.example.officeapp.viewModels.TripAssignmentViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.math.roundToInt
 
 @Composable
 fun AssignDriverScreen(
     tripId: Long,
     viewModel: TripAssignmentViewModel,
+    assignmentAiViewModel: AssignmentAiViewModel,
     isDarkTheme: Boolean,
     onBack: () -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val tripAssignmentState = viewModel.uiState.collectAsState()
+    val uiState = tripAssignmentState.value
+
+    val assignmentAiState = assignmentAiViewModel.uiState.collectAsState()
+    val assignmentAiUiState = assignmentAiState.value
 
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
     var selectedDriverId by remember { mutableStateOf<Long?>(null) }
     var selectedPrimaryVehicle by remember { mutableStateOf<AvailableVehicle?>(null) }
     var selectedTrailerVehicleId by remember { mutableStateOf<Long?>(null) }
+    var aiSelectionErrorMessage by remember { mutableStateOf<String?>(null) }
+    var aiSelectionSuccessMessage by remember { mutableStateOf<String?>(null) }
 
     val trailerEnabled = selectedPrimaryVehicle?.vehicleType == VehicleType.TRACTOR_UNIT
 
@@ -94,6 +110,199 @@ fun AssignDriverScreen(
             pageSize = 20,
             append = false
         )
+    }
+
+    LaunchedEffect(assignmentAiUiState.recommendation) {
+        val recommendation = assignmentAiUiState.recommendation ?: return@LaunchedEffect
+
+        aiSelectionErrorMessage = null
+        aiSelectionSuccessMessage = null
+
+        suspend fun waitForStateChange(
+            previousSize: Int,
+            currentSize: () -> Int,
+            isLastPage: () -> Boolean
+        ): Boolean {
+            return withTimeoutOrNull(8000L) {
+                while (true) {
+                    val state = tripAssignmentState.value
+
+                    if (!state.isLoading &&
+                        (currentSize() != previousSize || isLastPage())
+                    ) {
+                        return@withTimeoutOrNull true
+                    }
+
+                    delay(100L)
+                }
+            } == true
+        }
+
+        suspend fun findDriver(driverId: Long): Boolean {
+            while (true) {
+                val state = tripAssignmentState.value
+
+                if (state.availableDrivers.any { it.id == driverId }) {
+                    return true
+                }
+
+                if (state.driversLastPage) {
+                    return false
+                }
+
+                val previousSize = state.availableDrivers.size
+
+                viewModel.loadNextDriversPage(tripId)
+
+                val updated = waitForStateChange(
+                    previousSize = previousSize,
+                    currentSize = { tripAssignmentState.value.availableDrivers.size },
+                    isLastPage = { tripAssignmentState.value.driversLastPage }
+                )
+
+                if (!updated) {
+                    return false
+                }
+            }
+        }
+
+        suspend fun findPrimaryVehicle(primaryVehicleId: Long): AvailableVehicle? {
+            while (true) {
+                val state = tripAssignmentState.value
+
+                val vehicle = state.availablePrimaryVehicles
+                    .firstOrNull { it.id == primaryVehicleId }
+
+                if (vehicle != null) {
+                    return vehicle
+                }
+
+                if (state.primaryVehiclesLastPage) {
+                    return null
+                }
+
+                val previousSize = state.availablePrimaryVehicles.size
+
+                viewModel.loadNextPrimaryVehiclesPage(tripId)
+
+                val updated = waitForStateChange(
+                    previousSize = previousSize,
+                    currentSize = { tripAssignmentState.value.availablePrimaryVehicles.size },
+                    isLastPage = { tripAssignmentState.value.primaryVehiclesLastPage }
+                )
+
+                if (!updated) {
+                    return null
+                }
+            }
+        }
+
+        suspend fun findTrailer(trailerId: Long): Boolean {
+            if (tripAssignmentState.value.availableTrailers.isEmpty()) {
+                viewModel.getAvailableTrailersForTrip(
+                    tripId = tripId,
+                    pageNumber = 0,
+                    pageSize = 20,
+                    append = false
+                )
+
+                waitForStateChange(
+                    previousSize = 0,
+                    currentSize = { tripAssignmentState.value.availableTrailers.size },
+                    isLastPage = { tripAssignmentState.value.trailersLastPage }
+                )
+            }
+
+            while (true) {
+                val state = tripAssignmentState.value
+
+                if (state.availableTrailers.any { it.id == trailerId }) {
+                    return true
+                }
+
+                if (state.trailersLastPage) {
+                    return false
+                }
+
+                val previousSize = state.availableTrailers.size
+
+                viewModel.loadNextTrailersPage(tripId)
+
+                val updated = waitForStateChange(
+                    previousSize = previousSize,
+                    currentSize = { tripAssignmentState.value.availableTrailers.size },
+                    isLastPage = { tripAssignmentState.value.trailersLastPage }
+                )
+
+                if (!updated) {
+                    return false
+                }
+            }
+        }
+
+        val driverFound = findDriver(recommendation.driverId)
+
+        if (!driverFound) {
+            aiSelectionErrorMessage =
+                "AI recommended driver ${recommendation.driverId}, but it was not found in the available drivers list."
+
+            assignmentAiViewModel.clearRecommendation()
+            return@LaunchedEffect
+        }
+
+        val recommendedPrimaryVehicle = findPrimaryVehicle(recommendation.primaryVehicleId)
+
+        if (recommendedPrimaryVehicle == null) {
+            aiSelectionErrorMessage =
+                "AI recommended primary vehicle ${recommendation.primaryVehicleId}, but it was not found in the available vehicles list."
+
+            assignmentAiViewModel.clearRecommendation()
+            return@LaunchedEffect
+        }
+
+        selectedDriverId = recommendation.driverId
+        selectedPrimaryVehicle = recommendedPrimaryVehicle
+
+        if (recommendedPrimaryVehicle.vehicleType == VehicleType.TRACTOR_UNIT) {
+            val recommendedTrailerId = recommendation.trailerId
+
+            if (recommendedTrailerId == null) {
+                aiSelectionErrorMessage =
+                    "AI recommended a tractor unit, but no trailer was returned."
+
+                assignmentAiViewModel.clearRecommendation()
+                return@LaunchedEffect
+            }
+
+            val trailerFound = findTrailer(recommendedTrailerId)
+
+            if (!trailerFound) {
+                aiSelectionErrorMessage =
+                    "AI recommended trailer $recommendedTrailerId, but it was not found in the available trailers list."
+
+                assignmentAiViewModel.clearRecommendation()
+                return@LaunchedEffect
+            }
+
+            selectedTrailerVehicleId = recommendedTrailerId
+        } else {
+            selectedTrailerVehicleId = null
+            viewModel.clearTrailers()
+
+            if (selectedTabIndex == 2) {
+                selectedTabIndex = 1
+            }
+        }
+
+        val confidencePercent = (recommendation.confidence * 100).roundToInt()
+
+        aiSelectionSuccessMessage =
+            "AI recommendation applied: driver ${recommendation.driverId}, primary vehicle ${recommendation.primaryVehicleId}" +
+                    "${recommendation.trailerId?.let { ", trailer $it" } ?: ""}, confidence $confidencePercent%. Review and press Assign."
+
+        selectedTabIndex = 0
+
+        assignmentAiViewModel.clearRecommendation()
     }
 
     Box(
@@ -300,45 +509,72 @@ fun AssignDriverScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            LoadingButton(
-                text = stringResource(R.string.button_assign),
-                isLoading = false,
-                onClick = {
-                    val driverId = selectedDriverId
-                    val primaryVehicle = selectedPrimaryVehicle
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                LoadingButton(
+                    text = stringResource(R.string.button_assign),
+                    isLoading = false,
+                    onClick = {
+                        val driverId = selectedDriverId
+                        val primaryVehicle = selectedPrimaryVehicle
 
-                    if (driverId != null && primaryVehicle != null) {
-                        viewModel.assignTrip(
-                            tripId = tripId,
-                            driverId = driverId,
-                            primaryVehicleId = primaryVehicle.id,
-                            trailerVehicleId = if (primaryVehicle.vehicleType == VehicleType.TRACTOR_UNIT) {
-                                selectedTrailerVehicleId
-                            } else {
-                                null
-                            }
-                        )
+                        if (driverId != null && primaryVehicle != null) {
+                            viewModel.assignTrip(
+                                tripId = tripId,
+                                driverId = driverId,
+                                primaryVehicleId = primaryVehicle.id,
+                                trailerVehicleId = if (primaryVehicle.vehicleType == VehicleType.TRACTOR_UNIT) {
+                                    selectedTrailerVehicleId
+                                } else {
+                                    null
+                                }
+                            )
 
-                        selectedDriverId = null
-                        selectedPrimaryVehicle = null
-                        selectedTrailerVehicleId = null
-                        onBack()
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(58.dp),
-                enabled = selectedDriverId != null &&
-                        selectedPrimaryVehicle != null &&
-                        (!trailerEnabled || selectedTrailerVehicleId != null)
-            )
+                            selectedDriverId = null
+                            selectedPrimaryVehicle = null
+                            selectedTrailerVehicleId = null
+                            onBack()
+                        }
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(58.dp),
+                    enabled = selectedDriverId != null &&
+                            selectedPrimaryVehicle != null &&
+                            (!trailerEnabled || selectedTrailerVehicleId != null)
+                )
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                LoadingButton(
+                    text = stringResource(R.string.button_ai_recommendation),
+                    isLoading = assignmentAiUiState.isLoading,
+                    onClick = {
+                        assignmentAiViewModel.autoOptimizeTripAssignment(tripId)
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(58.dp),
+                    enabled = !assignmentAiUiState.isLoading
+                )
+            }
         }
 
         FormMessages(
-            errorMessage = uiState.errorMessage,
-            successMessage = uiState.successMessage,
+            errorMessage = aiSelectionErrorMessage
+                ?: assignmentAiUiState.errorMessage
+                ?: uiState.errorMessage,
+            successMessage = aiSelectionSuccessMessage
+                ?: uiState.successMessage,
             isDarkTheme = isDarkTheme,
-            onMessageShown = { viewModel.clearMessage() }
+            onMessageShown = {
+                viewModel.clearMessage()
+                assignmentAiViewModel.clearMessage()
+                aiSelectionErrorMessage = null
+                aiSelectionSuccessMessage = null
+            }
         )
     }
 }
