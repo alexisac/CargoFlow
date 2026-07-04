@@ -27,7 +27,7 @@ annotation class BaseWebSocketUrl
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val IP = "192.168.1.5:8081"
+    private const val IP = "10.118.26.220:8081"
     private const val BASE_URL = "http://${IP}"
     private const val BASE_WS_URL = "ws://${IP}"
 

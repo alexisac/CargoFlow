@@ -64,6 +64,7 @@ fun DateTimeIntervalRow(
                     )
                 },
                 placeholder = stringResource(R.string.label_date),
+                allowPastDates = true,
                 iconColor = iconColor,
                 textColor = textColor,
                 secondaryTextColor = secondaryTextColor,
@@ -112,6 +113,7 @@ fun DateTimeIntervalRow(
                     )
                 },
                 placeholder = stringResource(R.string.label_date),
+                allowPastDates = true,
                 iconColor = iconColor,
                 textColor = textColor,
                 secondaryTextColor = secondaryTextColor,

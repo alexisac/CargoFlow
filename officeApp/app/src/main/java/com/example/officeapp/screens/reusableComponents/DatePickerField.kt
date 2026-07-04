@@ -35,6 +35,7 @@ fun DatePickerField(
     placeholder: String? = null,
     required: Boolean = false,
     enabled: Boolean = true,
+    allowPastDates: Boolean = false,
     icon: ImageVector = Icons.Outlined.CalendarMonth,
     iconColor: Color = MaterialTheme.colorScheme.primary,
     textColor: Color = MaterialTheme.colorScheme.onSurface,
@@ -51,11 +52,26 @@ fun DatePickerField(
             .toEpochMilli()
     }
 
+    val initialSelectedDateMillis = remember(value) {
+        try {
+            if (value.isNotBlank()) {
+                LocalDate.parse(value)
+                    .atStartOfDay(ZoneOffset.UTC)
+                    .toInstant()
+                    .toEpochMilli()
+            } else {
+                todayMillis
+            }
+        } catch (_: Exception) {
+            todayMillis
+        }
+    }
+
     val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = todayMillis,
+        initialSelectedDateMillis = initialSelectedDateMillis,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis >= todayMillis
+                return allowPastDates || utcTimeMillis >= todayMillis
             }
         }
     )
